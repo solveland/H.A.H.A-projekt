@@ -1,0 +1,36 @@
+#Meeting Agenda
+
+Group: 20
+Date: 18/09/09
+Chair: Henrik
+Participants: August S, Henrik T, Hampus E, Anthony T
+
+## Objectives (5 min)
+
+Assign individual group roles/responsibilities and write a group contract
+GUI, prototyping
+UML
+RAD
+
+## Report
+The meeting with our supervisor gave insight into how we should structure both the working process as well as our group.
+We concluded that a group-contract is suitable to further decrease the possibility of internal conflict. We also received instructions on how to individually contribute without creating confusion or errors (usage of travis etc). The first tasks to tackle will be related to the applications structural design as well as “logistics”.
+
+## Discussion items (35 min)
+Develop a broader understanding of git and gradle
+Discuss individual group roles/responsibilities
+GUI, prototyping
+
+
+## Outcomes and assignments (5 min)
+
+On monday, 10/9, we will construct a group contract
+In the coming week we will start creating a prototype-uml and RAD
+We will continue to contribute with more user-stories and tasks
+
+
+## Wrap up
+For next meeting: Follow-up the discussion items and affirm that the overall progress is moving at the right pace. If not discuss how we can become better at setting up clear tasks for each individual.
+
+Next meeting: Tuesday 11/9
+
