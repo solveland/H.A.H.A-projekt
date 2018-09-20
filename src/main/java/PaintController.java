@@ -3,28 +3,57 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelFormat;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
 
 public class PaintController {
 
 
     @FXML
-    private Canvas canvas;
-    @FXML
-    private Button clearButton;
+    private ImageView canvas;
+
+    private WritableImage image;
+
+    int size = 15;
+    int color = 0xFF000000;
+
+    AbstractTool activeTool;
+    PencilTool pencilTool;
 
     public void initialize() {
-        GraphicsContext g = canvas.getGraphicsContext2D();
+        image = new WritableImage(600, 600);
+        pencilTool = new PencilTool(size);
+        setActiveTool(pencilTool);
+        canvas.setImage(image);
         canvas.setOnMouseDragged(e -> {
-            double size = 10;
-            double x = e.getX();
-            double y = e.getY();
-            g.fillRect(x, y, size, size);
+            int x = (int) Math.floor(e.getX());
+            int y = (int) Math.floor(e.getY());
+            if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
+                return;
+            }
+            activeTool.onDrag(x, y, image);
         });
-
+        clearCanvas();
     }
+
+    //Temporär testfunktion
 @FXML
     public void clearCanvas () {
-        canvas.getGraphicsContext2D().clearRect(0,0,600,600);
+        int[] buffer = new int[600*600];
+        for(int i = 0; i < 600*600;i++){
+            buffer[i] = 0xFFFFFFFF;
+        }
+        image.getPixelWriter().setPixels(0,0,600,600, PixelFormat.getIntArgbInstance(),buffer,0,600);
+    }
+
+    private void setActiveTool(AbstractTool tool){
+        activeTool = tool;
+        if(tool instanceof ISizeAndColor){
+            ((ISizeAndColor) tool).updateSizeAndColor(size,color);
+        }
     }
 
 
