@@ -15,9 +15,16 @@
     <left>
             <ToolBar fx:id="toolBar" BorderPane.alignment="CENTER">
                 <items>
-                    <VBox styleClass="segmented-button-bar, vbox">
+                    <VBox prefHeight="342.0" prefWidth="57.0" styleClass="segmented-button-bar, vbox">
                        <children>
-                           <Button text="Brush" />
+                           <Button prefHeight="20.0" prefWidth="22.0">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@paint-brush.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
                            <Button text="-" />
                            <Button text="-" />
                            <Button text="-" />

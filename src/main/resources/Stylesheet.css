@@ -12,6 +12,12 @@
     -fx-effect: dropshadow(two-pass-box,black,5,.2,0,0);
 }
 
+.hud{
+    -fx-base: -dark-black;
+    -fx-effect: dropshadow(two-pass-box,black,5,.2,0,0);
+}
+
+
 
 
 

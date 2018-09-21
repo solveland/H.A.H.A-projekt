@@ -1,4 +1,5 @@
 import javafx.event.Event;
+
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -50,13 +51,11 @@ public class PaintController {
         //Color Palette
         colorPicker.setValue(Color.BLACK);
 
-        colorPicker.setOnAction(new EventHandler() {
-            public void handle(Event t) {
-                Color temp = colorPicker.getValue();
-                color = 0xFF000000 | ((int)(temp.getRed() * 255) << 16) | ((int)(temp.getGreen() * 255) << 8) | ((int)(temp.getBlue() * 255));
-                if(activeTool instanceof ISizeAndColor) {
-                    ((ISizeAndColor) activeTool).updateSizeAndColor(size, color);
-                }
+        colorPicker.setOnAction(e -> {
+            Color temp = colorPicker.getValue();
+            color = 0xFF000000 | ((int)(temp.getRed() * 255) << 16) | ((int)(temp.getGreen() * 255) << 8) | ((int)(temp.getBlue() * 255));
+            if(activeTool instanceof ISizeAndColor) {
+                ((ISizeAndColor) activeTool).updateSizeAndColor(size, color);
             }
         });
         clearCanvas();
