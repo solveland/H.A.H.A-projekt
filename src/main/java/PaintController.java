@@ -1,7 +1,10 @@
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelFormat;
@@ -15,7 +18,13 @@ public class PaintController {
     @FXML
     private ImageView canvas;
 
+    @FXML
+    private ColorPicker colorPicker;
+
+
+
     private WritableImage image;
+
 
     int size = 15;
     int color = 0xFF000000;
@@ -36,8 +45,24 @@ public class PaintController {
             }
             activeTool.onDrag(x, y, image);
         });
+
+
+        //Color Palette
+        colorPicker.setValue(Color.BLACK);
+
+        colorPicker.setOnAction(new EventHandler() {
+            public void handle(Event t) {
+                Color temp = colorPicker.getValue();
+                color = 0xFF000000 | ((int)(temp.getRed() * 255) << 16) | ((int)(temp.getGreen() * 255) << 8) | ((int)(temp.getBlue() * 255));
+                if(activeTool instanceof ISizeAndColor) {
+                    ((ISizeAndColor) activeTool).updateSizeAndColor(size, color);
+                }
+            }
+        });
         clearCanvas();
     }
+
+
 
     //Temporär testfunktion
 @FXML

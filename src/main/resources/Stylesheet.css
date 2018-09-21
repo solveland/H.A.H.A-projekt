@@ -9,28 +9,9 @@
 
 .tool-bar{
     -fx-base: -dark-black;
-    -fx-font-size: 12pt;
-    -fx-background-color:
-        linear-gradient(to bottom, derive(-fx-base,-30%), derive(-fx-base,-60%)),
-        linear-gradient(to bottom, -light-black 2%, -dark-black 98%);
     -fx-effect: dropshadow(two-pass-box,black,5,.2,0,0);
 }
 
-.segmented-button-bar .button {
-    -fx-background-radius: 10;
-}
-
-.segmented-button-bar .button:hover {
-    -fx-background-color:
-        -darkest-black,
-        rgb(55, 57, 58),
-        linear-gradient(to top, -light-black 2%, -dark-black 98%);
-}
-
-.vbox {
-    -fx-padding: 15;
-    -fx-spacing: 10;
-}
 
 
 
