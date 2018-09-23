@@ -14,30 +14,17 @@ public class PencilTool extends AbstractTool implements ISizeAndColor {
 
     @Override
     void onPress(int xPos, int yPos, WritableImage image) {
-
+        paintArea(xPos, yPos, image);
     }
 
     @Override
     void onDrag(int xPos, int yPos, WritableImage image) {
-        PixelWriter pw = image.getPixelWriter();
-        int diameter = size*2-1;
-        for(int yc = 0; yc < diameter; yc++){
-            for(int xc = 0; xc < diameter; xc++){
-                if((brushBuffer[yc*diameter +xc] & 0xFF000000) != 0){
-                    int pixelX = xc+xPos - diameter/2;
-                    int pixelY = yc+yPos - diameter/2;
-                    if(pixelX < 0 || pixelX >= image.getWidth() || pixelY < 0 ||pixelY >= image.getHeight()){
-                        continue;
-                    }
-                    pw.setArgb(xc+xPos - diameter/2,yc+yPos - diameter/2,brushBuffer[yc*diameter + xc]);
-                }
-            }
-        }
+        paintArea(xPos, yPos, image);
     }
 
     @Override
     void onRelease(int xPos, int yPos, WritableImage image) {
-
+        paintArea(xPos, yPos, image);
     }
 
     @Override
@@ -57,5 +44,22 @@ public class PencilTool extends AbstractTool implements ISizeAndColor {
             }
         }
 
+    }
+
+    private void paintArea(int xPos, int yPos, WritableImage image){
+        PixelWriter pw = image.getPixelWriter();
+        int diameter = size*2-1;
+        for(int yc = 0; yc < diameter; yc++){
+            for(int xc = 0; xc < diameter; xc++){
+                if((brushBuffer[yc*diameter +xc] & 0xFF000000) != 0){
+                    int pixelX = xc+xPos - diameter/2;
+                    int pixelY = yc+yPos - diameter/2;
+                    if(pixelX < 0 || pixelX >= image.getWidth() || pixelY < 0 ||pixelY >= image.getHeight()){
+                        continue;
+                    }
+                    pw.setArgb(xc+xPos - diameter/2,yc+yPos - diameter/2,brushBuffer[yc*diameter + xc]);
+                }
+            }
+        }
     }
 }

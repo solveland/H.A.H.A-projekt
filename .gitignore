@@ -72,6 +72,8 @@ fabric.properties
 # Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
 
 # *.iml
+src/main/main.iml
+src/test/test.iml
 # modules.xml
 # .idea/misc.xml
 # *.ipr
