@@ -17,6 +17,14 @@
                 <items>
                     <VBox prefHeight="342.0" prefWidth="60.0" styleClass="segmented-button-bar, vbox">
                        <children>
+                           <Button>
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@arrow.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
                            <Button prefHeight="20.0" prefWidth="22.0">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
@@ -25,7 +33,6 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                           <Button text="-" />
                            <Button text="-" />
                            <Button text="-" />
                            <Button text="-" />
