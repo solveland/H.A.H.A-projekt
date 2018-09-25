@@ -1,5 +1,5 @@
-public interface Observer {
+public interface ModelObserver {
 
-   void drawOnUpdate();
+   void drawOnUpdate(PaintLayer layer);
 
 }

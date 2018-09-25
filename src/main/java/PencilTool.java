@@ -1,8 +1,3 @@
-import javafx.scene.image.PixelFormat;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
-
 public class PencilTool extends AbstractTool implements ISizeAndColor {
 
     private int size;
@@ -13,18 +8,18 @@ public class PencilTool extends AbstractTool implements ISizeAndColor {
     }
 
     @Override
-    void onPress(int xPos, int yPos, WritableImage image) {
-        paintArea(xPos, yPos, image);
+    void onPress(int xPos, int yPos, PaintLayer layer) {
+        paintArea(xPos, yPos, layer);
     }
 
     @Override
-    void onDrag(int xPos, int yPos, WritableImage image) {
-        paintArea(xPos, yPos, image);
+    void onDrag(int xPos, int yPos, PaintLayer layer) {
+        paintArea(xPos, yPos, layer);
     }
 
     @Override
-    void onRelease(int xPos, int yPos, WritableImage image) {
-        paintArea(xPos, yPos, image);
+    void onRelease(int xPos, int yPos, PaintLayer layer) {
+        paintArea(xPos, yPos, layer);
     }
 
     @Override
@@ -46,18 +41,17 @@ public class PencilTool extends AbstractTool implements ISizeAndColor {
 
     }
 
-    private void paintArea(int xPos, int yPos, WritableImage image){
-        PixelWriter pw = image.getPixelWriter();
+    private void paintArea(int xPos, int yPos, PaintLayer layer){
         int diameter = size*2-1;
         for(int yc = 0; yc < diameter; yc++){
             for(int xc = 0; xc < diameter; xc++){
                 if((brushBuffer[yc*diameter +xc] & 0xFF000000) != 0){
                     int pixelX = xc+xPos - diameter/2;
                     int pixelY = yc+yPos - diameter/2;
-                    if(pixelX < 0 || pixelX >= image.getWidth() || pixelY < 0 ||pixelY >= image.getHeight()){
+                    if(pixelX < 0 || pixelX >= layer.getWidth() || pixelY < 0 ||pixelY >= layer.getHeight()){
                         continue;
                     }
-                    pw.setArgb(xc+xPos - diameter/2,yc+yPos - diameter/2,brushBuffer[yc*diameter + xc]);
+                    layer.setPixel(xc+xPos - diameter/2,yc+yPos - diameter/2,brushBuffer[yc*diameter + xc]);
                 }
             }
         }

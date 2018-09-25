@@ -1,20 +1,25 @@
-import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ImageModel {
 
-    private WritableImage image;
+    private PaintLayer layer;
     private AbstractTool activeTool;
+    private List<ModelObserver> observers;
 
     int toolSize = 15;
     int color = 0xFF000000;
 
     public ImageModel(int sizeX, int sizeY) {
-        image = new WritableImage(sizeX, sizeY);
+        layer = new PaintLayer(sizeX, sizeY);
         activeTool = new PencilTool(toolSize);
         if(activeTool instanceof ISizeAndColor){
             ((ISizeAndColor) activeTool).updateSizeAndColor(toolSize, color);
         }
+
+        observers = new ArrayList<ModelObserver>();
     }
 
     public void updateColor(Color color){
@@ -24,10 +29,11 @@ public class ImageModel {
         }
     }
     public void onDrag(int x, int y){
-        activeTool.onDrag(x, y, image);
+        activeTool.onDrag(x, y, layer);
+        updateModel();
     }
-    public WritableImage getImage() {
-        return image;
+    public PaintLayer getWritableLayer() {
+        return layer;
     }
 
     public int getToolSize() {
@@ -36,5 +42,24 @@ public class ImageModel {
 
     public void setActiveTool(AbstractTool activeTool) {
         this.activeTool = activeTool;
+    }
+
+    public void addObserver(ModelObserver observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(ModelObserver observer) {
+        observers.remove(observer);
+    }
+
+    public void updateModel() {
+        for (ModelObserver o : observers)
+            o.drawOnUpdate(layer);
+    }
+
+    public void clearLayer()
+    {
+        layer.clearLayer();
+        updateModel();
     }
 }

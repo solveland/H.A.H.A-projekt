@@ -25,12 +25,16 @@ public class PaintController {
 
     private ImageModel image;
 
+    private PaintView view;
+
 
 
     public void initialize() {
         image = new ImageModel(600, 600);
+        view = new PaintView(600, 600);
+        image.addObserver(view);
 
-        canvas.setImage(image.getImage());
+        canvas.setImage(view.getImage());
         canvas.setOnMouseDragged(e -> {
             int x = (int) Math.floor(e.getX());
             int y = (int) Math.floor(e.getY());
@@ -60,7 +64,8 @@ public class PaintController {
         for(int i = 0; i < 600*600;i++){
             buffer[i] = 0xFFFFFFFF;
         }
-        image.getImage().getPixelWriter().setPixels(0,0,600,600, PixelFormat.getIntArgbInstance(),buffer,0,600);
+        //view.getImage().getPixelWriter().setPixels(0,0,600,600, PixelFormat.getIntArgbInstance(),buffer,0,600);
+        image.clearLayer();
     }
 
     private void setActiveTool(AbstractTool tool){

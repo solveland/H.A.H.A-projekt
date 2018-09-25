@@ -15,7 +15,7 @@
     <left>
             <ToolBar fx:id="toolBar" BorderPane.alignment="CENTER">
                 <items>
-                    <VBox prefHeight="342.0" prefWidth="57.0" styleClass="segmented-button-bar, vbox">
+                    <VBox prefHeight="342.0" prefWidth="60.0" styleClass="segmented-button-bar, vbox">
                        <children>
                            <Button prefHeight="20.0" prefWidth="22.0">
                      <graphic>
@@ -44,5 +44,37 @@
    <center>
       <ImageView fx:id="canvas" fitHeight="600.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
    </center>
+
+    <top>
+        <MenuBar fx:id="menuBar" stylesheets="Stylesheet.css" styleClass="hud">
+            <menus>
+                <Menu text="File">
+                    <items>
+                        <MenuItem text="New"/>
+                        <MenuItem text="Open"/>
+                        <MenuItem text="Save"/>
+                        <MenuItem text="Save As"/>
+                        <SeparatorMenuItem  />
+                        <MenuItem text="Exit"/>
+                    </items>
+                </Menu>
+                <Menu text="Edit">
+                    <items>
+                        <MenuItem text="Copy"/>
+                        <MenuItem text="Cut"/>
+                        <MenuItem text="Paste"/>
+                    </items>
+                </Menu>
+                <Menu text="Help">
+                    <items>
+                        <MenuItem text="Search" disable="true"/>
+                        <MenuItem text="Online Manual" visible="false"/>
+                        <SeparatorMenuItem />
+                        <MenuItem text="About"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
 
 </BorderPane>

@@ -1,5 +1,3 @@
-import javafx.scene.image.WritableImage;
-
 public class EraserTool extends AbstractTool implements  ISizeAndColor {
     private int size;
     private int[] brushBuffer;
@@ -9,17 +7,17 @@ public class EraserTool extends AbstractTool implements  ISizeAndColor {
     }
 
     @Override
-    void onPress(int x, int y, WritableImage image) {
+    void onPress(int x, int y, PaintLayer layer) {
 
     }
 
     @Override
-    void onDrag(int x, int y, WritableImage image) {
+    void onDrag(int x, int y, PaintLayer layer) {
 
     }
 
     @Override
-    void onRelease(int x, int y, WritableImage image) {
+    void onRelease(int x, int y, PaintLayer layer) {
 
     }
 
