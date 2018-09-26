@@ -1,16 +1,7 @@
-import javafx.event.Event;
-
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ToolBar;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelFormat;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 public class PaintController {
@@ -22,12 +13,13 @@ public class PaintController {
     @FXML
     private ColorPicker colorPicker;
 
+    @FXML
+    private Button bucketToolButton;
+
 
     private ImageModel image;
 
     private PaintView view;
-
-
 
     public void initialize() {
         image = new ImageModel(600, 600);
@@ -44,6 +36,24 @@ public class PaintController {
             image.onDrag(x, y);
         });
 
+        canvas.setOnMouseReleased(e -> {
+            int x = (int) Math.floor(e.getX());
+            int y = (int) Math.floor(e.getY());
+            if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
+                return;
+            }
+            image.onRelease(x, y);}
+            );
+
+        canvas.setOnMousePressed(e -> {
+            int x = (int) Math.floor(e.getX());
+            int y = (int) Math.floor(e.getY());
+            if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
+                return;
+            }
+            image.onPress(x, y);}
+        );
+
 
         //Color Palette
         colorPicker.setValue(Color.BLACK);
@@ -54,6 +64,7 @@ public class PaintController {
         });
         clearCanvas();
     }
+
 
 
 
@@ -68,9 +79,19 @@ public class PaintController {
         image.clearLayer();
     }
 
+
     private void setActiveTool(AbstractTool tool){
         image.setActiveTool(tool);
     }
 
+    @FXML
+    public void setPencil (){
+        image.setPencil();
+    }
+
+    @FXML
+    public void setFillTool (){
+        image.setFillTool();
+    }
 
 }

@@ -19,7 +19,7 @@ public class PaintView implements ModelObserver {
         PixelWriter pw = image.getPixelWriter();
         for (int x = 0; x < layer.getWidth(); x++)
             for (int y = 0; y < layer.getHeight(); y++) {
-                pw.setArgb(x, y, layer.getPixel(y * layer.getWidth() + x));
+                pw.setArgb(x, y, layer.getPixel(x,y));
             }
     }
 }

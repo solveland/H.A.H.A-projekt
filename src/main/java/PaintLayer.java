@@ -27,8 +27,8 @@ public class PaintLayer {
         pixelArray[y * width + x] = rgb;
     }
 
-    public int getPixel(int index) {
-        return pixelArray[index];
+    public int getPixel(int x, int y) {
+        return pixelArray[y*width+x];
     }
 
     // Temporary clear

@@ -25,7 +25,7 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                           <Button prefHeight="20.0" prefWidth="22.0">
+                           <Button onAction="#setPencil" prefHeight="20.0" prefWidth="22.0">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -33,7 +33,14 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                           <Button text="-" />
+                           <Button onAction="#setFillTool">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@paint-bucket.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
                            <Button text="-" />
                            <Button text="-" />
                            <Button text="-" />
@@ -53,31 +60,31 @@
    </center>
 
     <top>
-        <MenuBar fx:id="menuBar" stylesheets="Stylesheet.css" styleClass="hud">
+        <MenuBar fx:id="menuBar" styleClass="hud" stylesheets="Stylesheet.css">
             <menus>
                 <Menu text="File">
                     <items>
-                        <MenuItem text="New"/>
-                        <MenuItem text="Open"/>
-                        <MenuItem text="Save"/>
-                        <MenuItem text="Save As"/>
-                        <SeparatorMenuItem  />
-                        <MenuItem text="Exit"/>
+                        <MenuItem text="New" />
+                        <MenuItem text="Open" />
+                        <MenuItem text="Save" />
+                        <MenuItem text="Save As" />
+                        <SeparatorMenuItem />
+                        <MenuItem text="Exit" />
                     </items>
                 </Menu>
                 <Menu text="Edit">
                     <items>
-                        <MenuItem text="Copy"/>
-                        <MenuItem text="Cut"/>
-                        <MenuItem text="Paste"/>
+                        <MenuItem text="Copy" />
+                        <MenuItem text="Cut" />
+                        <MenuItem text="Paste" />
                     </items>
                 </Menu>
                 <Menu text="Help">
                     <items>
-                        <MenuItem text="Search" disable="true"/>
-                        <MenuItem text="Online Manual" visible="false"/>
+                        <MenuItem disable="true" text="Search" />
+                        <MenuItem text="Online Manual" visible="false" />
                         <SeparatorMenuItem />
-                        <MenuItem text="About"/>
+                        <MenuItem text="About" />
                     </items>
                 </Menu>
             </menus>
