@@ -1,4 +1,3 @@
-import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -12,28 +11,31 @@ public class ImageModel {
     private PencilTool pencilTool;
     private BucketFillTool bucketFillTool;
 
-    int toolSize = 15;
+    int toolSize = 3;
     int color = 0xFF000000;
 
     public ImageModel(int sizeX, int sizeY) {
         layer = new PaintLayer(sizeX, sizeY);
-       // activeTool = new PencilTool(toolSize);
         pencilTool = new PencilTool(toolSize);
-        bucketFillTool = new BucketFillTool(color, layer);
+        bucketFillTool = new BucketFillTool(color);
         setActiveTool(bucketFillTool);
-        if(activeTool instanceof ISizeAndColor){
-            ((ISizeAndColor) activeTool).updateSizeAndColor(toolSize, color);
-        }
-
         observers = new ArrayList<ModelObserver>();
     }
 
     public void updateColor(Color color){
         this.color = 0xFF000000 | ((int)(color.getRed() * 255) << 16) | ((int)(color.getGreen() * 255) << 8) | ((int)(color.getBlue() * 255));
-        if(activeTool instanceof ISizeAndColor){
-            ((ISizeAndColor) activeTool).updateSizeAndColor(toolSize, this.color);
+        if(activeTool instanceof IColor){
+            ((IColor) activeTool).updateColor(this.color);
         }
     }
+
+    public void updateSize(int size){
+        this.toolSize = size;
+        if(activeTool instanceof ISize){
+            ((ISize) activeTool).updateSize(toolSize);
+        }
+    }
+
     public void onDrag(int x, int y){
         activeTool.onDrag(x, y, layer);
         updateModel();
@@ -59,8 +61,11 @@ public class ImageModel {
 
     public void setActiveTool(AbstractTool activeTool) {
         this.activeTool = activeTool;
-        if(activeTool instanceof ISizeAndColor){
-            ((ISizeAndColor) activeTool).updateSizeAndColor(toolSize, this.color);
+        if(activeTool instanceof ISize){
+            ((ISize) activeTool).updateSize(toolSize);
+        }
+        if(activeTool instanceof IColor){
+            ((IColor) activeTool).updateColor(color);
         }
     }
 
@@ -73,8 +78,13 @@ public class ImageModel {
     }
 
     public void updateModel() {
-        for (ModelObserver o : observers)
-            o.drawOnUpdate(layer);
+        if (layer.isChanged()){
+            for (ModelObserver o : observers) {
+                o.drawOnUpdate(layer, layer.getChangedMinX(), layer.getChangedMaxX(), layer.getChangedMinY(), layer.getChangedMaxY());
+            }
+            layer.resetChangeTracker();
+        }
+
     }
 
     public void clearLayer()

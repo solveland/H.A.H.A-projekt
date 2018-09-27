@@ -1,7 +1,8 @@
-public class PencilTool extends AbstractTool implements ISizeAndColor {
+public class PencilTool extends AbstractTool implements ISize, IColor {
 
     private int size;
     private int[] brushBuffer;
+    private int color;
 
     public PencilTool(int size){
         this.size = size;
@@ -22,25 +23,6 @@ public class PencilTool extends AbstractTool implements ISizeAndColor {
         paintArea(xPos, yPos, layer);
     }
 
-    @Override
-    public void updateSizeAndColor(int size, int color){
-        this.size = size;
-        int brushDiameter = size * 2 - 1;
-        brushBuffer = new int[brushDiameter * brushDiameter];
-        int midPoint = size -1;
-        for(int y = 0; y < brushDiameter;y++){
-            for(int x= 0; x < brushDiameter; x++){
-                if (Math.sqrt((x-midPoint)*(x-midPoint)+(y-midPoint)*(y-midPoint)) > size){
-                    brushBuffer[y*brushDiameter + x] = 0;
-                } else {
-                    brushBuffer[y*brushDiameter + x] = color;
-                }
-
-            }
-        }
-
-    }
-
     private void paintArea(int xPos, int yPos, PaintLayer layer){
         int diameter = size*2-1;
         for(int yc = 0; yc < diameter; yc++){
@@ -53,6 +35,34 @@ public class PencilTool extends AbstractTool implements ISizeAndColor {
                     }
                     layer.setPixel(xc+xPos - diameter/2,yc+yPos - diameter/2,brushBuffer[yc*diameter + xc]);
                 }
+            }
+        }
+    }
+
+    @Override
+    public void updateColor(int color) {
+        this.color = color;
+        updateBrush();
+    }
+
+    @Override
+    public void updateSize(int size) {
+        this.size = size;
+        updateBrush();
+    }
+
+    private void updateBrush(){
+        int brushDiameter = size * 2 - 1;
+        brushBuffer = new int[brushDiameter * brushDiameter];
+        int midPoint = size -1;
+        for(int y = 0; y < brushDiameter;y++){
+            for(int x= 0; x < brushDiameter; x++){
+                if (Math.sqrt((x-midPoint)*(x-midPoint)+(y-midPoint)*(y-midPoint)) > size -0.5){
+                    brushBuffer[y*brushDiameter + x] = 0;
+                } else {
+                    brushBuffer[y*brushDiameter + x] = color;
+                }
+
             }
         }
     }
