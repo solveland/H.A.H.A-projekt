@@ -1,31 +1,19 @@
-import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.image.WritableImage;
-
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
-public class BucketFillTool extends AbstractTool implements ISizeAndColor {
+public class BucketFillTool extends AbstractTool implements IColor {
 
    private int oldColor,newColor;
-   //private WritableImage image;
-   private PaintLayer layer;
-   private Queue q;
 
 
-   public BucketFillTool(int color, PaintLayer layer){
-       this.layer = layer;
+   public BucketFillTool(int color){
        newColor = color;
    }
 
     @Override
     void onRelease(int xPos, int yPos, PaintLayer layer) {
-       // oldColor= image.getPixelReader().getArgb(xPos,yPos);
-       // oldColor= layer.getPixel(yPos * layer.getWidth() + xPos);
-      // flood(xPos,yPos);
+
    }
 
     @Override
@@ -36,10 +24,10 @@ public class BucketFillTool extends AbstractTool implements ISizeAndColor {
     @Override
     void onPress(int xPos, int yPos, PaintLayer layer) {
         oldColor= layer.getPixel(xPos, yPos);
-        flood(xPos,yPos);
+        flood(xPos,yPos, layer);
     }
 
-    public void flood(int x, int y) {
+    public void flood(int x, int y, PaintLayer layer) {
         Point p = new Point(x,y);
        Queue<Point> Q = new LinkedList<Point>();
        if (oldColor == newColor) return;
@@ -70,72 +58,9 @@ public class BucketFillTool extends AbstractTool implements ISizeAndColor {
     }
 
 
-
-/*
-    public void flood(int x, int y) {
-       Point p = new Point(x,y);
-       Queue<Point> Q = new LinkedList<Point>();
-        List<Point> list = new ArrayList<Point>();
-       if (oldColor == newColor) return;
-       if (layer.getPixel(x,y) != oldColor) return;
-       Q.add(p);
-       for (Point N : Q){
-           Point w = N;
-           Point e = N;
-           while( layer.getPixel(w.x-1,w.y) != oldColor){
-               double a = w.x - 1;
-              w.setLocation(a , w.y);
-              Q.add(w);
-           }
-           while( layer.getPixel(e.x+1,e.y) != oldColor){
-               double a = e.x + 1;
-               w.setLocation(a , e.y);
-               Q.add(e);
-           }
-           for (Point n : Q ){
-               layer.setPixel(n.x, n.y, newColor);
-               if (layer.getPixel(n.x, n.y+1) == oldColor) {
-                   Q.add(n);
-               }
-               if (layer.getPixel(n.x, n.y-1) == oldColor) {
-                   Q.add(n);
-               }
-           }
-       }
-        return;
-    }
-
-*/
-
-
-
-/*
-    public void flood(int x, int y){
-       // check bounds
-        if (x<0) return;
-        if (y<0) return;
-        if (x >= layer.getWidth()) return;
-        if (y >= layer.getHeight()) return;
-
-        // check old color
-        if (layer.getPixel(x,y) != oldColor) return;
-
-        // switch to new color
-        layer.setPixel(x,y, newColor);
-        // flood surrounding pixels
-
-        flood(x-1, y);
-        flood(x+1,y);
-        flood(x,y-1);
-        flood(x,y+1);
-
-    }
-*/
-
     @Override
-    public void updateSizeAndColor(int size, int color){
-    this.newColor = color;
-
+    public void updateColor(int color){
+        this.newColor = color;
     }
 
 

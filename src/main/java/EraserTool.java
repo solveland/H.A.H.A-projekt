@@ -1,4 +1,4 @@
-public class EraserTool extends AbstractTool implements  ISizeAndColor {
+public class EraserTool extends AbstractTool implements ISize {
     private int size;
     private int[] brushBuffer;
 
@@ -22,7 +22,7 @@ public class EraserTool extends AbstractTool implements  ISizeAndColor {
     }
 
     @Override
-    public void updateSizeAndColor(int size, int color) {
+    public void updateSize(int size) {
 
     }
 }
