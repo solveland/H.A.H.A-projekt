@@ -6,7 +6,7 @@ import java.awt.image.RGBImageFilter;
 
 import static junit.framework.TestCase.assertTrue;
 
-public class test {
+public class BucketTest {
 
     int sizeX = 600;
     int sizeY = 600;

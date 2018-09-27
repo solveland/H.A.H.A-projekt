@@ -73,7 +73,7 @@ fabric.properties
 
 # *.iml
 src/main/main.iml
-src/test/test.iml
+src/BucketTest/BucketTest.iml
 # modules.xml
 # .idea/misc.xml
 # *.ipr
