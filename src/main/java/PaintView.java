@@ -17,9 +17,10 @@ public class PaintView implements ModelObserver {
     public void drawOnUpdate(PaintLayer layer,int minX,int maxX,int minY,int maxY)
     {
         PixelWriter pw = image.getPixelWriter();
-        for (int x = minX; x < maxX; x++)
+        for (int x = minX; x < maxX; x++) {
             for (int y = minY; y < maxY; y++) {
-                pw.setArgb(x, y, layer.getPixel(x,y));
+                pw.setArgb(x, y, layer.getPixel(x, y));
             }
+        }
     }
 }

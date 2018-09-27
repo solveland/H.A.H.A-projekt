@@ -10,12 +10,9 @@ public class PaintController {
     @FXML
     private ImageView canvas;
 
+
     @FXML
     private ColorPicker colorPicker;
-
-    @FXML
-    private Button bucketToolButton;
-
 
     private ImageModel image;
 

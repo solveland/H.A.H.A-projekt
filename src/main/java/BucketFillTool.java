@@ -28,7 +28,7 @@ public class BucketFillTool extends AbstractTool implements IColor {
         flood(xPos,yPos, layer);
     }
 
-    public void flood(int x, int y, PaintLayer layer) {
+    private void flood(int x, int y, PaintLayer layer) {
         Point p = new Point(x,y);
        Queue<Point> Q = new LinkedList<Point>();
        if (oldColor == newColor) return;

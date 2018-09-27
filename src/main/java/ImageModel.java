@@ -11,7 +11,7 @@ public class ImageModel {
     private PencilTool pencilTool;
     private BucketFillTool bucketFillTool;
 
-    int toolSize = 3;
+    int toolSize = 64;
     int color = 0xFF000000;
 
     public ImageModel(int sizeX, int sizeY) {
