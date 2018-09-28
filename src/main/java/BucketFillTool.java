@@ -21,6 +21,7 @@ public class BucketFillTool implements IColor, ITool {
     }
 
     private void flood(int x, int y, PaintLayer layer) {
+
        int oldColor = layer.getPixel(x, y);
        Point p = new Point(x,y);
        Queue<Point> Q = new LinkedList<Point>();

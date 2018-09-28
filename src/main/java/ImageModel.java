@@ -12,7 +12,7 @@ public class ImageModel {
     private BucketFillTool bucketFillTool;
     private EraserTool eraserTool;
 
-    int toolSize = 3;
+    int toolSize = 64;
     int color = 0xFF000000;
 
     public ImageModel(int sizeX, int sizeY) {

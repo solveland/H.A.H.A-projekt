@@ -31,9 +31,9 @@ public class PaintLayer {
         pixelArray[y * width + x] = rgb;
         if (!changed){
             changedMinX = x;
-            changedMaxX = x;
+            changedMaxX = x + 1;
             changedMinY = y;
-            changedMaxY = y;
+            changedMaxY = y + 1;
             changed = true;
         } else {
             if (x < changedMinX){
