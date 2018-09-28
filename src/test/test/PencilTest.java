@@ -36,6 +36,7 @@ public class PencilTest {
         assertTrue(pl.getPixel(5, 5) == 0xFF000000);
         assertTrue(pl.getPixel(4, 4) == 0xFF000000);
         assertTrue(pl.getPixel(6, 6) == 0xFF000000);
+        System.out.println("PencilTest, successful");
 
     }
 
