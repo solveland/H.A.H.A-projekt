@@ -1,28 +1,27 @@
-public class EraserTool extends AbstractTool implements ISize {
-    private int size;
-    private int[] brushBuffer;
+public class EraserTool extends AbstractPaintTool implements ISize {
+
+
 
     public EraserTool(int size){
         this.size = size;
+        this.color = 0xFFFFFFFF;
     }
 
-    @Override
-    void onPress(int x, int y, PaintLayer layer) {
 
-    }
 
-    @Override
-    void onDrag(int x, int y, PaintLayer layer) {
 
-    }
-
-    @Override
-    void onRelease(int x, int y, PaintLayer layer) {
-
-    }
-
-    @Override
     public void updateSize(int size) {
+        this.size = size;
+        updateBrush();
+    }
 
+    /*
+        TODO: This will vary when we have layers, it will make it transcendent if you erase on a layer, but white at the bottom layer.
+        This is up for discussion atm.
+     */
+
+    @Override
+    int getPixelColor(int x, int y) {
+        return brushBuffer[y*(this.size*2 -1) + x];
     }
 }

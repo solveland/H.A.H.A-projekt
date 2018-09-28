@@ -2,34 +2,28 @@ import java.awt.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class BucketFillTool extends AbstractTool implements IColor {
+public class BucketFillTool implements IColor, ITool {
 
-   private int oldColor,newColor;
-
-
+    private int newColor;
 
    public BucketFillTool(int color){
        newColor = color;
    }
 
-    @Override
-    void onRelease(int xPos, int yPos, PaintLayer layer) {
-
-   }
-
-    @Override
-    void onDrag(int xPos, int yPos, PaintLayer layer) {
-
+    public void onPress(int x, int y, PaintLayer layer){
+        flood(x, y, layer);
     }
-
-    @Override
-    void onPress(int xPos, int yPos, PaintLayer layer) {
-        oldColor= layer.getPixel(xPos, yPos);
-        flood(xPos,yPos, layer);
+    public void onDrag(int x, int y, PaintLayer layer){
+        flood(x, y, layer);
+    }
+    public void onRelease(int x, int y, PaintLayer layer){
+        flood(x, y, layer);
     }
 
     private void flood(int x, int y, PaintLayer layer) {
-        Point p = new Point(x,y);
+
+       int oldColor = layer.getPixel(x, y);
+       Point p = new Point(x,y);
        Queue<Point> Q = new LinkedList<Point>();
        if (oldColor == newColor) return;
        if (layer.getPixel(x,y) != oldColor) return;
@@ -58,7 +52,6 @@ public class BucketFillTool extends AbstractTool implements IColor {
 
     }
 
-    @Override
     public void updateColor(int color){
         this.newColor = color;
     }

@@ -77,7 +77,7 @@ public class PaintController {
     }
 
 
-    private void setActiveTool(AbstractTool tool){
+    private void setActiveTool(AbstractPaintTool tool){
         image.setActiveTool(tool);
     }
 
@@ -90,5 +90,8 @@ public class PaintController {
     public void setFillTool (){
         image.setFillTool();
     }
+
+    @FXML
+    public void setEraserTool(){image.setEraserTool();}
 
 }
