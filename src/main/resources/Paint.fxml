@@ -41,7 +41,14 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                           <Button text="-" />
+                           <Button onAction="#setEraserTool">
+                     <graphic>
+                       <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                               <Image url="@eraser.png" />
+                           </image>
+                       </ImageView>
+                     </graphic></Button>
                            <Button text="-" />
                            <Button text="-" />
                            <Button text="-" />

@@ -6,10 +6,11 @@ import java.util.List;
 public class ImageModel {
 
     private PaintLayer layer;
-    private AbstractTool activeTool;
+    private ITool activeTool;
     private List<ModelObserver> observers;
     private PencilTool pencilTool;
     private BucketFillTool bucketFillTool;
+    private EraserTool eraserTool;
 
     int toolSize = 3;
     int color = 0xFF000000;
@@ -18,6 +19,7 @@ public class ImageModel {
         layer = new PaintLayer(sizeX, sizeY);
         pencilTool = new PencilTool(toolSize);
         bucketFillTool = new BucketFillTool(color);
+        eraserTool = new EraserTool(toolSize);
         setActiveTool(bucketFillTool);
         observers = new ArrayList<ModelObserver>();
     }
@@ -59,7 +61,7 @@ public class ImageModel {
         return toolSize;
     }
 
-    public void setActiveTool(AbstractTool activeTool) {
+    public void setActiveTool(ITool activeTool) {
         this.activeTool = activeTool;
         if(activeTool instanceof ISize){
             ((ISize) activeTool).updateSize(toolSize);
@@ -100,5 +102,7 @@ public class ImageModel {
     public void setFillTool (){
         setActiveTool(bucketFillTool);
     }
+
+    public void setEraserTool(){ setActiveTool(eraserTool);}
 
 }
