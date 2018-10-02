@@ -51,7 +51,8 @@ public class PencilTest {
         }
         pt.updateSize(5);
         pt.updateColor(0xFF000000);
-        pt.onPress(x,y, pl);if((x + 10 <= 49) && (y + 10 <= 49)) {
+        pt.onPress(x,y, pl);
+        if((x + 10 <= 49) && (y + 10 <= 49)) {
             assertTrue(pl.getPixel(x, y + 9) == 0xFF00FF00);
             assertTrue(pl.getPixel(x + 9, y) == 0xFF00FF00);
         }
