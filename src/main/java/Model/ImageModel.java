@@ -1,3 +1,6 @@
+package Model;
+
+import Model.BucketFillTool;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;

@@ -1,3 +1,7 @@
+package Model;
+
+import Model.AbstractPaintTool;
+
 public class EraserTool extends AbstractPaintTool implements ISize {
 
 
@@ -22,6 +26,6 @@ public class EraserTool extends AbstractPaintTool implements ISize {
 
     @Override
     int getPixelColor(int x, int y) {
-        return brushBuffer[y*(this.size*2 -1) + x];
+        return 0;
     }
 }
