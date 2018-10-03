@@ -5,8 +5,12 @@
     -darkest-black: rgb(5, 5, 5);
     -mid-gray: rgb(216, 222, 227);
     -layer-highlight: rgb(102, 124, 135);
-    -fx-background-color: -mid-gray;
+    -fx-background-color: -light-black;
     -layer-background: rgb(65, 68, 70);
+}
+
+.scrollPane {
+    -fx-background-color: -dark-highlight;
 }
 
 .tool-bar{
@@ -25,6 +29,8 @@
 .button:hover {
     -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;
 }
+
+
 
 .no-border-scroll {
     -fx-background-color: transparent;

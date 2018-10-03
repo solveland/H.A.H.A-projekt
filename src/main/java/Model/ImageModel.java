@@ -17,12 +17,19 @@ public class ImageModel {
     private PencilTool pencilTool;
     private BucketFillTool bucketFillTool;
     private EraserTool eraserTool;
+    private ZoomTool zoomTool;
     private int width;
     private int height;
     private PaintLayer renderedImage;
 
     private int toolSize = 64;
     private int color = 0xFF000000;
+
+    private double zoomScaleX;
+    private double zoomScaleY;
+    private double oldZoomScaleY;
+    private double oldZoomScaleX;
+
 
     public ImageModel(int sizeX, int sizeY) {
         width = sizeX;
@@ -37,6 +44,7 @@ public class ImageModel {
         pencilTool = new PencilTool(toolSize);
         bucketFillTool = new BucketFillTool(color);
         eraserTool = new EraserTool(toolSize);
+        zoomTool = new ZoomTool();
         setActiveTool(bucketFillTool);
 
         observers = new ArrayList<>();
@@ -121,6 +129,37 @@ public class ImageModel {
         updateModel();
     }
 
+    public double getZoomScaleY(){
+        return zoomScaleY;
+    }
+    public double getZoomScaleX(){
+        return zoomScaleX;
+    }
+    public void setZoomScaleY(double zoomValueY){
+        this.zoomScaleY = zoomValueY;
+    }
+    public void setZoomScaleX(double zoomValueX){
+        this.zoomScaleX = zoomValueX;
+    }
+
+    public double getOldZoomScaleY() {
+        return oldZoomScaleY;
+    }
+
+    public void setOldZoomScaleY(double oldZoomValueY) {
+        this.oldZoomScaleY = oldZoomValueY;
+    }
+
+    public double getOldZoomScaleX() {
+        return oldZoomScaleX;
+    }
+
+    public void setOldZoomScaleX(double oldZoomValueX) {
+        this.oldZoomScaleX = oldZoomValueX;
+    }
+
+    ////////////////////////////////////////////SET_TOOLS_START/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public void setPencil (){
         setActiveTool(pencilTool);
     }
@@ -131,6 +170,10 @@ public class ImageModel {
 
     public void setEraserTool(){ setActiveTool(eraserTool); }
 
+    public void setZoomTool(){setActiveTool(zoomTool);}
+
+
+    ////////////////////////////////////////////LAYERS_START/////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void createLayer(int bgColor) {
         int index = 0;
 
@@ -174,7 +217,6 @@ public class ImageModel {
         if (!layerList.isEmpty()) {
             return layerList.indexOf(activeLayer);
         }
-
         return -1;
     }
 
@@ -254,5 +296,9 @@ public class ImageModel {
         layer.toggleVisible();
         updateRenderedImage();
     }
+
+    /////////////////////////////////////////////////LAYERS_END///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 }

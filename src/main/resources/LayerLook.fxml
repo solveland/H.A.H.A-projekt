@@ -5,9 +5,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<fx:root fx:id="background" onMouseClicked="#selectLayer" prefHeight="36.0" prefWidth="152.0" styleClass="layer-item" stylesheets="@Stylesheet.css" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="background" onMouseClicked="#selectLayer" prefHeight="36.0" prefWidth="179.0" styleClass="layer-item" stylesheets="@Stylesheet.css" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TextField fx:id="layerName" layoutX="34.0" layoutY="7.0" prefHeight="18.0" prefWidth="106.0" styleClass="layerTextField" text="layerName">
+      <TextField fx:id="layerName" layoutX="34.0" layoutY="7.0" prefHeight="23.0" prefWidth="128.0" styleClass="layerTextField" text="layerName" AnchorPane.bottomAnchor="4.800000000000001" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="7.0">
          <font>
             <Font size="10.0" />
          </font>

@@ -2,21 +2,31 @@ import Model.AbstractPaintTool;
 import Model.ImageModel;
 import Model.PaintLayer;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+import java.awt.*;
 import java.util.List;
 
 public class PaintController implements LayerObserver {
 
-
+    @FXML
+    private ScrollPane scrollPane;
     @FXML
     private ImageView canvas;
+
+    @FXML
+    private BorderPane borderPane;
 
     @FXML
     private ColorPicker colorPicker;
@@ -54,21 +64,23 @@ public class PaintController implements LayerObserver {
         });
 
         canvas.setOnMouseReleased(e -> {
-            int x = (int) Math.floor(e.getX());
-            int y = (int) Math.floor(e.getY());
-            if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
-                return;
-            }
-            image.onRelease(x, y);}
-            );
+                    int x = (int) Math.floor(e.getX());
+                    int y = (int) Math.floor(e.getY());
+                    if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
+                        return;
+                    }
+                    image.onRelease(x, y);
+                }
+        );
 
         canvas.setOnMousePressed(e -> {
-            int x = (int) Math.floor(e.getX());
-            int y = (int) Math.floor(e.getY());
-            if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
-                return;
-            }
-            image.onPress(x, y);}
+                    int x = (int) Math.floor(e.getX());
+                    int y = (int) Math.floor(e.getY());
+                    if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
+                        return;
+                    }
+                    image.onPress(x, y);
+                }
         );
 
 
@@ -81,26 +93,34 @@ public class PaintController implements LayerObserver {
             canvas.requestFocus();
         });
         clearCanvas();
+
     }
 
     //Temporär testfunktion -> låter den vara image.getimage()....
-@FXML
-    public void clearCanvas () {
+    @FXML
+    public void clearCanvas() {
         image.clearLayer();
     }
 
     @FXML
-    public void setPencil (){
+    public void setPencil() {
         image.setPencil();
     }
 
     @FXML
-    public void setFillTool (){
+    public void setFillTool() {
         image.setFillTool();
     }
 
     @FXML
-    public void setEraserTool(){image.setEraserTool();}
+    public void setEraserTool() {
+        image.setEraserTool();
+    }
+
+    @FXML
+    public void setZoomTool() {
+        image.setZoomTool();
+    }
 
     private void createLayer(int bgColor, String name) {
         int index = 0;
@@ -149,8 +169,7 @@ public class PaintController implements LayerObserver {
 
     // Deselects all selected layers
     private void deselectLayers() {
-        for (Node n : layerViewList)
-        {
+        for (Node n : layerViewList) {
             if (n.getClass().equals(LayerItem.class)) {
                 LayerItem i = (LayerItem) n;
                 if (i.isSelected()) {
@@ -166,7 +185,7 @@ public class PaintController implements LayerObserver {
     }
 
     private int indexOfSelectedItem() {
-        for (Node n : layerViewList){
+        for (Node n : layerViewList) {
             LayerItem i = (LayerItem) n;
             if (i.isSelected()) {
                 return layerViewList.indexOf(i);
@@ -184,9 +203,79 @@ public class PaintController implements LayerObserver {
 
     // Listens to every layer for a layer toggle
     @Override
-    public void visibleLayerToggle(PaintLayer layer)
-    {
+    public void visibleLayerToggle(PaintLayer layer) {
         image.toggleLayerVisible(layer);
+    }
+
+
+    private static final double MAX_SCALE = 15.0d;
+    private static final double MIN_SCALE = 0.1d;
+
+    @FXML
+    public void zoom( boolean setZoom) {
+        double delta = 1.05;
+        image.setZoomScaleX(canvas.getScaleX());
+        image.setZoomScaleY(canvas.getScaleY());
+        image.setOldZoomScaleX(image.getZoomScaleX());
+        image.setOldZoomScaleY(image.getZoomScaleY());
+
+        double scaleY = image.getZoomScaleY();
+        double scaleX = image.getZoomScaleX();
+
+        if(setZoom)
+        {
+            scaleY *= delta;
+            scaleX *= delta;
+        } else {
+            scaleY /= delta;
+            scaleX /= delta;
+        }
+        scaleY = clamp(scaleY, MIN_SCALE, MAX_SCALE);
+        scaleX = clamp(scaleX, MIN_SCALE, MAX_SCALE);
+
+        double fy = (image.getZoomScaleY() / image.getOldZoomScaleY()) - 1;
+        double fx = (image.getZoomScaleX() / image.getOldZoomScaleX()) - 1;
+
+        double dx = (scrollPane.getLayoutX() - (canvas.getBoundsInParent().getWidth() / 2 + canvas.getBoundsInParent().getMinX()));
+        double dy = (scrollPane.getLayoutY() - (canvas.getBoundsInParent().getHeight() / 2 + canvas.getBoundsInParent().getMinY()));
+
+        canvas.setScaleY(scaleY);
+        canvas.setScaleX(scaleX);
+
+        canvas.setTranslateY(canvas.getTranslateY()-fy*dy);
+        canvas.setTranslateX(canvas.getTranslateX()-fx*dx);
+    }
+
+    @FXML
+    public void zoomIn(){
+        zoom(true);
+    }
+    @FXML
+    public void zoomOut(){
+        zoom(false);
+    }
+
+    private void setZoomPercent (int percent){
+        canvas.setScaleY(percent);
+        canvas.setScaleX(percent);
+    }
+
+    @FXML
+    public void zoomHundred(){
+        setZoomPercent(1);
+    }
+
+
+
+    public static double clamp( double value, double min, double max) {
+
+        if( Double.compare(value, min) < 0)
+            return min;
+
+        if( Double.compare(value, max) > 0)
+            return max;
+
+        return value;
     }
 
 }
