@@ -1,8 +1,8 @@
+import Model.BucketFillTool;
+import Model.PaintLayer;
 import org.junit.Test;
-import org.w3c.dom.css.RGBColor;
 
 import java.awt.*;
-import java.awt.image.RGBImageFilter;
 
 import static junit.framework.TestCase.assertTrue;
 

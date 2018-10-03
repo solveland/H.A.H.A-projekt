@@ -1,4 +1,6 @@
-public abstract class AbstractPaintTool implements ITool{
+package Model;
+
+public abstract class AbstractPaintTool implements ITool {
     protected int[] brushBuffer;
     protected int size;
     protected int color;

@@ -1,3 +1,9 @@
+package Model;
+
+import Model.AbstractPaintTool;
+import Model.IColor;
+import Model.ISize;
+
 public class PencilTool extends AbstractPaintTool implements ISize, IColor {
 
 

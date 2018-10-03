@@ -1,3 +1,6 @@
+package Model;
+
+import Model.BucketFillTool;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
@@ -18,8 +21,8 @@ public class ImageModel {
     private int height;
     private PaintLayer renderedImage;
 
-    int toolSize = 64;
-    int color = 0xFF000000;
+    private int toolSize = 64;
+    private int color = 0xFF000000;
 
     public ImageModel(int sizeX, int sizeY) {
         width = sizeX;

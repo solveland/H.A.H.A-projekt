@@ -3,6 +3,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import Model.PaintLayer;
 
 import java.io.IOException;
 import java.util.ArrayList;

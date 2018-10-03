@@ -1,3 +1,7 @@
+import Model.AbstractPaintTool;
+import Model.ImageModel;
+import Model.PaintLayer;
+
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;

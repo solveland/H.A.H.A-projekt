@@ -1,3 +1,5 @@
+import Model.ModelObserver;
+import Model.PaintLayer;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 
@@ -14,7 +16,7 @@ public class PaintView implements ModelObserver {
     }
 
     @Override
-    public void drawOnUpdate(PaintLayer layer,int minX,int maxX,int minY,int maxY)
+    public void drawOnUpdate(PaintLayer layer, int minX, int maxX, int minY, int maxY)
     {
         PixelWriter pw = image.getPixelWriter();
         for (int x = minX; x < maxX; x++) {

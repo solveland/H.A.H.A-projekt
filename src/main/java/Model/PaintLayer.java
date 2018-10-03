@@ -1,3 +1,5 @@
+package Model;
+
 public class PaintLayer {
 
     private int[] pixelArray;
