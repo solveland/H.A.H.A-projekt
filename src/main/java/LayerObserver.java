@@ -1,4 +1,7 @@
-package PACKAGE_NAME;
-
 public interface LayerObserver {
+
+    void selectLayerUpdate(PaintLayer layer);
+
+    void visibleLayerToggle(PaintLayer layer);
+
 }

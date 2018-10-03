@@ -4,24 +4,44 @@
     -dark-black: rgb(39, 40, 40);
     -darkest-black: rgb(5, 5, 5);
     -mid-gray: rgb(216, 222, 227);
+    -layer-highlight: rgb(102, 124, 135);
     -fx-background-color: -mid-gray;
+    -layer-background: rgb(65, 68, 70);
 }
 
 .tool-bar{
     -fx-base: -dark-black;
-    -fx-effect: dropshadow(two-pass-box,black,5,.2,0,0);
+    -fx-background-radius: 0 5 5 0;
 }
 
 .hud{
     -fx-base: -dark-black;
-    -fx-effect: dropshadow(two-pass-box,black,5,.2,0,0);
 }
 
+.button {
+    -fx-background-color: transparent;
+}
 
+.button:hover {
+    -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;
+}
 
+.no-border-scroll {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+}
 
+.layerTextField {
+    -fx-background-color: transparent;
+}
 
+.layerTextField:focused {
+    -fx-background-color: white, transparent, -dark-black;
+}
 
-
+.layer-item{
+    -fx-border-color: -layer-background;
+    -fx-border-color: -dark-black;
+}
 
 }

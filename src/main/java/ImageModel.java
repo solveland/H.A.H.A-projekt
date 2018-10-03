@@ -1,27 +1,42 @@
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ImageModel {
 
-    private PaintLayer layer;
+    private List<PaintLayer> layerList;
+    private PaintLayer activeLayer;
     private ITool activeTool;
     private List<ModelObserver> observers;
     private PencilTool pencilTool;
     private BucketFillTool bucketFillTool;
     private EraserTool eraserTool;
+    private int width;
+    private int height;
+    private PaintLayer renderedImage;
 
     int toolSize = 64;
     int color = 0xFF000000;
 
     public ImageModel(int sizeX, int sizeY) {
-        layer = new PaintLayer(sizeX, sizeY);
+        width = sizeX;
+        height = sizeY;
+
+        activeLayer = null;
+
+        layerList = new LinkedList<>();
+
+        renderedImage = new PaintLayer(sizeX, sizeY, 0);
+
         pencilTool = new PencilTool(toolSize);
         bucketFillTool = new BucketFillTool(color);
         eraserTool = new EraserTool(toolSize);
         setActiveTool(bucketFillTool);
-        observers = new ArrayList<ModelObserver>();
+
+        observers = new ArrayList<>();
     }
 
     public void updateColor(Color color){
@@ -39,22 +54,28 @@ public class ImageModel {
     }
 
     public void onDrag(int x, int y){
-        activeTool.onDrag(x, y, layer);
-        updateModel();
+        if (!(activeLayer == null)) {
+            activeTool.onDrag(x, y, activeLayer);
+            updateModel();
+        }
     }
 
     public void onRelease (int x, int y){
-        activeTool.onRelease(x,y,layer);
-        updateModel();
+        if (!(activeLayer == null)) {
+            activeTool.onRelease(x, y, activeLayer);
+            updateModel();
+        }
     }
 
     public void onPress (int x, int y){
-        activeTool.onPress(x,y,layer);
-        updateModel();
+        if (!(activeLayer == null)) {
+            activeTool.onPress(x, y, activeLayer);
+            updateModel();
+        }
     }
 
-    public PaintLayer getWritableLayer() {
-        return layer;
+    public List<PaintLayer> getLayerList() {
+        return layerList;
     }
 
     public int getToolSize() {
@@ -80,18 +101,20 @@ public class ImageModel {
     }
 
     public void updateModel() {
-        if (layer.isChanged()){
-            for (ModelObserver o : observers) {
-                o.drawOnUpdate(layer, layer.getChangedMinX(), layer.getChangedMaxX(), layer.getChangedMinY(), layer.getChangedMaxY());
-            }
-            layer.resetChangeTracker();
-        }
+        if (!layerList.isEmpty() && activeLayer.isChanged())
+            updateRenderedRect();
 
+        if (renderedImage.isChanged()) {
+            for (ModelObserver o : observers) {
+                o.drawOnUpdate(renderedImage, renderedImage.getChangedMinX(), renderedImage.getChangedMaxX(), renderedImage.getChangedMinY(), renderedImage.getChangedMaxY());
+            }
+            renderedImage.resetChangeTracker();
+        }
     }
 
     public void clearLayer()
     {
-        layer.clearLayer();
+        activeLayer.clearLayer();
         updateModel();
     }
 
@@ -103,6 +126,130 @@ public class ImageModel {
         setActiveTool(bucketFillTool);
     }
 
-    public void setEraserTool(){ setActiveTool(eraserTool);}
+    public void setEraserTool(){ setActiveTool(eraserTool); }
+
+    public void createLayer(int bgColor) {
+        int index = 0;
+
+        if (!layerList.isEmpty())
+            index = indexOfActiveLayer();
+
+        PaintLayer newLayer = new PaintLayer(width, height, bgColor);
+        layerList.add(index, newLayer);
+        setActiveLayer(newLayer);
+    }
+
+    // Deletes the active layer and selects a new active layer or null if no layers exist.
+    public void deleteActiveLayer(){
+        if (!layerList.isEmpty()) {
+            int index = indexOfActiveLayer();
+
+            clearLayer();
+            layerList.remove(index);
+
+            if (!layerList.isEmpty()) {
+                if (index > 0)
+                    index -= 1;
+
+                activeLayer = layerList.get(index);
+            } else {
+                activeLayer = null;
+                renderTransparent();
+            }
+        }
+    }
+
+    public void setActiveLayer(PaintLayer layer) {
+        activeLayer = layer;
+    }
+
+    public PaintLayer getActiveLayer() {
+        return activeLayer;
+    }
+
+    private int indexOfActiveLayer() {
+        if (!layerList.isEmpty()) {
+            return layerList.indexOf(activeLayer);
+        }
+
+        return -1;
+    }
+
+    public void updateRenderedImage() {
+        // Clear the image before we draw new pixels.
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                renderedImage.setPixel(x, y, 0);
+            }
+        }
+
+        if (!layerList.isEmpty()) {
+            for (PaintLayer l : reversedLayerList()) {
+                if (l.isVisible()) {
+                    for (int x = 0; x < l.getWidth(); x++) {
+                        for (int y = 0; y < l.getHeight(); y++) {
+                            if (l.getPixel(x, y) != 0)
+                                renderedImage.setPixel(x, y, l.getPixel(x, y));
+                        }
+                    }
+                }
+            }
+        }
+        updateModel();
+    }
+
+    private void updateRenderedRect() {
+        int minX = activeLayer.getChangedMinX();
+        int maxX = activeLayer.getChangedMaxX();
+        int minY = activeLayer.getChangedMinY();
+        int maxY = activeLayer.getChangedMaxY();
+
+        // Clear the rectangle before we draw new pixels.
+        for (int x = minX; x < maxX; x++) {
+            for (int y = minY; y < maxY; y++) {
+                renderedImage.setPixel(x, y, 0);
+            }
+        }
+
+        // Draws the from bottom layer to top layer to make a top layer render over the bottom layer.
+        for (PaintLayer l : reversedLayerList()) {
+            if (l.isVisible()) {
+                for (int x = minX; x < maxX; x++) {
+                    for (int y = minY; y < maxY; y++) {
+                        if ((l.getPixel(x, y) != 0))
+                            renderedImage.setPixel(x, y, l.getPixel(x, y));
+                    }
+                }
+            }
+        }
+
+        activeLayer.resetChangeTracker();
+    }
+
+    private void renderTransparent() {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                renderedImage.setPixel(x, y, 0);
+            }
+        }
+
+        updateModel();
+    }
+
+    private List<PaintLayer> reversedLayerList() {
+        LinkedList<PaintLayer> reversedList = new LinkedList<>();
+
+        for (PaintLayer l : layerList) {
+            reversedList.push(l);
+        }
+
+        return reversedList;
+    }
+
+    // Toggles a layer and updates the view
+    public void toggleLayerVisible(PaintLayer layer) {
+        layer.toggleVisible();
+        updateRenderedImage();
+    }
 
 }

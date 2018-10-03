@@ -7,9 +7,6 @@ public class EraserTool extends AbstractPaintTool implements ISize {
         this.color = 0xFFFFFFFF;
     }
 
-
-
-
     public void updateSize(int size) {
         this.size = size;
         updateBrush();

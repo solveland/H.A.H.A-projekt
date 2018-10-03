@@ -5,19 +5,22 @@ public class PaintLayer {
     private int width;
     private int changedMinX,changedMinY,changedMaxX,changedMaxY;
     private boolean changed = false;
+    private boolean visible;
+    private int bgColor;
 
-    public PaintLayer(int sizeX, int sizeY) {
+    public PaintLayer(int sizeX, int sizeY, int bgColor) {
         height = sizeY;
         width = sizeX;
         pixelArray = new int[sizeX * sizeY];
-        // Temporary initialize layer with white pixels since it is used as a background for the moment
+        this.bgColor = bgColor;
+        visible = true;
+
+        if (bgColor != 0)
         for (int i = 0; i < sizeX * sizeY; i++)
         {
-            pixelArray[i] = 0xFFFFFFFF;
+            pixelArray[i] = bgColor;
         }
     }
-
-
 
     public int getWidth() {
         return width;
@@ -57,7 +60,7 @@ public class PaintLayer {
     // Temporary clear
     public void clearLayer() {
         for (int i = 0; i < height * width; i++) {
-            pixelArray[i] = 0xFFFFFFFF;
+            pixelArray[i] = bgColor;
         }
         changed = true;
         changedMinX = 0;
@@ -92,5 +95,11 @@ public class PaintLayer {
 
     public boolean isChanged() {
         return changed;
+    }
+
+    public boolean isVisible() { return visible; }
+
+    public void toggleVisible() {
+        visible = !visible;
     }
 }
