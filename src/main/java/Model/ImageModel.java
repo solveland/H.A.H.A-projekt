@@ -72,6 +72,12 @@ public class ImageModel {
 
     }
 
+    public void updateToolShape(String s){
+        if(activeTool instanceof AbstractPaintTool){
+            ((AbstractPaintTool) activeTool).updateShape(s);
+        }
+    }
+
     public void updateSize(int size){
         this.toolSize = size;
         if(activeTool instanceof ISize){

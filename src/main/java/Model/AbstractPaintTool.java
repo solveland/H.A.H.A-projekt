@@ -4,6 +4,8 @@ public abstract class AbstractPaintTool implements ITool {
     protected int[] brushBuffer;
     protected int size;
     protected int color;
+    public enum Shape { CIRCLE, SQUARE }
+    private Shape shape = Shape.CIRCLE;
     /* TODO: When we have a broader understanding of what the tools will require we have to move functionality to this class
      */
     public void onPress(int x, int y, PaintLayer layer){
@@ -42,17 +44,34 @@ public abstract class AbstractPaintTool implements ITool {
         int brushDiameter = size * 2 - 1;
         brushBuffer = new int[brushDiameter * brushDiameter];
         int midPoint = size -1;
-        for(int y = 0; y < brushDiameter;y++){
-            for(int x= 0; x < brushDiameter; x++){
-                if (Math.sqrt((x-midPoint)*(x-midPoint)+(y-midPoint)*(y-midPoint)) > size -0.5){
-                    brushBuffer[y*brushDiameter + x] = 0;
-                } else {
-                    brushBuffer[y*brushDiameter + x] = color;
-                }
+        if(shape == Shape.CIRCLE) {
+            for (int y = 0; y < brushDiameter; y++) {
+                for (int x = 0; x < brushDiameter; x++) {
+                    if (Math.sqrt((x - midPoint) * (x - midPoint) + (y - midPoint) * (y - midPoint)) > size - 0.5) {
+                        brushBuffer[y * brushDiameter + x] = 0;
+                    } else {
+                        brushBuffer[y * brushDiameter + x] = color;
+                    }
 
+                }
+            }
+        }else if(shape == Shape.SQUARE){
+            for (int y = 0; y < brushDiameter; y++) {
+                for (int x = 0; x < brushDiameter; x++) {
+                    brushBuffer[y * brushDiameter + x] = color;
+                }
             }
         }
     }
+
+    public void updateShape(String shape){
+        if(shape.equals("Circle"))
+            this.shape = Shape.CIRCLE;
+        else if(shape.equals("Square"))
+            this.shape = Shape.SQUARE;
+        updateBrush();
+    }
+
 
     abstract int getPixelColor(int x, int y);
 
