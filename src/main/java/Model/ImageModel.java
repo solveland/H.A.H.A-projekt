@@ -12,19 +12,11 @@ public class ImageModel {
 
     private List<PaintLayer> layerList;
     private PaintLayer activeLayer;
-    private ITool activeTool;
     private List<ModelObserver> observers;
-    private PencilTool pencilTool;
-    private BucketFillTool bucketFillTool;
-    private EraserTool eraserTool;
-    private ZoomTool zoomTool;
+
     private int width;
     private int height;
     private PaintLayer renderedImage;
-
-    private int toolSize = 5;
-    private int color = 0xFF000000;
-    private int opacity = 0xFF000000;
 
     private double zoomScaleX;
     private double zoomScaleY;
@@ -42,48 +34,9 @@ public class ImageModel {
 
         renderedImage = new PaintLayer(sizeX, sizeY, 0);
 
-        pencilTool = new PencilTool(toolSize);
-        bucketFillTool = new BucketFillTool(color);
-        eraserTool = new EraserTool(toolSize);
-        zoomTool = new ZoomTool();
-        setActiveTool(bucketFillTool);
-
         observers = new ArrayList<>();
     }
-    private void updateColor(){
-        if(activeTool instanceof IColor){
-            ((IColor) activeTool).updateColor(this.color);
-        }
-    }
 
-    public void updateColor(Color color){
-        this.color = opacity | ((int)(color.getRed() * 255) << 16) | ((int)(color.getGreen() * 255) << 8) | ((int)(color.getBlue() * 255));
-        if(activeTool instanceof IColor){
-            ((IColor) activeTool).updateColor(this.color);
-        }
-    }
-
-    public void updateOpacity(double alpha){
-        int temp = (int)(0xFF * alpha);
-        temp = temp << 24;
-        this.opacity = temp & 0xFF000000;
-        this.color = (this.color & 0x00FFFFFF) | this.opacity;
-        updateColor();
-
-    }
-
-    public void updateToolShape(String s){
-        if(activeTool instanceof AbstractPaintTool){
-            ((AbstractPaintTool) activeTool).updateShape(s);
-        }
-    }
-
-    public void updateSize(int size){
-        this.toolSize = size;
-        if(activeTool instanceof ISize){
-            ((ISize) activeTool).updateSize(toolSize);
-        }
-    }
 
     public void setImageSize(int width, int height){
         this.width = width;
@@ -91,51 +44,16 @@ public class ImageModel {
         renderedImage = new PaintLayer(width,height,0);
     }
 
-    public void onDrag(int x, int y){
-        if (!(activeLayer == null)) {
-            activeTool.onDrag(x, y, activeLayer);
-            updateModel();
-        }
-    }
 
-    public void onRelease (int x, int y){
-        if (!(activeLayer == null)) {
-            activeTool.onRelease(x, y, activeLayer);
-            updateModel();
-        }
-    }
-
-    public void onPress (int x, int y){
-        if (!(activeLayer == null)) {
-            activeTool.onPress(x, y, activeLayer);
-            updateModel();
-        }
-    }
 
     public List<PaintLayer> getLayerList() {
         return layerList;
     }
 
-    public int getToolSize() {
-        return toolSize;
-    }
 
-    public void setActiveTool(ITool activeTool) {
-        this.activeTool = activeTool;
-        if(activeTool instanceof ISize){
-            ((ISize) activeTool).updateSize(toolSize);
-        }
-        if(activeTool instanceof IColor){
-            ((IColor) activeTool).updateColor(color);
-        }
-    }
 
     public void addObserver(ModelObserver observer) {
         observers.add(observer);
-    }
-
-    public void removeObserver(ModelObserver observer) {
-        observers.remove(observer);
     }
 
     public void updateModel() {
@@ -155,9 +73,6 @@ public class ImageModel {
         activeLayer.clearLayer();
         updateModel();
     }
-
-
-
 
 
     public double getZoomScaleY(){
@@ -188,20 +103,6 @@ public class ImageModel {
     public void setOldZoomScaleX(double oldZoomValueX) {
         this.oldZoomScaleX = oldZoomValueX;
     }
-
-    ////////////////////////////////////////////SET_TOOLS_START/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public void setPencil (){
-        setActiveTool(pencilTool);
-    }
-
-    public void setFillTool (){
-        setActiveTool(bucketFillTool);
-    }
-
-    public void setEraserTool(){ setActiveTool(eraserTool); }
-
-    public void setZoomTool(){setActiveTool(zoomTool);}
 
 
     ////////////////////////////////////////////LAYERS_START/////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -240,6 +141,7 @@ public class ImageModel {
     public void setActiveLayer(PaintLayer layer) {
         activeLayer = layer;
     }
+
 
     public void deleteAllLayers(){
         layerList.clear();

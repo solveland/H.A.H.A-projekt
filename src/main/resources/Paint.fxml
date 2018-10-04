@@ -25,7 +25,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane id="background" fx:id="borderPane" prefHeight="600" prefWidth="600" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PaintController">
+<BorderPane id="background" fx:id="borderPane" prefHeight="800" prefWidth="600" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PaintController">
 
     <left>
             <ToolBar fx:id="toolBar" prefHeight="371.0" prefWidth="57.0" BorderPane.alignment="CENTER">
@@ -126,7 +126,9 @@
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#zoomIn" text="Zoom In" />
                   <MenuItem mnemonicParsing="false" onAction="#zoomOut" text="Zoom Out" />
+                  <MenuItem mnemonicParsing="false" onAction="#zoomFifty" text="Zoom 50%" />
                   <MenuItem mnemonicParsing="false" onAction="#zoomHundred" text="Zoom 100%" />
+                  <MenuItem mnemonicParsing="false" onAction="#zoomTwoHundred" text="Zoom 200%" />
               </items>
             </Menu>
             </menus>
@@ -188,7 +190,7 @@
    <center>
       <ScrollPane id="background" fx:id="scrollPane" fitToHeight="true" fitToWidth="true" minViewportHeight="600.0" minViewportWidth="600.0" prefViewportHeight="600.0" prefViewportWidth="600.0">
          <content>
-            <StackPane styleClass="scrollPane" BorderPane.alignment="CENTER">
+            <StackPane fx:id="stackPane" styleClass="scrollPane" BorderPane.alignment="CENTER">
                <children>
                   <ToolBar fx:id="brushBar" prefHeight="40.0" prefWidth="200.0" style="-fx-spacing: 10px;" StackPane.alignment="TOP_LEFT">
                      <items>
