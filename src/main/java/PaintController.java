@@ -1,10 +1,13 @@
 import Model.*;
 
+import javafx.event.EventHandler;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.ColorPicker;
+import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import javafx.scene.layout.FlowPane;
@@ -12,6 +15,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 import javafx.stage.FileChooser;
+import javafx.util.Callback;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -35,7 +39,24 @@ public class PaintController implements LayerObserver {
     @FXML
     private FlowPane layerView;
 
+
     private ITool activeTool;
+
+    @FXML
+    private Spinner<Integer> sizeSpinner;
+
+    @FXML
+    private ToolBar brushBar;
+
+    @FXML
+    private Slider opacitySlider;
+
+    @FXML
+    private Label opacityLabel;
+
+    @FXML
+    private ComboBox<String> shapeBox;
+
 
     private List<Node> layerViewList;
 
@@ -52,6 +73,7 @@ public class PaintController implements LayerObserver {
 
     private int toolSize = 64;
     private int color = 0xFF000000;
+    private int opacity = 0xFF000000;
 
     public void initialize() {
         image = new ImageModel(600, 600);
@@ -71,7 +93,6 @@ public class PaintController implements LayerObserver {
         // Initialize project with white background layer.
         createLayer(0xFFFFFFFF, "Background");
         image.updateRenderedImage();
-
         canvas.setImage(view.getImage());
         canvas.setOnMouseDragged(e -> {
             int x = (int) Math.floor(e.getX());
@@ -112,6 +133,7 @@ public class PaintController implements LayerObserver {
     });
 
 
+
         //Color Palette
         colorPicker.setValue(Color.BLACK);
 
@@ -122,6 +144,15 @@ public class PaintController implements LayerObserver {
         });
         clearCanvas();
 
+        //Toolbar
+        sizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 5) );
+        sizeSpinner.setEditable(true);
+        sizeSpinner.valueProperty().addListener((obs, oldvalue, newvalue) -> updateSize(newvalue));
+        opacitySlider.valueProperty().addListener((obs, oldvalue, newvalue) -> updateOpacity(newvalue.doubleValue()));
+        brushBar.setVisible(false);
+        shapeBox.getItems().addAll("Circle", "Square");
+        populateShapeComboBox();
+        shapeBox.valueProperty().addListener((obs, oldvalue, newvalue) -> updateToolShape(newvalue));
     }
 
     public void onDrag(int x, int y){
@@ -155,17 +186,39 @@ public class PaintController implements LayerObserver {
         }
     }
 
+    public void updateSize(int size){
+        this.toolSize = size;
+        if(activeTool instanceof ISize){
+            ((ISize) activeTool).updateSize(toolSize);
+        }
+    }
+
     public void updateColor(Color color){
-        this.color = 0xFF000000 | ((int)(color.getRed() * 255) << 16) | ((int)(color.getGreen() * 255) << 8) | ((int)(color.getBlue() * 255));
+        this.color = opacity | ((int)(color.getRed() * 255) << 16) | ((int)(color.getGreen() * 255) << 8) | ((int)(color.getBlue() * 255));
         if(activeTool instanceof IColor){
             ((IColor) activeTool).updateColor(this.color);
         }
     }
 
-    public void updateSize(int size){
-        this.toolSize = size;
-        if(activeTool instanceof ISize){
-            ((ISize) activeTool).updateSize(toolSize);
+
+    private void updateColor(){
+        if(activeTool instanceof IColor){
+            ((IColor) activeTool).updateColor(this.color);
+        }
+    }
+
+    public void updateOpacity(double alpha){
+        int temp = (int)(0xFF * alpha);
+        temp = temp << 24;
+        this.opacity = temp & 0xFF000000;
+        this.color = (this.color & 0x00FFFFFF) | this.opacity;
+        updateColor();
+
+    }
+
+    public void updateToolShape(String s){
+        if(activeTool instanceof AbstractPaintTool){
+            ((AbstractPaintTool) activeTool).updateShape(s);
         }
     }
 
@@ -210,22 +263,39 @@ public class PaintController implements LayerObserver {
 
     @FXML
     public void setPencil() {
+
         setActiveTool(pencilTool);
+        opacitySlider.setVisible(true);
+        opacityLabel.setVisible(true);
+        brushBar.setVisible(true);
     }
 
     @FXML
     public void setFillTool() {
+
         setActiveTool(bucketFillTool);
+        brushBar.setVisible(false);
+        opacitySlider.setValue(1);
     }
 
     @FXML
     public void setEraserTool() {
+
         setActiveTool(eraserTool);
+        brushBar.setVisible(true);
+        opacitySlider.setVisible(false);
+        opacityLabel.setVisible(false);
+        opacitySlider.setValue(1);
     }
 
     @FXML
     public void setZoomTool() {
         activeTool = zoomTool;
+        brushBar.setVisible(false);
+        opacitySlider.setValue(1);
+        layerViewList.clear();
+        image.deleteAllLayers();
+        createLayer(0xFF00FF00,"Background");
     }
 
     private void createLayer(int bgColor, String name) {
@@ -398,6 +468,50 @@ public class PaintController implements LayerObserver {
         return value;
     }
 
-    ////////////////////////////////////////// ZOOM ///////////////////////////////////////////////
+    private void populateShapeComboBox() {
+        Callback<ListView<String>, ListCell<String>> cellFactory = new Callback<ListView<String>, ListCell<String>>() {
+
+            @Override
+            public ListCell<String> call(ListView<String> p) {
+
+                return new ListCell<String>() {
+
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        setText(item);
+
+                        if (item == null || empty) {
+                            setGraphic(null);
+                        } else {
+                            Image icon = null;
+                            String iconPath;
+                            try {
+                                switch (item) {
+
+                                    case "Circle":
+                                        iconPath = "circle.png";
+                                        icon = new Image(getClass().getClassLoader().getResourceAsStream(iconPath));
+                                        break;
+                                    case "Square":
+                                        iconPath = "square.png";
+                                        icon = new Image(getClass().getClassLoader().getResourceAsStream(iconPath));
+                                        break;
+                                }
+                            } catch (NullPointerException ex) {
+                            }
+                            ImageView iconImageView = new ImageView(icon);
+                            iconImageView.setFitHeight(12);
+                            iconImageView.setPreserveRatio(true);
+                            setGraphic(iconImageView);
+                        }
+                    }
+                };
+            }
+        };
+        shapeBox.setButtonCell(cellFactory.call(null));
+        shapeBox.setCellFactory(cellFactory);
+    }
 
 }
