@@ -1,26 +1,22 @@
-import Model.AbstractPaintTool;
-import Model.ImageModel;
-import Model.PaintLayer;
+import Model.*;
 
-import javafx.event.EventHandler;
+
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.BorderPane;
+
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+
 import javafx.stage.FileChooser;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-import java.awt.*;
 import java.util.List;
 
 public class PaintController implements LayerObserver {
@@ -31,13 +27,15 @@ public class PaintController implements LayerObserver {
     private ImageView canvas;
 
     @FXML
-    private BorderPane borderPane;
+    private StackPane stackPane;
 
     @FXML
     private ColorPicker colorPicker;
 
     @FXML
     private FlowPane layerView;
+
+    private ITool activeTool;
 
     private List<Node> layerViewList;
 
@@ -47,10 +45,26 @@ public class PaintController implements LayerObserver {
 
     private int newLayerIndex;
 
+    private PencilTool pencilTool;
+    private BucketFillTool bucketFillTool;
+    private EraserTool eraserTool;
+    private ZoomTool zoomTool;
+
+    private int toolSize = 64;
+    private int color = 0xFF000000;
+
     public void initialize() {
         image = new ImageModel(600, 600);
         view = new PaintView(600, 600);
         image.addObserver(view);
+
+        pencilTool = new PencilTool(toolSize);
+        bucketFillTool = new BucketFillTool(color);
+        eraserTool = new EraserTool(toolSize);
+        zoomTool = new ZoomTool();
+
+        setActiveTool(bucketFillTool);
+
 
         layerViewList = layerView.getChildren();
 
@@ -65,7 +79,7 @@ public class PaintController implements LayerObserver {
             if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
                 return;
             }
-            image.onDrag(x, y);
+            onDrag(x, y);
         });
 
         canvas.setOnMouseReleased(e -> {
@@ -74,7 +88,7 @@ public class PaintController implements LayerObserver {
                     if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
                         return;
                     }
-                    image.onRelease(x, y);
+                    onRelease(x, y);
                 }
         );
 
@@ -84,9 +98,18 @@ public class PaintController implements LayerObserver {
                     if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
                         return;
                     }
-                    image.onPress(x, y);
+                    onPress(x, y);
                 }
         );
+
+        stackPane.setOnMousePressed(e ->{
+                    if(activeTool == zoomTool) {
+                        if (e.isAltDown())
+                            zoom(false);
+                        else
+                        zoom(true);
+                    }
+    });
 
 
         //Color Palette
@@ -94,11 +117,56 @@ public class PaintController implements LayerObserver {
 
         colorPicker.setOnAction(e -> {
             Color temp = colorPicker.getValue();
-            image.updateColor(temp);
+            updateColor(temp);
             canvas.requestFocus();
         });
         clearCanvas();
 
+    }
+
+    public void onDrag(int x, int y){
+        if (!(image.getActiveLayer() == null)) {
+            activeTool.onDrag(x, y, image.getActiveLayer());
+            image.updateModel();
+        }
+    }
+
+    public void onRelease (int x, int y){
+        if (!(image.getActiveLayer() == null)) {
+            activeTool.onRelease(x, y, image.getActiveLayer());
+            image.updateModel();
+        }
+    }
+
+    public void onPress (int x, int y){
+        if (!(image.getActiveLayer() == null)) {
+            activeTool.onPress(x, y, image.getActiveLayer());
+            image.updateModel();
+        }
+    }
+
+    public void setActiveTool(ITool activeTool) {
+        this.activeTool = activeTool;
+        if(activeTool instanceof ISize){
+            ((ISize) activeTool).updateSize(toolSize);
+        }
+        if(activeTool instanceof IColor){
+            ((IColor) activeTool).updateColor(color);
+        }
+    }
+
+    public void updateColor(Color color){
+        this.color = 0xFF000000 | ((int)(color.getRed() * 255) << 16) | ((int)(color.getGreen() * 255) << 8) | ((int)(color.getBlue() * 255));
+        if(activeTool instanceof IColor){
+            ((IColor) activeTool).updateColor(this.color);
+        }
+    }
+
+    public void updateSize(int size){
+        this.toolSize = size;
+        if(activeTool instanceof ISize){
+            ((ISize) activeTool).updateSize(toolSize);
+        }
     }
 
 
@@ -142,25 +210,22 @@ public class PaintController implements LayerObserver {
 
     @FXML
     public void setPencil() {
-        image.setPencil();
+        setActiveTool(pencilTool);
     }
 
     @FXML
     public void setFillTool() {
-        image.setFillTool();
+        setActiveTool(bucketFillTool);
     }
 
     @FXML
     public void setEraserTool() {
-        image.setEraserTool();
+        setActiveTool(eraserTool);
     }
 
     @FXML
     public void setZoomTool() {
-        image.setZoomTool();
-        layerViewList.clear();
-        image.deleteAllLayers();
-        createLayer(0xFF00FF00,"Background");
+        activeTool = zoomTool;
     }
 
     private void createLayer(int bgColor, String name) {
@@ -249,11 +314,13 @@ public class PaintController implements LayerObserver {
     }
 
 
+    ////////////////////////////////////////// ZOOM ///////////////////////////////////////////////
+
     private static final double MAX_SCALE = 15.0d;
     private static final double MIN_SCALE = 0.1d;
 
     @FXML
-    public void zoom( boolean setZoom) {
+    public void zoom(boolean setZoom) {
         double delta = 1.05;
         image.setZoomScaleX(canvas.getScaleX());
         image.setZoomScaleY(canvas.getScaleY());
@@ -274,17 +341,20 @@ public class PaintController implements LayerObserver {
         scaleY = clamp(scaleY, MIN_SCALE, MAX_SCALE);
         scaleX = clamp(scaleX, MIN_SCALE, MAX_SCALE);
 
+        /*
         double fy = (image.getZoomScaleY() / image.getOldZoomScaleY()) - 1;
         double fx = (image.getZoomScaleX() / image.getOldZoomScaleX()) - 1;
 
         double dx = (scrollPane.getLayoutX() - (canvas.getBoundsInParent().getWidth() / 2 + canvas.getBoundsInParent().getMinX()));
         double dy = (scrollPane.getLayoutY() - (canvas.getBoundsInParent().getHeight() / 2 + canvas.getBoundsInParent().getMinY()));
+        */
 
         canvas.setScaleY(scaleY);
         canvas.setScaleX(scaleX);
-
+        /*
         canvas.setTranslateY(canvas.getTranslateY()-fy*dy);
         canvas.setTranslateX(canvas.getTranslateX()-fx*dx);
+        */
     }
 
     @FXML
@@ -296,14 +366,23 @@ public class PaintController implements LayerObserver {
         zoom(false);
     }
 
-    private void setZoomPercent (int percent){
+    private void setZoomPercent (double percent){
         canvas.setScaleY(percent);
         canvas.setScaleX(percent);
+    }
+    @FXML
+    public void zoomFifty(){
+        setZoomPercent(0.5);
     }
 
     @FXML
     public void zoomHundred(){
         setZoomPercent(1);
+    }
+
+    @FXML
+    public void zoomTwoHundred(){
+        setZoomPercent(2);
     }
 
 
@@ -318,5 +397,7 @@ public class PaintController implements LayerObserver {
 
         return value;
     }
+
+    ////////////////////////////////////////// ZOOM ///////////////////////////////////////////////
 
 }
