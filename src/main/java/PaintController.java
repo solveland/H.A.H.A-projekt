@@ -2,16 +2,19 @@ import Model.AbstractPaintTool;
 import Model.ImageModel;
 import Model.PaintLayer;
 
+
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.ColorPicker;
+import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
@@ -39,6 +42,19 @@ public class PaintController implements LayerObserver {
     @FXML
     private FlowPane layerView;
 
+    @FXML
+    private Spinner<Integer> sizeSpinner;
+
+    @FXML
+    private ToolBar brushBar;
+
+    @FXML
+    private Slider opacitySlider;
+
+    @FXML
+    private Label opacityLabel;
+
+
     private List<Node> layerViewList;
 
     private ImageModel image;
@@ -57,7 +73,6 @@ public class PaintController implements LayerObserver {
         // Initialize project with white background layer.
         createLayer(0xFFFFFFFF, "Background");
         image.updateRenderedImage();
-
         canvas.setImage(view.getImage());
         canvas.setOnMouseDragged(e -> {
             int x = (int) Math.floor(e.getX());
@@ -89,6 +104,7 @@ public class PaintController implements LayerObserver {
         );
 
 
+
         //Color Palette
         colorPicker.setValue(Color.BLACK);
 
@@ -99,6 +115,12 @@ public class PaintController implements LayerObserver {
         });
         clearCanvas();
 
+        //Toolbar
+        sizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 5) );
+        sizeSpinner.setEditable(true);
+        sizeSpinner.valueProperty().addListener((obs, oldvalue, newvalue) -> image.updateSize(newvalue));
+        opacitySlider.valueProperty().addListener((obs, oldvalue, newvalue) -> image.updateOpacity(newvalue.doubleValue()));
+        brushBar.setVisible(false);
     }
 
 
@@ -143,20 +165,28 @@ public class PaintController implements LayerObserver {
     @FXML
     public void setPencil() {
         image.setPencil();
+        opacitySlider.setVisible(true);
+        opacityLabel.setVisible(true);
+        brushBar.setVisible(true);
     }
 
     @FXML
     public void setFillTool() {
         image.setFillTool();
+        brushBar.setVisible(false);
     }
 
     @FXML
     public void setEraserTool() {
         image.setEraserTool();
+        brushBar.setVisible(true);
+        opacitySlider.setVisible(false);
+        opacityLabel.setVisible(false);
     }
 
     @FXML
     public void setZoomTool() {
+        brushBar.setVisible(false);
         image.setZoomTool();
         layerViewList.clear();
         image.deleteAllLayers();

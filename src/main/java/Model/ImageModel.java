@@ -22,8 +22,9 @@ public class ImageModel {
     private int height;
     private PaintLayer renderedImage;
 
-    private int toolSize = 64;
+    private int toolSize = 5;
     private int color = 0xFF000000;
+    private int opacity = 0xFF000000;
 
     private double zoomScaleX;
     private double zoomScaleY;
@@ -49,12 +50,24 @@ public class ImageModel {
 
         observers = new ArrayList<>();
     }
-
-    public void updateColor(Color color){
-        this.color = 0xFF000000 | ((int)(color.getRed() * 255) << 16) | ((int)(color.getGreen() * 255) << 8) | ((int)(color.getBlue() * 255));
+    private void updateColor(){
         if(activeTool instanceof IColor){
             ((IColor) activeTool).updateColor(this.color);
         }
+    }
+    public void updateColor(Color color){
+        this.color = opacity | ((int)(color.getRed() * 255) << 16) | ((int)(color.getGreen() * 255) << 8) | ((int)(color.getBlue() * 255));
+        if(activeTool instanceof IColor){
+            ((IColor) activeTool).updateColor(this.color);
+        }
+    }
+
+    public void updateOpacity(double alpha){
+        int temp = (int)(0xFF * alpha);
+        temp = temp << 24;
+        System.out.println(String.format("0x%08X", temp));
+        this.opacity = temp & 0xFF000000;
+        updateColor();
     }
 
     public void updateSize(int size){
