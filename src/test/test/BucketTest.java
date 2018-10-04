@@ -10,7 +10,7 @@ public class BucketTest {
 
     int sizeX = 600;
     int sizeY = 600;
-    PaintLayer layer = new PaintLayer(sizeX,sizeY);
+    PaintLayer layer = new PaintLayer(sizeX,sizeY,0xFFFFFFFF);
 
 
     @Test

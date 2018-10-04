@@ -64,6 +64,12 @@ public class ImageModel {
         }
     }
 
+    public void setImageSize(int width, int height){
+        this.width = width;
+        this.height = height;
+        renderedImage = new PaintLayer(width,height,0);
+    }
+
     public void onDrag(int x, int y){
         if (!(activeLayer == null)) {
             activeTool.onDrag(x, y, activeLayer);
@@ -129,6 +135,10 @@ public class ImageModel {
         updateModel();
     }
 
+
+
+
+
     public double getZoomScaleY(){
         return zoomScaleY;
     }
@@ -183,6 +193,7 @@ public class ImageModel {
         PaintLayer newLayer = new PaintLayer(width, height, bgColor);
         layerList.add(index, newLayer);
         setActiveLayer(newLayer);
+        updateRenderedImage();
     }
 
     // Deletes the active layer and selects a new active layer or null if no layers exist.
@@ -207,6 +218,11 @@ public class ImageModel {
 
     public void setActiveLayer(PaintLayer layer) {
         activeLayer = layer;
+    }
+
+    public void deleteAllLayers(){
+        layerList.clear();
+        activeLayer = null;
     }
 
     public PaintLayer getActiveLayer() {

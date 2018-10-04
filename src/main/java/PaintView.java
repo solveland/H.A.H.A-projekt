@@ -8,11 +8,15 @@ public class PaintView implements ModelObserver {
     private WritableImage image;
 
     public PaintView(int sizeX, int sizeY) {
-        image = new WritableImage(sizeX, sizeY);
+        setSize(sizeX,sizeY);
     }
 
     public WritableImage getImage() {
         return image;
+    }
+
+    public void setSize(int x, int y){
+        image = new WritableImage(x, y);
     }
 
     @Override

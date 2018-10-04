@@ -22,6 +22,11 @@ public class PaintLayer {
         {
             pixelArray[i] = bgColor;
         }
+        changedMinX = width;
+        changedMinX = 0;
+        changedMinY = 0;
+        changedMaxY = height;
+        changed = true;
     }
 
     public int getWidth() {

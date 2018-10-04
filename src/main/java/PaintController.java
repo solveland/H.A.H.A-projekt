@@ -14,6 +14,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.stage.FileChooser;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 import java.awt.*;
 import java.util.List;
@@ -96,6 +101,39 @@ public class PaintController implements LayerObserver {
 
     }
 
+
+    @FXML
+    public void openFile(){
+        //Mycket av denna funktion måste flyttas till andra delar. pixlarna ska ändras i modellen, inte här t.ex.
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(canvas.getScene().getWindow());
+        if (file == null){
+            return;
+        }
+        BufferedImage loadedImage;
+        try {
+            loadedImage = ImageIO.read(file);
+        } catch (java.io.IOException e) {
+            //Todo: Handle this exception
+            return;
+        }
+        view.setSize(loadedImage.getWidth(),loadedImage.getHeight());
+        layerViewList.clear();
+        image.deleteAllLayers();
+        image.setImageSize(loadedImage.getWidth(),loadedImage.getHeight());
+        canvas.setImage(view.getImage());
+        canvas.setFitHeight(loadedImage.getHeight());
+        canvas.setFitWidth(loadedImage.getWidth());
+        createLayer(0,"Background");
+        PaintLayer pl = image.getActiveLayer();
+        for (int x = 0; x < loadedImage.getWidth(); x++) {
+            for (int y = 0; y < loadedImage.getHeight(); y++) {
+                pl.setPixel(x, y, loadedImage.getRGB(x, y));
+            }
+        }
+        image.updateRenderedImage();
+    }
+
     //Temporär testfunktion -> låter den vara image.getimage()....
     @FXML
     public void clearCanvas() {
@@ -120,6 +158,9 @@ public class PaintController implements LayerObserver {
     @FXML
     public void setZoomTool() {
         image.setZoomTool();
+        layerViewList.clear();
+        image.deleteAllLayers();
+        createLayer(0xFF00FF00,"Background");
     }
 
     private void createLayer(int bgColor, String name) {

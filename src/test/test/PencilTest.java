@@ -8,7 +8,7 @@ public class PencilTest {
 
     @Test
     public void paintTest(){
-        PaintLayer pl = new PaintLayer(50, 50);
+        PaintLayer pl = new PaintLayer(50, 50,0xFFFFFFFF);
         assertTrue(pl.getPixel(0, 0) == 0xFFFFFFFF);
         assertTrue(pl.getPixel(2, 2) == 0xFFFFFFFF);
         assertTrue(pl.getPixel(7, 7) == 0xFFFFFFFF);
