@@ -55,6 +55,7 @@ public class ImageModel {
             ((IColor) activeTool).updateColor(this.color);
         }
     }
+
     public void updateColor(Color color){
         this.color = opacity | ((int)(color.getRed() * 255) << 16) | ((int)(color.getGreen() * 255) << 8) | ((int)(color.getBlue() * 255));
         if(activeTool instanceof IColor){
@@ -65,9 +66,10 @@ public class ImageModel {
     public void updateOpacity(double alpha){
         int temp = (int)(0xFF * alpha);
         temp = temp << 24;
-        System.out.println(String.format("0x%08X", temp));
         this.opacity = temp & 0xFF000000;
+        this.color = (this.color & 0x00FFFFFF) | this.opacity;
         updateColor();
+
     }
 
     public void updateSize(int size){

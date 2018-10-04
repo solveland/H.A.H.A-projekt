@@ -174,6 +174,7 @@ public class PaintController implements LayerObserver {
     public void setFillTool() {
         image.setFillTool();
         brushBar.setVisible(false);
+        opacitySlider.setValue(1);
     }
 
     @FXML
@@ -182,11 +183,13 @@ public class PaintController implements LayerObserver {
         brushBar.setVisible(true);
         opacitySlider.setVisible(false);
         opacityLabel.setVisible(false);
+        opacitySlider.setValue(1);
     }
 
     @FXML
     public void setZoomTool() {
         brushBar.setVisible(false);
+        opacitySlider.setValue(1);
         image.setZoomTool();
         layerViewList.clear();
         image.deleteAllLayers();
