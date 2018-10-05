@@ -7,8 +7,6 @@ import Model.ISize;
 public class PencilTool extends AbstractPaintTool implements ISize, IColor {
 
 
-
-
     public PencilTool(int size){
         this.size = size;
     }
@@ -25,6 +23,7 @@ public class PencilTool extends AbstractPaintTool implements ISize, IColor {
         this.size = size;
         updateBrush();
     }
+
 
     @Override
     int getPixelColor(int x, int y) {

@@ -5,17 +5,20 @@ public abstract class AbstractPaintTool implements ITool {
     protected int size;
     protected int color;
     public enum Shape { CIRCLE, SQUARE }
+    private UndoBuffer undoBuffer;
     private Shape shape = Shape.CIRCLE;
     /* TODO: When we have a broader understanding of what the tools will require we have to move functionality to this class
      */
-    public void onPress(int x, int y, PaintLayer layer){
-        changePixels(x, y, layer);
+    public void onPress(int x, int y, ImageModel imageModel){
+        undoBuffer = new UndoBuffer(imageModel.getActiveLayer());
+        changePixels(x, y, imageModel.getActiveLayer());
     }
-    public void onDrag(int x, int y, PaintLayer layer){
-        changePixels(x, y, layer);
+    public void onDrag(int x, int y, ImageModel imageModel){
+        changePixels(x, y, imageModel.getActiveLayer());
     }
-    public void onRelease(int x, int y, PaintLayer layer){
-        changePixels(x, y, layer);
+    public void onRelease(int x, int y, ImageModel imageModel){
+        imageModel.pushToUndoStack(undoBuffer);
+        undoBuffer = null;
     }
     /**
      * Checks the brushbuffer for colored pixels and sets layer accordingly
@@ -27,9 +30,10 @@ public abstract class AbstractPaintTool implements ITool {
                 if((brushBuffer[yc*diameter +xc] & 0xFF000000) != 0){
                     int pixelX = xc+xPos - diameter/2;
                     int pixelY = yc+yPos - diameter/2;
-                    if(pixelX < 0 || pixelX >= layer.getWidth() || pixelY < 0 ||pixelY >= layer.getHeight()){
+                    if(pixelX < 0 || pixelX >= layer.getWidth() || pixelY < 0 ||pixelY >= layer.getHeight() || layer.getPixel(xc+xPos - diameter/2,yc+yPos - diameter/2) == getPixelColor(xc, yc)){
                         continue;
                     }
+                    undoBuffer.addPixel(xc+xPos - diameter/2,yc+yPos - diameter/2,layer.getPixel(xc+xPos - diameter/2,yc+yPos - diameter/2));
                     layer.setPixel(xc+xPos - diameter/2,yc+yPos - diameter/2, getPixelColor(xc, yc));
                 }
             }

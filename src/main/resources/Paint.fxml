@@ -25,7 +25,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane id="background" fx:id="borderPane" prefHeight="800" prefWidth="600" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PaintController">
+<BorderPane id="background" fx:id="borderPane" prefHeight="800" prefWidth="600" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
 
     <left>
             <ToolBar fx:id="toolBar" prefHeight="371.0" prefWidth="57.0" BorderPane.alignment="CENTER">
@@ -75,7 +75,10 @@
                            <Button onAction="#zoomIn" />
                            <Button text="-" />
                            <Button text="-" />
-                           <Button text="-" />
+                           <Button onAction="#undoButton" text="Undo">
+                     <font>
+                        <Font size="9.0" />
+                     </font></Button>
                            <Button onAction="#clearCanvas" prefHeight="26.0" prefWidth="37.0" text="Clear">
                      <font>
                         <Font size="10.0" />

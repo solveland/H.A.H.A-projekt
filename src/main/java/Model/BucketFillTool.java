@@ -12,15 +12,17 @@ public class BucketFillTool implements IColor, ITool {
        newColor = color;
    }
 
-    public void onPress(int x, int y, PaintLayer layer){
-        flood(x, y, layer);
+    public void onPress(int x, int y, ImageModel imageModel) {
+        flood(x, y, imageModel.getActiveLayer());
     }
-    public void onDrag(int x, int y, PaintLayer layer){
-        flood(x, y, layer);
+    public void onDrag(int x, int y, ImageModel imageModel){
+        flood(x, y, imageModel.getActiveLayer());
     }
-    public void onRelease(int x, int y, PaintLayer layer){
-        flood(x, y, layer);
+    public void onRelease(int x, int y, ImageModel imageModel){
+        flood(x, y, imageModel.getActiveLayer());
     }
+
+
 
     private void flood(int x, int y, PaintLayer layer) {
 

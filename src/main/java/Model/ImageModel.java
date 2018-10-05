@@ -7,6 +7,7 @@ import javafx.scene.paint.Paint;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 public class ImageModel {
 
@@ -23,6 +24,8 @@ public class ImageModel {
     private double oldZoomScaleY;
     private double oldZoomScaleX;
 
+    private Stack<UndoBuffer> undoBufferStack;
+
 
     public ImageModel(int sizeX, int sizeY) {
         width = sizeX;
@@ -35,6 +38,7 @@ public class ImageModel {
         renderedImage = new PaintLayer(sizeX, sizeY, 0);
 
         observers = new ArrayList<>();
+        undoBufferStack = new Stack<>();
     }
 
 
@@ -72,6 +76,21 @@ public class ImageModel {
     {
         activeLayer.clearLayer();
         updateModel();
+    }
+
+    public void pushToUndoStack(UndoBuffer buffer){
+        undoBufferStack.push(buffer);
+    }
+
+    public void undo(){
+        if(undoBufferStack.empty()){
+            return;
+        }
+        UndoBuffer buffer = undoBufferStack.pop();
+        for(Pixel p : buffer.pixels){
+            buffer.getLayer().setPixel(p.getX(),p.getY(),p.getColor());
+        }
+        updateRenderedImage();
     }
 
 

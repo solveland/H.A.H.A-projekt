@@ -1,15 +1,15 @@
 import Model.*;
 
-import javafx.event.EventHandler;
-
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -71,9 +71,15 @@ public class PaintController implements LayerObserver {
     private EraserTool eraserTool;
     private ZoomTool zoomTool;
 
-    private int toolSize = 64;
+    private int toolSize = 5;
     private int color = 0xFF000000;
     private int opacity = 0xFF000000;
+
+    public void afterInitialize(Scene scene){
+        scene.setOnKeyPressed(e->{
+            System.out.println(e.getCharacter());
+        });
+    }
 
     public void initialize() {
         image = new ImageModel(600, 600);
@@ -89,6 +95,7 @@ public class PaintController implements LayerObserver {
 
 
         layerViewList = layerView.getChildren();
+
 
         // Initialize project with white background layer.
         createLayer(0xFFFFFFFF, "Background");
@@ -122,6 +129,7 @@ public class PaintController implements LayerObserver {
                     onPress(x, y);
                 }
         );
+
 
         stackPane.setOnMousePressed(e ->{
                     if(activeTool == zoomTool) {
@@ -157,21 +165,21 @@ public class PaintController implements LayerObserver {
 
     public void onDrag(int x, int y){
         if (!(image.getActiveLayer() == null)) {
-            activeTool.onDrag(x, y, image.getActiveLayer());
+            activeTool.onDrag(x, y, image);
             image.updateModel();
         }
     }
 
     public void onRelease (int x, int y){
         if (!(image.getActiveLayer() == null)) {
-            activeTool.onRelease(x, y, image.getActiveLayer());
+            activeTool.onRelease(x, y, image);
             image.updateModel();
         }
     }
 
     public void onPress (int x, int y){
         if (!(image.getActiveLayer() == null)) {
-            activeTool.onPress(x, y, image.getActiveLayer());
+            activeTool.onPress(x, y, image);
             image.updateModel();
         }
     }
@@ -220,6 +228,11 @@ public class PaintController implements LayerObserver {
         if(activeTool instanceof AbstractPaintTool){
             ((AbstractPaintTool) activeTool).updateShape(s);
         }
+    }
+
+    @FXML
+    public void undoButton(){
+        image.undo();
     }
 
 
@@ -513,5 +526,7 @@ public class PaintController implements LayerObserver {
         shapeBox.setButtonCell(cellFactory.call(null));
         shapeBox.setCellFactory(cellFactory);
     }
+
+    /////////////////////////////////////////////////////////////////////
 
 }
