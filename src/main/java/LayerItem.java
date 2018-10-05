@@ -82,4 +82,7 @@ public class LayerItem extends AnchorPane {
         return layerName.getText();
     }
 
+    public PaintLayer getLayer() {
+        return layer;
+    }
 }

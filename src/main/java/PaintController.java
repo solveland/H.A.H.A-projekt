@@ -1,3 +1,5 @@
+import Model.ImageModel;
+import Model.PaintLayer;
 import Model.*;
 
 import javafx.fxml.FXML;
@@ -8,12 +10,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
@@ -24,10 +25,11 @@ import java.io.File;
 
 import java.util.List;
 
-public class PaintController implements LayerObserver {
+public class PaintController {
 
     @FXML
     private ScrollPane scrollPane;
+
     @FXML
     private ImageView canvas;
 
@@ -40,6 +42,8 @@ public class PaintController implements LayerObserver {
     @FXML
     private FlowPane layerView;
 
+    @FXML
+    private BorderPane borderPane;
 
     private ITool activeTool;
 
@@ -58,14 +62,11 @@ public class PaintController implements LayerObserver {
     @FXML
     private ComboBox<String> shapeBox;
 
-
-    private List<Node> layerViewList;
-
     private ImageModel image;
 
     private PaintView view;
 
-    private int newLayerIndex;
+    private LayerListController lController;
 
     private PencilTool pencilTool;
     private BucketFillTool bucketFillTool;
@@ -85,7 +86,12 @@ public class PaintController implements LayerObserver {
     public void initialize() {
         image = new ImageModel(600, 600);
         view = new PaintView(600, 600);
+        lController = new LayerListController(image);
         image.addObserver(view);
+        image.addObserver(lController);
+        borderPane.setRight(lController.getLayerPane());
+
+        image.createLayer(0xFFFFFFFF, "Background"); // Should be moved to the method where we initialize a new project.
 
         pencilTool = new PencilTool(toolSize);
         bucketFillTool = new BucketFillTool(color);
@@ -94,13 +100,6 @@ public class PaintController implements LayerObserver {
 
         setActiveTool(bucketFillTool);
 
-
-        layerViewList = layerView.getChildren();
-
-
-        // Initialize project with white background layer.
-        createLayer(0xFFFFFFFF, "Background");
-        image.updateRenderedImage();
         canvas.setImage(view.getImage());
         canvas.setOnMouseDragged(e -> {
             int x = (int) Math.floor(e.getX());
@@ -131,7 +130,6 @@ public class PaintController implements LayerObserver {
                 }
         );
 
-
         stackPane.setOnMousePressed(e ->{
                     if(activeTool == zoomTool) {
                         if (e.isAltDown())
@@ -139,7 +137,7 @@ public class PaintController implements LayerObserver {
                         else
                         zoom(true);
                     }
-    });
+        });
 
 
 
@@ -168,21 +166,21 @@ public class PaintController implements LayerObserver {
     public void onDrag(int x, int y){
         if (!(image.getActiveLayer() == null)) {
             activeTool.onDrag(x, y, image);
-            image.updateModel();
+            image.updateCanvas();
         }
     }
 
     public void onRelease (int x, int y){
         if (!(image.getActiveLayer() == null)) {
             activeTool.onRelease(x, y, image);
-            image.updateModel();
+            image.updateCanvas();
         }
     }
 
     public void onPress (int x, int y){
         if (!(image.getActiveLayer() == null)) {
             activeTool.onPress(x, y, image);
-            image.updateModel();
+            image.updateCanvas();
         }
     }
 
@@ -255,13 +253,13 @@ public class PaintController implements LayerObserver {
             return;
         }
         view.setSize(loadedImage.getWidth(),loadedImage.getHeight());
-        layerViewList.clear();
+        lController.getLayerList().clear();
         image.deleteAllLayers();
         image.setImageSize(loadedImage.getWidth(),loadedImage.getHeight());
         canvas.setImage(view.getImage());
         canvas.setFitHeight(loadedImage.getHeight());
         canvas.setFitWidth(loadedImage.getWidth());
-        createLayer(0,"Background");
+        image.createLayer(0,"Background");
         PaintLayer pl = image.getActiveLayer();
         for (int x = 0; x < loadedImage.getWidth(); x++) {
             for (int y = 0; y < loadedImage.getHeight(); y++) {
@@ -306,97 +304,8 @@ public class PaintController implements LayerObserver {
 
     @FXML
     public void setZoomTool() {
-        activeTool = zoomTool;
+        setActiveTool(zoomTool);
         brushBar.setVisible(false);
-        opacitySlider.setValue(1);
-        layerViewList.clear();
-        image.deleteAllLayers();
-        createLayer(0xFF00FF00,"Background");
-    }
-
-    private void createLayer(int bgColor, String name) {
-        int index = 0;
-
-        if (!layerViewList.isEmpty())
-            index = indexOfSelectedItem();
-
-        image.createLayer(bgColor); // Create the layer in the model
-
-        LayerItem layerItem = new LayerItem(name, image.getActiveLayer()); // Creates a layer item with an instance of the active layer in the model, which is the new layer.
-        layerItem.addObserver(this); // Make the controller listen to every layer (for user input)
-
-        layerViewList.add(index, layerItem); // Add the layer item to the pane which holds all layer items.
-
-        selectLayer(layerItem);
-    }
-
-    // New layer button creates a transparent layer with a unique name
-    @FXML
-    public void newLayerAction() {
-        createLayer(0, "Layer " + newLayerIndex);
-        newLayerIndex++;
-    }
-
-    // Delete layer button deletes the selected layer and selects a new layer (or none if there are no layers)
-    @FXML
-    public void deleteLayerAction() {
-        if (!layerViewList.isEmpty()) {
-            int index = indexOfSelectedItem();
-
-            layerViewList.remove(index);
-
-            // Select the layer above the deleted layer or the topmost layer if the deleted layer is at the top.
-            if (!layerViewList.isEmpty()) {
-                if (index > 0)
-                    index -= 1;
-
-                LayerItem i = (LayerItem) layerViewList.get(index);
-                i.setSelected();
-            }
-
-            image.deleteActiveLayer();
-        }
-
-    }
-
-    // Deselects all selected layers
-    private void deselectLayers() {
-        for (Node n : layerViewList) {
-            if (n.getClass().equals(LayerItem.class)) {
-                LayerItem i = (LayerItem) n;
-                if (i.isSelected()) {
-                    i.setDeselected();
-                }
-            }
-        }
-    }
-
-    private void selectLayer(LayerItem layer) {
-        deselectLayers();
-        layer.setSelected();
-    }
-
-    private int indexOfSelectedItem() {
-        for (Node n : layerViewList) {
-            LayerItem i = (LayerItem) n;
-            if (i.isSelected()) {
-                return layerViewList.indexOf(i);
-            }
-        }
-        return -1;
-    }
-
-    // Listens to every layer for a selection
-    @Override
-    public void selectLayerUpdate(PaintLayer layer) {
-        image.setActiveLayer(layer);
-        deselectLayers();
-    }
-
-    // Listens to every layer for a layer toggle
-    @Override
-    public void visibleLayerToggle(PaintLayer layer) {
-        image.toggleLayerVisible(layer);
     }
 
 

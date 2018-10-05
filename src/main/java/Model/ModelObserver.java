@@ -1,7 +1,9 @@
 package Model;
 
+import java.util.List;
+
 public interface ModelObserver {
 
-   void drawOnUpdate(PaintLayer layer, int minX, int maxX, int minY, int maxY);
+   void notifyObservers(PaintLayer layer, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, String id);
 
 }
