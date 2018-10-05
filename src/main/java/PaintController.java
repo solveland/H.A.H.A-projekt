@@ -18,6 +18,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -161,6 +162,7 @@ public class PaintController implements LayerObserver {
         shapeBox.getItems().addAll("Circle", "Square");
         populateShapeComboBox();
         shapeBox.valueProperty().addListener((obs, oldvalue, newvalue) -> updateToolShape(newvalue));
+
     }
 
     public void onDrag(int x, int y){
@@ -223,6 +225,7 @@ public class PaintController implements LayerObserver {
         updateColor();
 
     }
+
 
     public void updateToolShape(String s){
         if(activeTool instanceof AbstractPaintTool){
