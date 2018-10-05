@@ -12,13 +12,13 @@ public abstract class AbstractPaintTool implements ITool {
     public void onPress(int x, int y, ImageModel imageModel){
         undoBuffer = new UndoBuffer(imageModel.getActiveLayer());
         changePixels(x, y, imageModel.getActiveLayer());
+        imageModel.pushToUndoStack(undoBuffer);
     }
     public void onDrag(int x, int y, ImageModel imageModel){
         changePixels(x, y, imageModel.getActiveLayer());
     }
     public void onRelease(int x, int y, ImageModel imageModel){
-        imageModel.pushToUndoStack(undoBuffer);
-        undoBuffer = null;
+
     }
     /**
      * Checks the brushbuffer for colored pixels and sets layer accordingly
