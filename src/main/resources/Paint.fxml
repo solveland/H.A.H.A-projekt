@@ -2,7 +2,6 @@
 
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
-<?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Menu?>
@@ -10,13 +9,10 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -128,59 +124,6 @@
             </menus>
         </MenuBar>
     </top>
-   <right>
-      <TitledPane animated="false" prefHeight="290.0" prefWidth="194.0" styleClass="hud" stylesheets="@Stylesheet.css" text="Layers" BorderPane.alignment="CENTER">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="167.0">
-               <children>
-                  <ToolBar layoutY="220.0" prefHeight="45.0" prefWidth="193.0">
-                    <items>
-                        <Button graphicTextGap="0.0" mnemonicParsing="false" onAction="#newLayerAction" prefHeight="24.0" prefWidth="24.0">
-                           <graphic>
-                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" smooth="false">
-                                 <image>
-                                    <Image url="@newlayer.png" />
-                                 </image>
-                                 <viewport>
-                                    <Rectangle2D />
-                                 </viewport>
-                              </ImageView>
-                           </graphic>
-                           <padding>
-                              <Insets left="1.0" />
-                           </padding>
-                        </Button>
-                      <Button mnemonicParsing="false" onAction="#deleteLayerAction" prefHeight="24.0" prefWidth="24.0">
-                           <graphic>
-                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" smooth="false">
-                                 <image>
-                                    <Image url="@deletelayer.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                           <styleClass>
-                              <String fx:value="button" />
-                              <String fx:value="button" />
-                           </styleClass>
-                           <padding>
-                              <Insets left="1.0" />
-                           </padding>
-                        </Button>
-                    </items>
-                     <padding>
-                        <Insets left="7.0" top="5.0" />
-                     </padding>
-                  </ToolBar>
-                  <ScrollPane hbarPolicy="NEVER" prefHeight="222.0" prefWidth="192.0" styleClass="no-border-scroll" stylesheets="@Stylesheet.css" vvalue="1.0">
-                     <content>
-                        <FlowPane fx:id="layerView" prefHeight="225.0" prefWidth="179.0" />
-                     </content>
-                  </ScrollPane>
-               </children>
-            </AnchorPane>
-        </content>
-      </TitledPane>
-   </right>
    <center>
       <ScrollPane id="background" fx:id="scrollPane" fitToHeight="true" fitToWidth="true" minViewportHeight="600.0" minViewportWidth="600.0" prefViewportHeight="600.0" prefViewportWidth="600.0">
          <content>

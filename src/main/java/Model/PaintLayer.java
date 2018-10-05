@@ -9,13 +9,15 @@ public class PaintLayer {
     private boolean changed = false;
     private boolean visible;
     private int bgColor;
+    private String name;
 
-    public PaintLayer(int sizeX, int sizeY, int bgColor) {
+    public PaintLayer(int sizeX, int sizeY, int bgColor, String name) {
         height = sizeY;
         width = sizeX;
         pixelArray = new int[sizeX * sizeY];
         this.bgColor = bgColor;
         visible = true;
+        this.name = name;
 
         if (bgColor != 0)
         for (int i = 0; i < sizeX * sizeY; i++)
@@ -108,5 +110,14 @@ public class PaintLayer {
 
     public void toggleVisible() {
         visible = !visible;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

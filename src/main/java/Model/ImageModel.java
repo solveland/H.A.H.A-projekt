@@ -1,8 +1,6 @@
 package Model;
 
-import Model.BucketFillTool;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -30,6 +28,7 @@ public class ImageModel {
     private double oldZoomScaleY;
     private double oldZoomScaleX;
 
+    private int newLayerCount;
 
     public ImageModel(int sizeX, int sizeY) {
         width = sizeX;
@@ -39,7 +38,7 @@ public class ImageModel {
 
         layerList = new LinkedList<>();
 
-        renderedImage = new PaintLayer(sizeX, sizeY, 0);
+        renderedImage = new PaintLayer(sizeX, sizeY, 0, null);
 
         pencilTool = new PencilTool(toolSize);
         bucketFillTool = new BucketFillTool(color);
@@ -48,6 +47,9 @@ public class ImageModel {
         setActiveTool(bucketFillTool);
 
         observers = new ArrayList<>();
+
+        newLayerCount = 0;
+
     }
 
     public void updateColor(Color color){
@@ -67,27 +69,27 @@ public class ImageModel {
     public void setImageSize(int width, int height){
         this.width = width;
         this.height = height;
-        renderedImage = new PaintLayer(width,height,0);
+        renderedImage = new PaintLayer(width,height,0, null);
     }
 
     public void onDrag(int x, int y){
         if (!(activeLayer == null)) {
             activeTool.onDrag(x, y, activeLayer);
-            updateModel();
+            updateCanvas();
         }
     }
 
     public void onRelease (int x, int y){
         if (!(activeLayer == null)) {
             activeTool.onRelease(x, y, activeLayer);
-            updateModel();
+            updateCanvas();
         }
     }
 
     public void onPress (int x, int y){
         if (!(activeLayer == null)) {
             activeTool.onPress(x, y, activeLayer);
-            updateModel();
+            updateCanvas();
         }
     }
 
@@ -117,27 +119,40 @@ public class ImageModel {
         observers.remove(observer);
     }
 
-    public void updateModel() {
+    public void updateCanvas() {
         if (!layerList.isEmpty() && activeLayer.isChanged())
             updateRenderedRect();
 
         if (renderedImage.isChanged()) {
+            int minX = renderedImage.getChangedMinX();
+            int maxX = renderedImage.getChangedMaxX();
+            int minY = renderedImage.getChangedMinY();
+            int maxY = renderedImage.getChangedMaxY();
+
             for (ModelObserver o : observers) {
-                o.drawOnUpdate(renderedImage, renderedImage.getChangedMinX(), renderedImage.getChangedMaxX(), renderedImage.getChangedMinY(), renderedImage.getChangedMaxY());
+                o.notifyObservers(renderedImage, minX, maxX, minY, maxY, layerList, "imageUpdate");
             }
+
             renderedImage.resetChangeTracker();
+        }
+    }
+
+    private void updateLayerGUI() {
+        int minX = renderedImage.getChangedMinX();
+        int maxX = renderedImage.getChangedMaxX();
+        int minY = renderedImage.getChangedMinY();
+        int maxY = renderedImage.getChangedMaxY();
+
+        for (ModelObserver o : observers) {
+            o.notifyObservers(renderedImage, minX, maxX, minY, maxY, layerList, "layerUpdate");
         }
     }
 
     public void clearLayer()
     {
         activeLayer.clearLayer();
-        updateModel();
+        updateCanvas();
     }
-
-
-
-
 
     public double getZoomScaleY(){
         return zoomScaleY;
@@ -182,18 +197,44 @@ public class ImageModel {
 
     public void setZoomTool(){setActiveTool(zoomTool);}
 
+    //// LAYER ///////
 
-    ////////////////////////////////////////////LAYERS_START/////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void createLayer(int bgColor) {
+    private List<PaintLayer> reversedLayerList() {
+        LinkedList<PaintLayer> reversedList = new LinkedList<>();
+
+        for (PaintLayer l : layerList) {
+            reversedList.push(l);
+        }
+
+        return reversedList;
+    }
+
+
+    // Toggles a layer and updates the view
+    public void toggleLayerVisible(PaintLayer layer) {
+        layer.toggleVisible();
+        updateRenderedImage();
+    }
+
+    public int getNewLayerCount() {
+        return newLayerCount;
+    }
+
+    public void createLayer(int bgColor, String name) {
         int index = 0;
 
         if (!layerList.isEmpty())
             index = indexOfActiveLayer();
 
-        PaintLayer newLayer = new PaintLayer(width, height, bgColor);
+        PaintLayer newLayer = new PaintLayer(width, height, bgColor, name);
         layerList.add(index, newLayer);
+
         setActiveLayer(newLayer);
+
         updateRenderedImage();
+        updateLayerGUI();
+
+        newLayerCount++;
     }
 
     // Deletes the active layer and selects a new active layer or null if no layers exist.
@@ -213,6 +254,8 @@ public class ImageModel {
                 activeLayer = null;
                 renderTransparent();
             }
+
+            updateLayerGUI();
         }
     }
 
@@ -223,6 +266,7 @@ public class ImageModel {
     public void deleteAllLayers(){
         layerList.clear();
         activeLayer = null;
+        updateLayerGUI();
     }
 
     public PaintLayer getActiveLayer() {
@@ -235,6 +279,8 @@ public class ImageModel {
         }
         return -1;
     }
+
+    ///// LAYER END ////// RENDER START //////
 
     public void updateRenderedImage() {
         // Clear the image before we draw new pixels.
@@ -256,7 +302,7 @@ public class ImageModel {
                 }
             }
         }
-        updateModel();
+        updateCanvas();
     }
 
     private void updateRenderedRect() {
@@ -294,27 +340,9 @@ public class ImageModel {
             }
         }
 
-        updateModel();
+        updateCanvas();
     }
 
-    private List<PaintLayer> reversedLayerList() {
-        LinkedList<PaintLayer> reversedList = new LinkedList<>();
-
-        for (PaintLayer l : layerList) {
-            reversedList.push(l);
-        }
-
-        return reversedList;
-    }
-
-    // Toggles a layer and updates the view
-    public void toggleLayerVisible(PaintLayer layer) {
-        layer.toggleVisible();
-        updateRenderedImage();
-    }
-
-    /////////////////////////////////////////////////LAYERS_END///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
+    ///// RENDER END //////
 
 }
