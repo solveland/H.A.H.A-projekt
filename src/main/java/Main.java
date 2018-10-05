@@ -8,7 +8,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("Paint.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Paint.fxml"));
+        PaintController pc = new PaintController();
+        loader.setController(pc);
+        //Parent root = FXMLLoader.load(getClass().getResource("Paint.fxml"));
+        Parent root = loader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setMaximized(true);
@@ -21,6 +25,7 @@ public class Main extends Application {
 
         stage.setTitle("Paint");
         stage.show();
+        pc.afterInitialize(scene);
     }
 
     public static void main(String[] args) {

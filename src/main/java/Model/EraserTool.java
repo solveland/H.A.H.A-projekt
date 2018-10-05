@@ -5,11 +5,11 @@ import Model.AbstractPaintTool;
 public class EraserTool extends AbstractPaintTool implements ISize {
 
 
-
     public EraserTool(int size){
         this.size = size;
         this.color = 0xFFFFFFFF;
     }
+
 
     public void updateSize(int size) {
         this.size = size;

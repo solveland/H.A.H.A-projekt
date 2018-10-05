@@ -5,23 +5,17 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 public class ImageModel {
 
     private List<PaintLayer> layerList;
     private PaintLayer activeLayer;
-    private ITool activeTool;
     private List<ModelObserver> observers;
-    private PencilTool pencilTool;
-    private BucketFillTool bucketFillTool;
-    private EraserTool eraserTool;
-    private ZoomTool zoomTool;
+
     private int width;
     private int height;
     private PaintLayer renderedImage;
-
-    private int toolSize = 64;
-    private int color = 0xFF000000;
 
     private double zoomScaleX;
     private double zoomScaleY;
@@ -29,6 +23,7 @@ public class ImageModel {
     private double oldZoomScaleX;
 
     private int newLayerCount;
+    private Stack<UndoBuffer> undoBufferStack;
 
     public ImageModel(int sizeX, int sizeY) {
         width = sizeX;
@@ -40,31 +35,13 @@ public class ImageModel {
 
         renderedImage = new PaintLayer(sizeX, sizeY, 0, null);
 
-        pencilTool = new PencilTool(toolSize);
-        bucketFillTool = new BucketFillTool(color);
-        eraserTool = new EraserTool(toolSize);
-        zoomTool = new ZoomTool();
-        setActiveTool(bucketFillTool);
-
         observers = new ArrayList<>();
 
         newLayerCount = 0;
 
+        undoBufferStack = new Stack<>();
     }
 
-    public void updateColor(Color color){
-        this.color = 0xFF000000 | ((int)(color.getRed() * 255) << 16) | ((int)(color.getGreen() * 255) << 8) | ((int)(color.getBlue() * 255));
-        if(activeTool instanceof IColor){
-            ((IColor) activeTool).updateColor(this.color);
-        }
-    }
-
-    public void updateSize(int size){
-        this.toolSize = size;
-        if(activeTool instanceof ISize){
-            ((ISize) activeTool).updateSize(toolSize);
-        }
-    }
 
     public void setImageSize(int width, int height){
         this.width = width;
@@ -72,51 +49,12 @@ public class ImageModel {
         renderedImage = new PaintLayer(width,height,0, null);
     }
 
-    public void onDrag(int x, int y){
-        if (!(activeLayer == null)) {
-            activeTool.onDrag(x, y, activeLayer);
-            updateCanvas();
-        }
-    }
-
-    public void onRelease (int x, int y){
-        if (!(activeLayer == null)) {
-            activeTool.onRelease(x, y, activeLayer);
-            updateCanvas();
-        }
-    }
-
-    public void onPress (int x, int y){
-        if (!(activeLayer == null)) {
-            activeTool.onPress(x, y, activeLayer);
-            updateCanvas();
-        }
-    }
-
     public List<PaintLayer> getLayerList() {
         return layerList;
     }
 
-    public int getToolSize() {
-        return toolSize;
-    }
-
-    public void setActiveTool(ITool activeTool) {
-        this.activeTool = activeTool;
-        if(activeTool instanceof ISize){
-            ((ISize) activeTool).updateSize(toolSize);
-        }
-        if(activeTool instanceof IColor){
-            ((IColor) activeTool).updateColor(color);
-        }
-    }
-
     public void addObserver(ModelObserver observer) {
         observers.add(observer);
-    }
-
-    public void removeObserver(ModelObserver observer) {
-        observers.remove(observer);
     }
 
     public void updateCanvas() {
@@ -154,6 +92,21 @@ public class ImageModel {
         updateCanvas();
     }
 
+    public void pushToUndoStack(UndoBuffer buffer){
+        undoBufferStack.push(buffer);
+    }
+
+    public void undo(){
+        if(undoBufferStack.empty()){
+            return;
+        }
+        UndoBuffer buffer = undoBufferStack.pop();
+        for(Pixel p : buffer.pixels){
+            buffer.getLayer().setPixel(p.getX(),p.getY(),p.getColor());
+        }
+        updateRenderedImage();
+    }
+
     public double getZoomScaleY(){
         return zoomScaleY;
     }
@@ -182,21 +135,6 @@ public class ImageModel {
     public void setOldZoomScaleX(double oldZoomValueX) {
         this.oldZoomScaleX = oldZoomValueX;
     }
-
-    ////////////////////////////////////////////SET_TOOLS_START/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public void setPencil (){
-        setActiveTool(pencilTool);
-    }
-
-    public void setFillTool (){
-        setActiveTool(bucketFillTool);
-    }
-
-    public void setEraserTool(){ setActiveTool(eraserTool); }
-
-    public void setZoomTool(){setActiveTool(zoomTool);}
-
     //// LAYER ///////
 
     private List<PaintLayer> reversedLayerList() {
@@ -208,7 +146,6 @@ public class ImageModel {
 
         return reversedList;
     }
-
 
     // Toggles a layer and updates the view
     public void toggleLayerVisible(PaintLayer layer) {
@@ -262,6 +199,7 @@ public class ImageModel {
     public void setActiveLayer(PaintLayer layer) {
         activeLayer = layer;
     }
+
 
     public void deleteAllLayers(){
         layerList.clear();
