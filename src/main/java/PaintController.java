@@ -27,60 +27,43 @@ import java.util.List;
 
 public class PaintController {
 
+    private static final double MAX_SCALE = 15.0d;
+    private static final double MIN_SCALE = 0.1d;
     @FXML
     private ScrollPane scrollPane;
-
     @FXML
     private ImageView canvas;
-
     @FXML
     private StackPane stackPane;
-
     @FXML
     private ColorPicker colorPicker;
-
     @FXML
     private FlowPane layerView;
-
     @FXML
     private BorderPane borderPane;
-
-    private ITool activeTool;
-
     @FXML
     private Spinner<Integer> sizeSpinner;
-
     @FXML
     private ToolBar brushBar;
-
     @FXML
     private Slider opacitySlider;
-
     @FXML
     private Label opacityLabel;
-
     @FXML
     private ComboBox<String> shapeBox;
-
     private ImageModel image;
-
     private PaintView view;
-
     private LayerListController lController;
 
-    private PencilTool pencilTool;
-    private BucketFillTool bucketFillTool;
-    private EraserTool eraserTool;
-    private ZoomTool zoomTool;
+    public static double clamp(double value, double min, double max) {
 
-    private int toolSize = 5;
-    private int color = 0xFF000000;
-    private int opacity = 0xFF000000;
+        if (Double.compare(value, min) < 0)
+            return min;
 
-    public void afterInitialize(Scene scene){
-        scene.setOnKeyPressed(e->{
-            System.out.println(e.getCharacter());
-        });
+        if (Double.compare(value, max) > 0)
+            return max;
+
+        return value;
     }
 
     public void initialize() {
@@ -91,14 +74,8 @@ public class PaintController {
         image.addObserver(lController);
         borderPane.setRight(lController.getLayerPane());
 
-        image.createLayer(0xFFFFFFFF, "Background"); // Should be moved to the method where we initialize a new project.
+        image.createLayer(new PaintColor(255,255,255), "Background"); // Should be moved to the method where we initialize a new project.
 
-        pencilTool = new PencilTool(toolSize);
-        bucketFillTool = new BucketFillTool(color);
-        eraserTool = new EraserTool(toolSize);
-        zoomTool = new ZoomTool();
-
-        setActiveTool(bucketFillTool);
 
         canvas.setImage(view.getImage());
         canvas.setOnMouseDragged(e -> {
@@ -107,29 +84,28 @@ public class PaintController {
             if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
                 return;
             }
-            onDrag(x, y);
+            image.onDrag(x, y);
         });
 
         canvas.setOnMouseReleased(e -> {
-                    int x = (int) Math.floor(e.getX());
-                    int y = (int) Math.floor(e.getY());
-                    if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
-                        return;
-                    }
-                    onRelease(x, y);
-                }
-        );
+            int x = (int) Math.floor(e.getX());
+            int y = (int) Math.floor(e.getY());
+            if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
+                return;
+            }
+            image.onRelease(x, y);
+        });
 
         canvas.setOnMousePressed(e -> {
-                    int x = (int) Math.floor(e.getX());
-                    int y = (int) Math.floor(e.getY());
-                    if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
-                        return;
-                    }
-                    onPress(x, y);
-                }
-        );
+            int x = (int) Math.floor(e.getX());
+            int y = (int) Math.floor(e.getY());
+            if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
+                return;
+            }
+            image.onPress(x, y);
+        });
 
+        /* Tar bort denna så länge eftersom jag flyttar tillbaka allt till modellen
         stackPane.setOnMousePressed(e ->{
                     if(activeTool == zoomTool) {
                         if (e.isAltDown())
@@ -137,112 +113,48 @@ public class PaintController {
                         else
                         zoom(true);
                     }
-        });
-
+        });*/
 
 
         //Color Palette
         colorPicker.setValue(Color.BLACK);
 
         colorPicker.setOnAction(e -> {
-            Color temp = colorPicker.getValue();
-            updateColor(temp);
-            canvas.requestFocus();
+            sendColorState();
         });
         clearCanvas();
 
         //Toolbar
-        sizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 5) );
+        sizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 5));
         sizeSpinner.setEditable(true);
-        sizeSpinner.valueProperty().addListener((obs, oldvalue, newvalue) -> updateSize(newvalue));
-        opacitySlider.valueProperty().addListener((obs, oldvalue, newvalue) -> updateOpacity(newvalue.doubleValue()));
+        sizeSpinner.valueProperty().addListener((obs, oldvalue, newvalue) -> image.updateSize(newvalue));
+        opacitySlider.valueProperty().addListener((obs, oldvalue, newvalue) -> sendColorState());
         brushBar.setVisible(false);
         shapeBox.getItems().addAll("Circle", "Square");
         populateShapeComboBox();
-        shapeBox.valueProperty().addListener((obs, oldvalue, newvalue) -> updateToolShape(newvalue));
+        shapeBox.valueProperty().addListener((obs, oldvalue, newvalue) -> image.updateToolShape(newvalue));
+
+        sendColorState();
 
     }
 
-    public void onDrag(int x, int y){
-        if (!(image.getActiveLayer() == null)) {
-            activeTool.onDrag(x, y, image);
-            image.updateCanvas();
-        }
-    }
-
-    public void onRelease (int x, int y){
-        if (!(image.getActiveLayer() == null)) {
-            activeTool.onRelease(x, y, image);
-            image.updateCanvas();
-        }
-    }
-
-    public void onPress (int x, int y){
-        if (!(image.getActiveLayer() == null)) {
-            activeTool.onPress(x, y, image);
-            image.updateCanvas();
-        }
-    }
-
-    public void setActiveTool(ITool activeTool) {
-        this.activeTool = activeTool;
-        if(activeTool instanceof ISize){
-            ((ISize) activeTool).updateSize(toolSize);
-        }
-        if(activeTool instanceof IColor){
-            ((IColor) activeTool).updateColor(color);
-        }
-    }
-
-    public void updateSize(int size){
-        this.toolSize = size;
-        if(activeTool instanceof ISize){
-            ((ISize) activeTool).updateSize(toolSize);
-        }
-    }
-
-    public void updateColor(Color color){
-        this.color = opacity | ((int)(color.getRed() * 255) << 16) | ((int)(color.getGreen() * 255) << 8) | ((int)(color.getBlue() * 255));
-        if(activeTool instanceof IColor){
-            ((IColor) activeTool).updateColor(this.color);
-        }
-    }
-
-
-    private void updateColor(){
-        if(activeTool instanceof IColor){
-            ((IColor) activeTool).updateColor(this.color);
-        }
-    }
-
-    public void updateOpacity(double alpha){
-        int temp = (int)(0xFF * alpha);
-        temp = temp << 24;
-        this.opacity = temp & 0xFF000000;
-        this.color = (this.color & 0x00FFFFFF) | this.opacity;
-        updateColor();
-
-    }
-
-
-    public void updateToolShape(String s){
-        if(activeTool instanceof AbstractPaintTool){
-            ((AbstractPaintTool) activeTool).updateShape(s);
-        }
+    private void sendColorState(){
+        Color javafxcolor = colorPicker.getValue();
+        PaintColor color = new PaintColor(javafxcolor.getRed(),javafxcolor.getGreen(),javafxcolor.getBlue(),opacitySlider.getValue());
+        image.setColor(color);
     }
 
     @FXML
-    public void undoButton(){
+    public void undoButton() {
         image.undo();
     }
 
-
     @FXML
-    public void openFile(){
+    public void openFile() {
         //Mycket av denna funktion måste flyttas till andra delar. pixlarna ska ändras i modellen, inte här t.ex.
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(canvas.getScene().getWindow());
-        if (file == null){
+        if (file == null) {
             return;
         }
         BufferedImage loadedImage;
@@ -252,18 +164,18 @@ public class PaintController {
             //Todo: Handle this exception
             return;
         }
-        view.setSize(loadedImage.getWidth(),loadedImage.getHeight());
+        view.setSize(loadedImage.getWidth(), loadedImage.getHeight());
         lController.getLayerList().clear();
         image.deleteAllLayers();
-        image.setImageSize(loadedImage.getWidth(),loadedImage.getHeight());
+        image.setImageSize(loadedImage.getWidth(), loadedImage.getHeight());
         canvas.setImage(view.getImage());
         canvas.setFitHeight(loadedImage.getHeight());
         canvas.setFitWidth(loadedImage.getWidth());
-        image.createLayer(0,"Background");
+        image.createLayer(PaintColor.blank, "Background");
         PaintLayer pl = image.getActiveLayer();
         for (int x = 0; x < loadedImage.getWidth(); x++) {
             for (int y = 0; y < loadedImage.getHeight(); y++) {
-                pl.setPixel(x, y, loadedImage.getRGB(x, y));
+                pl.setPixel(x, y, new PaintColor(loadedImage.getRGB(x, y)));
             }
         }
         image.updateRenderedImage();
@@ -278,16 +190,19 @@ public class PaintController {
     @FXML
     public void setPencil() {
 
-        setActiveTool(pencilTool);
+        image.activatePencilTool();
         opacitySlider.setVisible(true);
         opacityLabel.setVisible(true);
         brushBar.setVisible(true);
     }
 
+
+    ////////////////////////////////////////// ZOOM ///////////////////////////////////////////////
+
     @FXML
     public void setFillTool() {
 
-        setActiveTool(bucketFillTool);
+        image.activateFillTool();
         brushBar.setVisible(false);
         opacitySlider.setValue(1);
     }
@@ -295,7 +210,7 @@ public class PaintController {
     @FXML
     public void setEraserTool() {
 
-        setActiveTool(eraserTool);
+        image.activateEraserTool();
         brushBar.setVisible(true);
         opacitySlider.setVisible(false);
         opacityLabel.setVisible(false);
@@ -304,15 +219,9 @@ public class PaintController {
 
     @FXML
     public void setZoomTool() {
-        setActiveTool(zoomTool);
+        image.activateZoomTool();
         brushBar.setVisible(false);
     }
-
-
-    ////////////////////////////////////////// ZOOM ///////////////////////////////////////////////
-
-    private static final double MAX_SCALE = 15.0d;
-    private static final double MIN_SCALE = 0.1d;
 
     @FXML
     public void zoom(boolean setZoom) {
@@ -325,8 +234,7 @@ public class PaintController {
         double scaleY = image.getZoomScaleY();
         double scaleX = image.getZoomScaleX();
 
-        if(setZoom)
-        {
+        if (setZoom) {
             scaleY *= delta;
             scaleX *= delta;
         } else {
@@ -353,44 +261,33 @@ public class PaintController {
     }
 
     @FXML
-    public void zoomIn(){
+    public void zoomIn() {
         zoom(true);
     }
+
     @FXML
-    public void zoomOut(){
+    public void zoomOut() {
         zoom(false);
     }
 
-    private void setZoomPercent (double percent){
+    private void setZoomPercent(double percent) {
         canvas.setScaleY(percent);
         canvas.setScaleX(percent);
     }
+
     @FXML
-    public void zoomFifty(){
+    public void zoomFifty() {
         setZoomPercent(0.5);
     }
 
     @FXML
-    public void zoomHundred(){
+    public void zoomHundred() {
         setZoomPercent(1);
     }
 
     @FXML
-    public void zoomTwoHundred(){
+    public void zoomTwoHundred() {
         setZoomPercent(2);
-    }
-
-
-
-    public static double clamp( double value, double min, double max) {
-
-        if( Double.compare(value, min) < 0)
-            return min;
-
-        if( Double.compare(value, max) > 0)
-            return max;
-
-        return value;
     }
 
     private void populateShapeComboBox() {

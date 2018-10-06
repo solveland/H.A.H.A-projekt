@@ -5,9 +5,8 @@ import Model.AbstractPaintTool;
 public class EraserTool extends AbstractPaintTool implements ISize {
 
 
-    public EraserTool(int size){
-        this.size = size;
-        this.color = 0xFFFFFFFF;
+    public EraserTool(){
+        this.color = new PaintColor(255,255,255);
     }
 
 
@@ -22,7 +21,7 @@ public class EraserTool extends AbstractPaintTool implements ISize {
      */
 
     @Override
-    int getPixelColor(int x, int y) {
-        return 0;
+    PaintColor getPixelColor(int x, int y,PaintColor oldPixel) {
+        return PaintColor.blank;
     }
 }

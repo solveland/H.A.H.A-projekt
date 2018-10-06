@@ -3,9 +3,9 @@ package Model;
 public class Pixel {
     private int x;
     private int y;
-    private int color;
+    private PaintColor color;
 
-    public Pixel(int x, int y, int color){
+    public Pixel(int x, int y, PaintColor color){
         this.x = x;
         this.y = y;
         this.color = color;
@@ -19,7 +19,7 @@ public class Pixel {
         return y;
     }
 
-    public int getColor() {
+    public PaintColor getColor() {
         return color;
     }
 }

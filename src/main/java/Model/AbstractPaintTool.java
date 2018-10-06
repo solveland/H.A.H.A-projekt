@@ -1,9 +1,9 @@
 package Model;
 
 public abstract class AbstractPaintTool implements ITool {
-    protected int[] brushBuffer;
+    protected PaintColor[] brushBuffer;
     protected int size;
-    protected int color;
+    protected PaintColor color;
     public enum Shape { CIRCLE, SQUARE }
     private UndoBuffer undoBuffer;
     private Shape shape = Shape.CIRCLE;
@@ -27,14 +27,17 @@ public abstract class AbstractPaintTool implements ITool {
         int diameter = size*2-1;
         for(int yc = 0; yc < diameter; yc++){
             for(int xc = 0; xc < diameter; xc++){
-                if((brushBuffer[yc*diameter +xc] & 0xFF000000) != 0){
+                if(brushBuffer[yc*diameter +xc].getAlpha() != 0 ){
                     int pixelX = xc+xPos - diameter/2;
                     int pixelY = yc+yPos - diameter/2;
-                    if(pixelX < 0 || pixelX >= layer.getWidth() || pixelY < 0 ||pixelY >= layer.getHeight() || layer.getPixel(xc+xPos - diameter/2,yc+yPos - diameter/2) == getPixelColor(xc, yc)){
+                    if(pixelX < 0 || pixelX >= layer.getWidth() || pixelY < 0 ||pixelY >= layer.getHeight() || layer.getPixel(xc+xPos - diameter/2,yc+yPos - diameter/2) == getPixelColor(xc, yc,layer.getPixel(xc+xPos - diameter/2,yc+yPos - diameter/2))){
+                        continue;
+                    }
+                    if (undoBuffer.contains(xc + xPos - diameter/2, yc + yPos - diameter/2)){
                         continue;
                     }
                     undoBuffer.addPixel(xc+xPos - diameter/2,yc+yPos - diameter/2,layer.getPixel(xc+xPos - diameter/2,yc+yPos - diameter/2));
-                    layer.setPixel(xc+xPos - diameter/2,yc+yPos - diameter/2, getPixelColor(xc, yc));
+                    layer.setPixel(xc+xPos - diameter/2,yc+yPos - diameter/2, getPixelColor(xc, yc,layer.getPixel(xc + xPos - diameter / 2,yc + yPos - diameter / 2)));
                 }
             }
         }
@@ -46,13 +49,14 @@ public abstract class AbstractPaintTool implements ITool {
 
     protected void updateBrush(){
         int brushDiameter = size * 2 - 1;
-        brushBuffer = new int[brushDiameter * brushDiameter];
+        PaintColor empty = new PaintColor(0,0,0,0);
+        brushBuffer = new PaintColor[brushDiameter * brushDiameter];
         int midPoint = size -1;
         if(shape == Shape.CIRCLE) {
             for (int y = 0; y < brushDiameter; y++) {
                 for (int x = 0; x < brushDiameter; x++) {
                     if (Math.sqrt((x - midPoint) * (x - midPoint) + (y - midPoint) * (y - midPoint)) > size - 0.5) {
-                        brushBuffer[y * brushDiameter + x] = 0;
+                        brushBuffer[y * brushDiameter + x] = empty;
                     } else {
                         brushBuffer[y * brushDiameter + x] = color;
                     }
@@ -77,7 +81,7 @@ public abstract class AbstractPaintTool implements ITool {
     }
 
 
-    abstract int getPixelColor(int x, int y);
+    abstract PaintColor getPixelColor(int x, int y,PaintColor oldColor);
 
 
 }

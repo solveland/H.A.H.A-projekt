@@ -2,26 +2,24 @@ package Model;
 
 public class PaintLayer {
 
-    private int[] pixelArray;
+    private PaintColor[] pixelArray;
     private int height;
     private int width;
-    private int changedMinX,changedMinY,changedMaxX,changedMaxY;
+    private int changedMinX, changedMinY, changedMaxX, changedMaxY;
     private boolean changed = false;
     private boolean visible;
-    private int bgColor;
+    private PaintColor bgColor;
     private String name;
 
-    public PaintLayer(int sizeX, int sizeY, int bgColor, String name) {
+    public PaintLayer(int sizeX, int sizeY, PaintColor bgColor, String name) {
         height = sizeY;
         width = sizeX;
-        pixelArray = new int[sizeX * sizeY];
+        pixelArray = new PaintColor[sizeX * sizeY];
         this.bgColor = bgColor;
         visible = true;
         this.name = name;
 
-        if (bgColor != 0)
-        for (int i = 0; i < sizeX * sizeY; i++)
-        {
+        for (int i = 0; i < sizeX * sizeY; i++) {
             pixelArray[i] = bgColor;
         }
         changedMinX = width;
@@ -39,31 +37,31 @@ public class PaintLayer {
         return height;
     }
 
-    public void setPixel(int x, int y, int rgb) {
+    public void setPixel(int x, int y, PaintColor rgb) {
         pixelArray[y * width + x] = rgb;
-        if (!changed){
+        if (!changed) {
             changedMinX = x;
             changedMaxX = x + 1;
             changedMinY = y;
             changedMaxY = y + 1;
             changed = true;
         } else {
-            if (x < changedMinX){
+            if (x < changedMinX) {
                 changedMinX = x;
-            } else if(x >= changedMaxX){
+            } else if (x >= changedMaxX) {
                 changedMaxX = x + 1;
             }
 
-            if (y < changedMinY){
+            if (y < changedMinY) {
                 changedMinY = y;
-            } else if(y >= changedMaxY){
+            } else if (y >= changedMaxY) {
                 changedMaxY = y + 1;
             }
         }
     }
 
-    public int getPixel(int x, int y) {
-        return pixelArray[y*width+x];
+    public PaintColor getPixel(int x, int y) {
+        return pixelArray[y * width + x];
     }
 
     // Temporary clear
@@ -78,7 +76,7 @@ public class PaintLayer {
         changedMaxX = width;
     }
 
-    public void resetChangeTracker(){
+    public void resetChangeTracker() {
         changedMinX = 0;
         changedMaxX = 0;
         changedMinY = 0;
@@ -106,14 +104,15 @@ public class PaintLayer {
         return changed;
     }
 
-    public boolean isVisible() { return visible; }
+    public boolean isVisible() {
+        return visible;
+    }
 
     public void toggleVisible() {
         visible = !visible;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 

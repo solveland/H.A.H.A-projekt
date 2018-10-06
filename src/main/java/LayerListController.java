@@ -1,5 +1,6 @@
 import Model.ImageModel;
 import Model.ModelObserver;
+import Model.PaintColor;
 import Model.PaintLayer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -82,7 +83,7 @@ public class LayerListController extends StackPane implements ModelObserver, Lay
         }
     }
 
-    private void createLayer(int bgColor, String name) {
+    private void createLayer(PaintColor bgColor, String name) {
         int index = 0;
 
         if (!layerViewList.isEmpty())
@@ -102,7 +103,7 @@ public class LayerListController extends StackPane implements ModelObserver, Lay
     // New layer button creates a transparent layer with a unique name
     @FXML
     public void newLayerAction() {
-        createLayer(0, "Layer " + image.getNewLayerCount());
+        createLayer(PaintColor.blank, "Layer " + image.getNewLayerCount());
     }
 
     // Delete layer button deletes the selected layer and selects a new layer (or none if there are no layers)

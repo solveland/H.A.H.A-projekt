@@ -25,7 +25,6 @@ public class Main extends Application {
 
         stage.setTitle("Paint");
         stage.show();
-        pc.afterInitialize(scene);
     }
 
     public static void main(String[] args) {

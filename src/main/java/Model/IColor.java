@@ -2,6 +2,6 @@ package Model;
 
 public interface IColor {
 
-    void updateColor(int color);
+    void updateColor(PaintColor color);
 
 }

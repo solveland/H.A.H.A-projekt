@@ -9,9 +9,9 @@ import static junit.framework.TestCase.assertTrue;
 
 public class BucketTest {
 
-    int sizeX = 600;
+    /*int sizeX = 600;
     int sizeY = 600;
-    PaintLayer layer = new PaintLayer(sizeX,sizeY,0xFFFFFFFF);
+    PaintLayer layer = new PaintLayer(sizeX,sizeY,0xFFFFFFFF,"Background");
     ImageModel image = new ImageModel(sizeX, sizeY);
 
 
@@ -33,7 +33,7 @@ public class BucketTest {
         assertTrue(layer.getPixel(x+50,y+50) == blue);
         assertTrue(layer.getPixel(x-50,y-50) == blue);
         System.out.println("Second bucketToolTest, successful");
-    }
+    }*/
 
 
 
