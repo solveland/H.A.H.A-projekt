@@ -20,12 +20,16 @@ public class ImageModel {
     private double oldZoomScaleY;
     private double oldZoomScaleX;
 
+    public ArrayList<Pixel> overlay;
+    public ArrayList<Pixel> oldOverlay;
+
     private ITool activeTool;
 
     private PencilTool pencilTool;
     private BucketFillTool bucketFillTool;
     private EraserTool eraserTool;
     private ZoomTool zoomTool;
+    private SelectTool selectTool;
 
     private int toolSize = 5;
     private PaintColor color;
@@ -43,10 +47,13 @@ public class ImageModel {
         bucketFillTool = new BucketFillTool();
         eraserTool = new EraserTool();
         zoomTool = new ZoomTool();
+        selectTool = new SelectTool();
         setActiveTool(pencilTool);
 
         layerList = new LinkedList<>();
 
+        overlay = new <Pixel>ArrayList();
+        oldOverlay = new <Pixel>ArrayList();
         renderedImage = new PaintLayer(sizeX, sizeY, new PaintColor(0,0,0,0), null);
 
         observers = new ArrayList<>();
@@ -72,7 +79,7 @@ public class ImageModel {
     }
 
     public void updateCanvas() {
-        if (!layerList.isEmpty() && activeLayer.isChanged())
+        if (!layerList.isEmpty())
             updateRenderedRect();
 
         if (renderedImage.isChanged()) {
@@ -175,7 +182,7 @@ public class ImageModel {
         for(Pixel p : buffer.pixels){
             buffer.getLayer().setPixel(p.getX(),p.getY(),p.getColor());
         }
-        updateRenderedImage();
+        updateCanvas();
     }
 
     public void activatePencilTool(){
@@ -193,6 +200,8 @@ public class ImageModel {
     public void activateZoomTool(){
         setActiveTool(zoomTool);
     }
+
+    public void activateSelectTool(){setActiveTool(selectTool);}
 
     public double getZoomScaleY(){
         return zoomScaleY;
@@ -252,6 +261,7 @@ public class ImageModel {
 
         PaintLayer newLayer = new PaintLayer(width, height, bgColor, name);
         layerList.add(index, newLayer);
+
 
         setActiveLayer(newLayer);
 
@@ -330,11 +340,19 @@ public class ImageModel {
                 renderedImage.setPixel(x, y, PaintColor.blank);
             }
         }
+        for (int i =0; i < oldOverlay.size(); i+=5){
+            renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(), PaintColor.blank );
+        }
 
         // Draws the from bottom layer to top layer to make a top layer render over the bottom layer.
         if(!layerList.isEmpty()) {
             for (PaintLayer l : reversedLayerList()) {
                 if (l.isVisible()) {
+                    for (int i =0; i < oldOverlay.size(); i+=5){
+                        renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(),
+                                PaintColor.alphaBlend(l.getPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY()),renderedImage.getPixel(oldOverlay.get(i).getX(),oldOverlay.get(i).getY())));
+                    }
+                    oldOverlay.clear();
                     for (int x = minX; x < maxX; x++) {
                         for (int y = minY; y < maxY; y++) {
                             if ((l.getPixel(x, y).getAlpha() != 0))
@@ -344,10 +362,17 @@ public class ImageModel {
                 }
             }
         }
+
         for(PaintLayer layer : layerList){
             layer.resetChangeTracker();
         }
-        updateCanvas();
+
+        for (int i =0; i < overlay.size(); i+=5){
+            renderedImage.setPixel(overlay.get(i).getX(), overlay.get(i).getY(), new PaintColor(0,0,0) );
+        }
+            //updateCanvas();
+
+
     }
 
     private void renderTransparent() {
@@ -356,10 +381,8 @@ public class ImageModel {
                 renderedImage.setPixel(x, y, PaintColor.blank);
             }
         }
-
         updateCanvas();
     }
 
     ///// RENDER END //////
-
 }

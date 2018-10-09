@@ -218,6 +218,11 @@ public class PaintController {
     }
 
     @FXML
+    public void setSelectTool(){
+        image.activateSelectTool();
+    }
+
+    @FXML
     public void setZoomTool() {
         image.activateZoomTool();
         brushBar.setVisible(false);
