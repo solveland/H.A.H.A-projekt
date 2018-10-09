@@ -1,9 +1,12 @@
-package Model;
+package model.tools;
+
+import model.*;
+import model.utils.PaintColor;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class BucketFillTool implements IColor, ITool {
+public class BucketFillTool implements ITool {
 
     private PaintColor newColor;
     private UndoBuffer undoBuffer;
@@ -58,9 +61,9 @@ public class BucketFillTool implements IColor, ITool {
 
     }
 
-    @Override
-    public void updateColor(PaintColor color){
-        this.newColor = color;
+
+    public void updateSettings(ToolSettings ts){
+        this.newColor = ts.getPaintColor();
     }
 
 

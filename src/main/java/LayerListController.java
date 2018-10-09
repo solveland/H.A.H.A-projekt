@@ -1,16 +1,18 @@
-import Model.ImageModel;
-import Model.ModelObserver;
-import Model.PaintColor;
-import Model.PaintLayer;
+
+import model.ImageModel;
+import model.ModelObserver;
+import model.utils.PaintColor;
+import model.PaintLayer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 
+
+
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class LayerListController extends StackPane implements ModelObserver, LayerObserver {

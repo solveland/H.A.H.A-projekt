@@ -1,4 +1,6 @@
-import Model.PaintLayer;
+
+
+import model.PaintLayer;
 
 public interface LayerObserver {
 

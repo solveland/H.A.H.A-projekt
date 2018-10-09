@@ -1,72 +1,57 @@
-import Model.ImageModel;
-import Model.PaintLayer;
-import Model.PencilTool;
-import org.junit.Test;
+import model.ImageModel;
+import model.PaintLayer;
+import model.tools.PencilTool;
+import com.pholser.junit.quickcheck.Property;
+import com.pholser.junit.quickcheck.generator.InRange;
 
-import static junit.framework.TestCase.assertTrue;
+import com.pholser.junit.quickcheck.runner.JUnitQuickcheck;
+import model.tools.ToolSettings;
+import model.utils.PaintColor;
+import org.junit.Test;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.runner.RunWith;
+
+import java.awt.*;
+
+
+@RunWith(JUnitQuickcheck.class)
+
+
 
 public class PencilTest {
-    /*PencilTool pt = new PencilTool(10);
 
-    @Test
-    public void paintTest() {
-        ImageModel image = new ImageModel(50, 50);
-        PaintLayer pl = new PaintLayer(50, 50, 0xFFFFFFFF,"Background");
-        image.setActiveLayer(pl);
-        assertTrue(pl.getPixel(0, 0) == 0xFFFFFFFF);
-        assertTrue(pl.getPixel(2, 2) == 0xFFFFFFFF);
-        assertTrue(pl.getPixel(7, 7) == 0xFFFFFFFF);
-        assertTrue(pl.getPixel(5, 14) == 0xFFFFFFFF);
-        assertTrue(pl.getPixel(14, 5) == 0xFFFFFFFF);
-        assertTrue(pl.getPixel(16, 16) == 0xFFFFFFFF);
-        pt.updateColor(0xFF000000);
-        int x = (int) (Math.random() * 49);
-        int y = (int) (Math.random() * 49);
-        pt.onPress(x, y, image);
-        if ((x - 5 >= 0) && (y - 5 >= 0)) {
-            assertTrue(pl.getPixel(x - 5, y - 5) == 0xFF000000);
-            assertTrue(pl.getPixel(x - 3, y - 3) == 0xFF000000);
-        }
-        if ((x + 10 <= 49) && (y + 10 <= 49)) {
-            assertTrue(pl.getPixel(x + 2, y + 2) == 0xFF000000);
-            assertTrue(pl.getPixel(x, y + 9) == 0xFF000000);
-            assertTrue(pl.getPixel(x + 9, y) == 0xFF000000);
-        }
-        if ((x + 11 <= 49) && (y + 11 <= 49)) {
-            assertTrue(pl.getPixel(x + 10, y + 10) == 0xFFFFFFFF);
-            assertTrue(pl.getPixel(49, y) == 0xFFFFFFFF);
-            assertTrue(pl.getPixel(x, 49) == 0xFFFFFFFF);
-        }
-        pt.updateColor(0xFF00FF00);
-        pt.onPress(x, y, image);
-        if ((x - 5 >= 0) && (y - 5 >= 0)) {
-            assertTrue(pl.getPixel(x - 5, y - 5) == 0xFF00FF00);
-            assertTrue(pl.getPixel(x - 3, y - 3) == 0xFF00FF00);
-        }
-        if ((x + 10 <= 49) && (y + 10 <= 49)) {
-            assertTrue(pl.getPixel(x + 2, y + 2) == 0xFF00FF00);
-            assertTrue(pl.getPixel(x, y + 9) == 0xFF00FF00);
-            assertTrue(pl.getPixel(x + 9, y) == 0xFF00FF00);
-        }
-        if ((x + 11 <= 49) && (y + 11 <= 49)) {
-            assertTrue(pl.getPixel(x + 10, y + 10) == 0xFFFFFFFF);
-            assertTrue(pl.getPixel(49, y) == 0xFFFFFFFF);
-            assertTrue(pl.getPixel(x, 49) == 0xFFFFFFFF);
-        }
-        pt.updateSize(5);
-        pt.updateColor(0xFF000000);
-        pt.onPress(x, y, image);
-        if ((x + 10 <= 49) && (y + 10 <= 49)) {
-            assertTrue(pl.getPixel(x, y + 9) == 0xFF00FF00);
-            assertTrue(pl.getPixel(x + 9, y) == 0xFF00FF00);
-        }
-        if ((x - 5 >= 0) && (y - 5 >= 0) && (x + 5 <= 49) && (y + 5 <= 49)) {
-            assertTrue(pl.getPixel(x, y) == 0xFF000000);
-            assertTrue(pl.getPixel(x - 3, y - 3) == 0xFF000000);
-            assertTrue(pl.getPixel(x + 3, y + 3) == 0xFF000000);
+
+    @Property
+    public void paintTest(@InRange(minInt=3, maxInt=15) int size, @InRange(minInt=0, maxInt=149) int x,
+                          @InRange(minInt=0, maxInt=149) int y, @InRange(minInt=0, maxInt=255) int green,
+                          @InRange(minInt=0, maxInt=255) int blue, @InRange(minInt=0, maxInt=255) int red,
+                          @InRange(minInt=150, maxInt=200) int limit ) {
+        ImageModel im = new ImageModel(limit, limit);
+        int alpha = 255;
+        PaintColor color = new PaintColor(red, green, blue, alpha);
+        PaintColor nocolor = new PaintColor(255, 255,255,255);
+        im.activatePencilTool();
+        im.setSize(size);
+        im.setColor(color);
+        im.onPress(x, y);
+
+
+
+        for(int xi = 0; xi < limit; xi++){
+            for(int yi = 0; yi < limit; yi++) {
+
+                if (Math.sqrt((xi - x) * (xi - x) + (yi - y) * (yi - y)) > size - 0.5){
+                    assertTrue(im.getActiveLayer().getPixel(xi, yi).equals(nocolor));
+                }
+                else {
+                    assertTrue(im.getActiveLayer().getPixel(xi, yi).equals(color));
+                }
+            }
         }
 
-    }*/
+
+    }
 
 
 }

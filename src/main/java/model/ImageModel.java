@@ -1,4 +1,8 @@
-package Model;
+package model;
+
+import model.tools.*;
+import model.utils.PaintColor;
+import model.utils.Pixel;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -31,8 +35,8 @@ public class ImageModel {
     private ZoomTool zoomTool;
     private SelectTool selectTool;
 
-    private int toolSize = 5;
-    private PaintColor color;
+    private ToolSettings ts = new ToolSettings(5);
+
 
     private int newLayerCount;
     private Stack<UndoBuffer> undoBufferStack;
@@ -41,7 +45,7 @@ public class ImageModel {
         width = sizeX;
         height = sizeY;
 
-        activeLayer = null;
+
 
         pencilTool = new PencilTool();
         bucketFillTool = new BucketFillTool();
@@ -57,6 +61,9 @@ public class ImageModel {
         renderedImage = new PaintLayer(sizeX, sizeY, new PaintColor(0,0,0,0), null);
 
         observers = new ArrayList<>();
+
+
+        createLayer(new PaintColor(255,255,255), "Background"); // Should be moved to the method where we initialize a new project.
 
         newLayerCount = 0;
 
@@ -119,38 +126,25 @@ public class ImageModel {
 
     private void setActiveTool(ITool activeTool) {
         this.activeTool = activeTool;
-        if(activeTool instanceof ISize){
-            ((ISize) activeTool).updateSize(toolSize);
-        }
-        if(activeTool instanceof IColor){
-            ((IColor) activeTool).updateColor(color);
-        }
+        activeTool.updateSettings(ts);
     }
 
-    public void updateSize(int size){
-        this.toolSize = size;
-        if(activeTool instanceof ISize){
-            ((ISize) activeTool).updateSize(toolSize);
-        }
+    public void setSize(int size){
+        ts.setSize(size);
+        activeTool.updateSettings(ts);
     }
 
     public void setColor(PaintColor color){
-        this.color = color;
-        updateColor();
+        ts.setColor(color);
+        activeTool.updateSettings(ts);
     }
 
 
-    private void updateColor(){
-        if(activeTool instanceof IColor){
-            ((IColor) activeTool).updateColor(this.color);
-        }
-    }
 
 
-    public void updateToolShape(String s){
-        if(activeTool instanceof AbstractPaintTool){
-            ((AbstractPaintTool) activeTool).updateShape(s);
-        }
+    public void setToolShape(String s){
+        ts.setShape(s);
+        activeTool.updateSettings(ts);
     }
 
     private void updateLayerGUI() {
