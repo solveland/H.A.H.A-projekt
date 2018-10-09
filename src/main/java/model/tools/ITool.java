@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 public interface ITool {
     void onDrag(int x, int y, ImageModel imageModel);

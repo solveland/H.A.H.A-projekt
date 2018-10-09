@@ -1,4 +1,6 @@
-package Model;
+package model;
+
+import model.utils.PaintColor;
 
 import java.awt.*;
 import java.util.LinkedList;

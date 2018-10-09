@@ -1,14 +1,12 @@
-import Model.ImageModel;
-import Model.PaintLayer;
-import Model.*;
+package controller;
+
+import model.ImageModel;
+import model.PaintLayer;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 
@@ -16,14 +14,12 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import javafx.util.Callback;
+import model.utils.PaintColor;
+import view.PaintView;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-
-import java.util.List;
 
 public class PaintController {
 
@@ -131,7 +127,7 @@ public class PaintController {
         opacitySlider.valueProperty().addListener((obs, oldvalue, newvalue) -> sendColorState());
         brushBar.setVisible(false);
         shapeBox.getItems().addAll("Circle", "Square");
-        populateShapeComboBox();
+        view.populateShapeComboBox(shapeBox);
         shapeBox.valueProperty().addListener((obs, oldvalue, newvalue) -> image.updateToolShape(newvalue));
 
         sendColorState();
@@ -290,51 +286,7 @@ public class PaintController {
         setZoomPercent(2);
     }
 
-    private void populateShapeComboBox() {
-        Callback<ListView<String>, ListCell<String>> cellFactory = new Callback<ListView<String>, ListCell<String>>() {
 
-            @Override
-            public ListCell<String> call(ListView<String> p) {
-
-                return new ListCell<String>() {
-
-                    @Override
-                    protected void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-
-                        setText(item);
-
-                        if (item == null || empty) {
-                            setGraphic(null);
-                        } else {
-                            Image icon = null;
-                            String iconPath;
-                            try {
-                                switch (item) {
-
-                                    case "Circle":
-                                        iconPath = "circle.png";
-                                        icon = new Image(getClass().getClassLoader().getResourceAsStream(iconPath));
-                                        break;
-                                    case "Square":
-                                        iconPath = "square.png";
-                                        icon = new Image(getClass().getClassLoader().getResourceAsStream(iconPath));
-                                        break;
-                                }
-                            } catch (NullPointerException ex) {
-                            }
-                            ImageView iconImageView = new ImageView(icon);
-                            iconImageView.setFitHeight(12);
-                            iconImageView.setPreserveRatio(true);
-                            setGraphic(iconImageView);
-                        }
-                    }
-                };
-            }
-        };
-        shapeBox.setButtonCell(cellFactory.call(null));
-        shapeBox.setCellFactory(cellFactory);
-    }
 
     /////////////////////////////////////////////////////////////////////
 

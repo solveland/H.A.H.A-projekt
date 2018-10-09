@@ -1,6 +1,6 @@
-package Model;
+package model;
 
-import Model.AbstractPaintTool;
+import model.utils.PaintColor;
 
 public class EraserTool extends AbstractPaintTool implements ISize {
 

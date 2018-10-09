@@ -1,10 +1,12 @@
-package Model;
+package model;
+
+import model.utils.PaintColor;
+import model.utils.Shape;
 
 public abstract class AbstractPaintTool implements ITool {
     protected PaintColor[] brushBuffer;
     protected int size;
     protected PaintColor color;
-    public enum Shape { CIRCLE, SQUARE }
     private UndoBuffer undoBuffer;
     private Shape shape = Shape.CIRCLE;
     /* TODO: When we have a broader understanding of what the tools will require we have to move functionality to this class
