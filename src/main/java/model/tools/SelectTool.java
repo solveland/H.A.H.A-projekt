@@ -1,6 +1,10 @@
-package Model;
+package model.tools;
 
-import java.awt.*;
+import model.ImageModel;
+import model.utils.Pixel;
+import model.utils.Point;
+import model.utils.PaintColor;
+
 import java.util.ArrayList;
 
 public class SelectTool implements ITool{
@@ -46,6 +50,9 @@ public class SelectTool implements ITool{
         setStartPoint(startPoint);
     }
     public void onRelease(int x, int y, ImageModel imageModel){
+
+    }
+    public void updateSettings(ToolSettings ts){
 
     }
 

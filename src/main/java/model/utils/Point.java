@@ -1,4 +1,4 @@
-package Model;
+package model.utils;
 
 public class Point <T> {
     private int x;

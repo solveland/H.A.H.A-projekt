@@ -23,6 +23,7 @@ dependencies {
     compile 'com.pholser:junit-quickcheck-core:0.7'
     compile 'com.pholser:junit-quickcheck-generators:0.7'
 
+
     // Use JUnit test framework
     testCompile 'junit:junit:4.12'
 
