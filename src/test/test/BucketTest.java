@@ -1,10 +1,3 @@
-import Model.BucketFillTool;
-import Model.ImageModel;
-import Model.PaintLayer;
-import org.junit.Test;
-
-import java.awt.*;
-
 import static junit.framework.TestCase.assertTrue;
 
 public class BucketTest {

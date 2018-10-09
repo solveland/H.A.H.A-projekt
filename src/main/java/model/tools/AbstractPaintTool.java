@@ -1,11 +1,14 @@
-package model;
+package model.tools;
 
+import model.ImageModel;
+import model.PaintLayer;
+import model.UndoBuffer;
 import model.utils.PaintColor;
 import model.utils.Shape;
 
 public abstract class AbstractPaintTool implements ITool {
-    protected PaintColor[] brushBuffer;
-    protected int size;
+    PaintColor[] brushBuffer;
+    int size;
     protected PaintColor color;
     private UndoBuffer undoBuffer;
     private Shape shape = Shape.CIRCLE;
@@ -22,6 +25,16 @@ public abstract class AbstractPaintTool implements ITool {
     public void onRelease(int x, int y, ImageModel imageModel){
 
     }
+
+
+    @Override
+    public void updateSettings(ToolSettings ts) {
+        this.size = ts.getSize();
+        this.color = ts.getPaintColor();
+        this.shape = ts.getShape();
+        updateBrush();
+    }
+
     /**
      * Checks the brushbuffer for colored pixels and sets layer accordingly
      */
@@ -74,13 +87,6 @@ public abstract class AbstractPaintTool implements ITool {
         }
     }
 
-    public void updateShape(String shape){
-        if(shape.equals("Circle"))
-            this.shape = Shape.CIRCLE;
-        else if(shape.equals("Square"))
-            this.shape = Shape.SQUARE;
-        updateBrush();
-    }
 
 
     abstract PaintColor getPixelColor(int x, int y,PaintColor oldColor);

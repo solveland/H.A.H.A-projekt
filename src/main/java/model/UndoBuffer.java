@@ -1,4 +1,7 @@
-package Model;
+package model;
+
+import model.utils.PaintColor;
+import model.utils.Pixel;
 
 import java.util.ArrayList;
 import java.util.List;

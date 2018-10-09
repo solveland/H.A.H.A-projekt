@@ -1,4 +1,4 @@
-package controller;
+
 
 import model.ImageModel;
 import model.PaintLayer;
@@ -70,8 +70,6 @@ public class PaintController {
         image.addObserver(lController);
         borderPane.setRight(lController.getLayerPane());
 
-        image.createLayer(new PaintColor(255,255,255), "Background"); // Should be moved to the method where we initialize a new project.
-
 
         canvas.setImage(view.getImage());
         canvas.setOnMouseDragged(e -> {
@@ -123,12 +121,12 @@ public class PaintController {
         //Toolbar
         sizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 5));
         sizeSpinner.setEditable(true);
-        sizeSpinner.valueProperty().addListener((obs, oldvalue, newvalue) -> image.updateSize(newvalue));
+        sizeSpinner.valueProperty().addListener((obs, oldvalue, newvalue) -> image.setSize(newvalue));
         opacitySlider.valueProperty().addListener((obs, oldvalue, newvalue) -> sendColorState());
         brushBar.setVisible(false);
         shapeBox.getItems().addAll("Circle", "Square");
         view.populateShapeComboBox(shapeBox);
-        shapeBox.valueProperty().addListener((obs, oldvalue, newvalue) -> image.updateToolShape(newvalue));
+        shapeBox.valueProperty().addListener((obs, oldvalue, newvalue) -> image.setToolShape(newvalue));
 
         sendColorState();
 

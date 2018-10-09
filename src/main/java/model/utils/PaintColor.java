@@ -1,4 +1,4 @@
-package Model;
+package model.utils;
 
 public class PaintColor {
     public static PaintColor blank = new PaintColor(0,0,0,0);

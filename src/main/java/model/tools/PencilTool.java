@@ -1,21 +1,9 @@
-package model;
+package model.tools;
 
 import model.utils.PaintColor;
 
-public class PencilTool extends AbstractPaintTool implements ISize, IColor {
+public class PencilTool extends AbstractPaintTool  {
 
-
-    @Override
-    public void updateColor(PaintColor color) {
-        this.color = color;
-        updateBrush();
-    }
-
-    @Override
-    public void updateSize(int size) {
-        this.size = size;
-        updateBrush();
-    }
 
 
     @Override

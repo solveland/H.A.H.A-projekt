@@ -1,6 +1,4 @@
-package view;
 
-import controller.LayerObserver;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;

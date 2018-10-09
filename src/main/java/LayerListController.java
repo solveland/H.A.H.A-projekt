@@ -1,6 +1,4 @@
-package controller;
 
-import view.LayerItem;
 import model.ImageModel;
 import model.ModelObserver;
 import model.utils.PaintColor;

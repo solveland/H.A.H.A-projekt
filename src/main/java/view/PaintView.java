@@ -1,3 +1,4 @@
+package view;
 
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
