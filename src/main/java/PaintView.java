@@ -1,5 +1,5 @@
-import Model.ModelObserver;
-import Model.PaintLayer;
+import model.ModelObserver;
+import model.PaintLayer;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 

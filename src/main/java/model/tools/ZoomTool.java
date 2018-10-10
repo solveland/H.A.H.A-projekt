@@ -1,4 +1,7 @@
-package Model;
+package model.tools;
+
+import model.ImageModel;
+import model.tools.ITool;
 
 public class ZoomTool implements ITool {
 
@@ -14,5 +17,7 @@ public class ZoomTool implements ITool {
 
     };
 
+    public void updateSettings(ToolSettings ts) {
 
+    }
 }

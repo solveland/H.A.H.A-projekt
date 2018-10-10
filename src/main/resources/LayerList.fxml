@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.StackPane?>
 
-
 <fx:root fx:id="frontPane" type="StackPane" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <javafx.scene.control.TitledPane id="background" fx:id="titledPane" alignment="TOP_LEFT" animated="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="290.0" prefWidth="194.0" styleClass="hud" stylesheets="@Stylesheet.css" text="Layers">

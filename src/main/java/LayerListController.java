@@ -1,7 +1,7 @@
-import Model.ImageModel;
-import Model.ModelObserver;
-import Model.PaintColor;
-import Model.PaintLayer;
+import model.ImageModel;
+import model.ModelObserver;
+import model.utils.PaintColor;
+import model.PaintLayer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
@@ -10,8 +10,9 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,6 +75,8 @@ public class LayerListController extends StackPane implements ModelObserver, Lay
                 e.consume();
             }
         });
+
+        updateLayerItemList(image.getLayerList());
     }
 
     /*
@@ -122,6 +125,8 @@ public class LayerListController extends StackPane implements ModelObserver, Lay
             if (!itemExists)
                 createLayerItem(p, p.getName(), i);
         }
+
+        selectActiveLayer();
     }
 
     /*
@@ -246,11 +251,7 @@ public class LayerListController extends StackPane implements ModelObserver, Lay
             frontPane.getChildren().add(dragImage);
             mouseY = e.getSceneY();
             dragImage.setManaged(false);
-            dragImage.setY(mouseY - 40);
-            System.out.println(dragImage.getImage().getHeight());
-            System.out.println(dragImage.getImage().getWidth());
-            System.out.println(layerItem.getWidth());
-
+            dragImage.setY(mouseY - 80);
 
             e.consume();
         });

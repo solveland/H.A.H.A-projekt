@@ -1,4 +1,6 @@
-package Model;
+package model;
+
+import model.utils.PaintColor;
 
 public class PaintLayer {
 

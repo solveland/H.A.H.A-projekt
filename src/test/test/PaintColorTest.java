@@ -1,4 +1,4 @@
-import Model.PaintColor;
+import model.utils.PaintColor;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;

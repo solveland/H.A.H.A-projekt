@@ -12,7 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
-import Model.PaintLayer;
+import model.PaintLayer;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
