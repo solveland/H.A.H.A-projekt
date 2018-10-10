@@ -9,14 +9,16 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.StackPane?>
 
-<fx:root fx:id="layerPane" prefHeight="290.4" prefWidth="194.4" type="javafx.scene.layout.StackPane" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
+
+<fx:root fx:id="frontPane" type="StackPane" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <javafx.scene.control.TitledPane id="background" animated="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="290.0" prefWidth="194.0" styleClass="hud" stylesheets="@Stylesheet.css" text="Layers">
+      <javafx.scene.control.TitledPane id="background" fx:id="titledPane" alignment="TOP_LEFT" animated="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="290.0" prefWidth="194.0" styleClass="hud" stylesheets="@Stylesheet.css" text="Layers">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+          <AnchorPane fx:id="anchorPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <ToolBar layoutY="224.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="-9.599999999999994" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0">
+                  <ToolBar layoutY="224.0" prefHeight="40.0" prefWidth="194.0" AnchorPane.bottomAnchor="-9.599999999999994" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0">
                     <items>
                       <Button mnemonicParsing="false" onAction="#newLayerAction" prefHeight="24.0" prefWidth="24.0">
                            <graphic>
@@ -55,6 +57,9 @@
                </children>
             </AnchorPane>
         </content>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
       </javafx.scene.control.TitledPane>
    </children>
 </fx:root>

@@ -1,5 +1,7 @@
 package Model;
 
+import javafx.scene.Node;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -290,7 +292,6 @@ public class ImageModel {
         activeLayer = layer;
     }
 
-
     public void deleteAllLayers(){
         layerList.clear();
         activeLayer = null;
@@ -306,6 +307,23 @@ public class ImageModel {
             return layerList.indexOf(activeLayer);
         }
         return -1;
+    }
+
+    public void moveLayerTo(int index, PaintLayer movingLayer) {
+        int i = index;
+
+        if (layerList.indexOf(movingLayer) < i)
+            i -= 1;
+
+        if (i >= layerList.size())
+            i = layerList.size() - 1;
+
+        layerList.remove(movingLayer);
+        layerList.add(i, movingLayer);
+        setActiveLayer(movingLayer);
+
+        updateRenderedImage();
+        updateLayerGUI();
     }
 
     ///// LAYER END ////// RENDER START //////
@@ -331,7 +349,7 @@ public class ImageModel {
             }
         }
 
-        // Draws the from bottom layer to top layer to make a top layer render over the bottom layer.
+        // Draws the image from bottom layer to top layer to make a top layer render over the bottom layer.
         if(!layerList.isEmpty()) {
             for (PaintLayer l : reversedLayerList()) {
                 if (l.isVisible()) {

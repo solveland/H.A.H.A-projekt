@@ -46,7 +46,6 @@
 }
 
 .layer-item{
-    -fx-border-color: -layer-background;
     -fx-border-color: -dark-black;
 }
 

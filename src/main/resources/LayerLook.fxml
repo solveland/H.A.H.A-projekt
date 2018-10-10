@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<fx:root fx:id="background" onMouseClicked="#selectLayer" prefHeight="36.0" prefWidth="179.0" styleClass="layer-item" stylesheets="@Stylesheet.css" type="AnchorPane" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root id="background" fx:id="layerItemPane" onMouseClicked="#onSelectLayer" prefHeight="36.0" prefWidth="179.0" styleClass="layer-item" stylesheets="@Stylesheet.css" type="AnchorPane" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TextField fx:id="layerName" layoutX="34.0" layoutY="7.0" prefHeight="23.0" prefWidth="128.0" styleClass="layerTextField" text="layerName" AnchorPane.bottomAnchor="4.800000000000001" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="7.0">
+      <Label fx:id="layerName" layoutX="41.0" layoutY="9.0" prefHeight="18.0" prefWidth="131.0" text="layerName" AnchorPane.bottomAnchor="9.0" AnchorPane.rightAnchor="6.800000000000011" AnchorPane.topAnchor="9.0">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+      <CheckBox fx:id="layerVisible" layoutX="7.0" layoutY="9.0" mnemonicParsing="false" onAction="#onToggleVisible" selected="true" AnchorPane.bottomAnchor="9.399999999999999" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="9.0" />
+      <TextField fx:id="editableText" layoutX="35.0" layoutY="6.0" prefHeight="20.0" prefWidth="131.0" styleClass="layerTextField" text="editName" visible="false" AnchorPane.bottomAnchor="6.800000000000001" AnchorPane.rightAnchor="12.800000000000011" AnchorPane.topAnchor="6.0">
          <font>
             <Font size="10.0" />
          </font>
       </TextField>
-      <CheckBox fx:id="layerVisible" layoutX="8.0" layoutY="9.0" mnemonicParsing="false" onAction="#toggleLayerVisible" selected="true" />
+      <Pane fx:id="topBorderPane" mouseTransparent="true" prefHeight="18.0" prefWidth="179.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="0.0" />
+      <Pane fx:id="bottomBorderPane" layoutY="21.0" mouseTransparent="true" prefHeight="18.0" prefWidth="179.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1.0" />
    </children>
 </fx:root>

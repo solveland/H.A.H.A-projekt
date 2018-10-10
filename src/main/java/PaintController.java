@@ -3,27 +3,27 @@ import Model.PaintLayer;
 import Model.*;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
-import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-
-import java.util.List;
 
 public class PaintController {
 
@@ -51,6 +51,7 @@ public class PaintController {
     private Label opacityLabel;
     @FXML
     private ComboBox<String> shapeBox;
+
     private ImageModel image;
     private PaintView view;
     private LayerListController lController;
@@ -72,10 +73,9 @@ public class PaintController {
         lController = new LayerListController(image);
         image.addObserver(view);
         image.addObserver(lController);
-        borderPane.setRight(lController.getLayerPane());
+        borderPane.setRight(lController.getListPane());
 
         image.createLayer(new PaintColor(255,255,255), "Background"); // Should be moved to the method where we initialize a new project.
-
 
         canvas.setImage(view.getImage());
         canvas.setOnMouseDragged(e -> {
@@ -165,7 +165,6 @@ public class PaintController {
             return;
         }
         view.setSize(loadedImage.getWidth(), loadedImage.getHeight());
-        lController.getLayerList().clear();
         image.deleteAllLayers();
         image.setImageSize(loadedImage.getWidth(), loadedImage.getHeight());
         canvas.setImage(view.getImage());
@@ -189,7 +188,6 @@ public class PaintController {
 
     @FXML
     public void setPencil() {
-
         image.activatePencilTool();
         opacitySlider.setVisible(true);
         opacityLabel.setVisible(true);
