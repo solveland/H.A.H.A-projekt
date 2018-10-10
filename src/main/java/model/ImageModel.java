@@ -327,6 +327,7 @@ public class ImageModel {
 
         updateRenderedImage();
         updateLayerGUI();
+        updateCanvas();
     }
 
     ///// LAYER END ////// RENDER START //////
