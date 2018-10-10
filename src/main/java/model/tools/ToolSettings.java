@@ -22,10 +22,11 @@ public class ToolSettings {
     }
 
     public void setShape(String shape){
-        if(shape.equals("Circle"))
+        if(shape.equals("Circle")) {
             this.shape = Shape.CIRCLE;
-        else if(shape.equals("Square"))
+        }else if(shape.equals("Square")) {
             this.shape = Shape.SQUARE;
+        }
     }
     public PaintColor getPaintColor() {
         return color;

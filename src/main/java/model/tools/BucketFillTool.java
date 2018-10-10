@@ -30,8 +30,8 @@ public class BucketFillTool implements ITool {
        PaintColor oldColor = layer.getPixel(x, y);
        Point p = new Point(x,y);
        Queue<Point> Q = new LinkedList<Point>();
-       if (oldColor.equals(newColor)) return;
-       if (layer.getPixel(x,y) != oldColor) return;
+       if (oldColor.equals(newColor)) {return;}
+       if (layer.getPixel(x,y) != oldColor) {return;}
        undoBuffer.addPixel(x,y,oldColor);
        layer.setPixel(x,y, newColor);
        ((LinkedList<Point>) Q).addLast(p);

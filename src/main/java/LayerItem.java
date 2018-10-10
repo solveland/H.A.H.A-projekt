@@ -84,8 +84,9 @@ public class LayerItem extends AnchorPane implements Serializable {
         });
 
         editableText.setOnKeyPressed(e -> {
-            if (e.getCode().equals(KeyCode.ENTER))
+            if (e.getCode().equals(KeyCode.ENTER)) {
                 layerItemPane.requestFocus();
+            }
         });
 
         layerName.setOnMouseClicked(e -> {
@@ -117,17 +118,6 @@ public class LayerItem extends AnchorPane implements Serializable {
         }
     }
 
-    private void onDragDetected() {
-        for (LayerObserver o : observers) {
-            o.layerUpdate(layer, "dragDetected");
-        }
-    }
-
-    private void onDragDone() {
-        for (LayerObserver o : observers) {
-            o.layerUpdate(layer, "dragDone");
-        }
-    }
 
     public void addObserver(LayerObserver observer) {
         observers.add(observer);

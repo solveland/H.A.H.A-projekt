@@ -140,11 +140,6 @@ public class LayerListController extends StackPane implements ModelObserver, Lay
     }
 
     private void createLayer(PaintColor bgColor, String name) {
-        int index = 0;
-
-        if (!layerViewList.isEmpty())
-            index = indexOfSelectedItem();
-
         image.createLayer(bgColor, name); // Create the layer in the model
     }
 

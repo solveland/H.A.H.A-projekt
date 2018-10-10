@@ -6,6 +6,7 @@ import model.utils.Point;
 import model.utils.PaintColor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SelectTool implements ITool{
     private Point startPoint;
@@ -57,7 +58,7 @@ public class SelectTool implements ITool{
     }
 
 
-    private void drawSelectedToolArea (ArrayList<Pixel> arrayList, ArrayList<Pixel> oldArrayList, Point endPoint){
+    private void drawSelectedToolArea (List<Pixel> arrayList, List<Pixel> oldArrayList, Point endPoint){
             oldArrayList.addAll(arrayList);
             arrayList.clear();
             for (int i = startPoint.getX(); i < endPoint.getX(); i++) {
