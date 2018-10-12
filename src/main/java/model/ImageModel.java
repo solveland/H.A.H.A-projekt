@@ -24,8 +24,8 @@ public class ImageModel {
     private double oldZoomScaleY;
     private double oldZoomScaleX;
 
-    public ArrayList<Pixel> overlay;
-    public ArrayList<Pixel> oldOverlay;
+    public List<Pixel> overlay;
+    public List<Pixel> oldOverlay;
 
     private ITool activeTool;
 
@@ -56,9 +56,9 @@ public class ImageModel {
         setActiveTool(pencilTool);
 
         layerList = new LinkedList<>();
-
         overlay = new ArrayList<>();
         oldOverlay = new ArrayList<>();
+
         renderedImage = new PaintLayer(sizeX, sizeY, new PaintColor(0,0,0,0), null);
 
         observers = new ArrayList<>();
@@ -86,8 +86,9 @@ public class ImageModel {
     }
 
     public void updateCanvas() {
-        if (!layerList.isEmpty())
+        if (!layerList.isEmpty()) {
             updateRenderedRect();
+        }
 
         if (renderedImage.isChanged()) {
             int minX = renderedImage.getChangedMinX();
@@ -254,8 +255,9 @@ public class ImageModel {
     public void createLayer(PaintColor bgColor, String name) {
         int index = 0;
 
-        if (!layerList.isEmpty())
+        if (!layerList.isEmpty()) {
             index = indexOfActiveLayer();
+        }
 
         PaintLayer newLayer = new PaintLayer(width, height, bgColor, name);
         layerList.add(index, newLayer);
@@ -318,11 +320,13 @@ public class ImageModel {
     public void moveLayerTo(int index, PaintLayer movingLayer) {
         int i = index;
 
-        if (layerList.indexOf(movingLayer) < i)
+        if (layerList.indexOf(movingLayer) < i) {
             i -= 1;
+        }
 
-        if (i >= layerList.size())
+        if (i >= layerList.size()) {
             i = layerList.size() - 1;
+        }
 
         layerList.remove(movingLayer);
         layerList.add(i, movingLayer);
@@ -355,7 +359,7 @@ public class ImageModel {
                 renderedImage.setPixel(x, y, PaintColor.blank);
             }
         }
-        for (int i =0; i < oldOverlay.size(); i+=5){
+        for (int i =0; i < oldOverlay.size(); i++){
             renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(), PaintColor.blank );
         }
 
@@ -365,17 +369,18 @@ public class ImageModel {
                 if (l.isVisible()) {
                     for (int i =0; i < oldOverlay.size(); i++){
                         renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(),
-                                PaintColor.alphaBlend(l.getPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY()),renderedImage.getPixel(oldOverlay.get(i).getX(),oldOverlay.get(i).getY())));
+                                PaintColor.alphaBlend(l.getPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY()), renderedImage.getPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY())));
                     }
-                    oldOverlay.clear();
                     for (int x = minX; x < maxX; x++) {
                         for (int y = minY; y < maxY; y++) {
-                            if ((l.getPixel(x, y).getAlpha() != 0))
-                                renderedImage.setPixel(x, y, PaintColor.alphaBlend(l.getPixel(x, y),renderedImage.getPixel(x,y)));
+                            if ((l.getPixel(x, y).getAlpha() != 0)) {
+                                renderedImage.setPixel(x, y, PaintColor.alphaBlend(l.getPixel(x, y), renderedImage.getPixel(x, y)));
+                            }
                         }
                     }
                 }
             }
+            oldOverlay.clear();
         }
 
         for(PaintLayer layer : layerList){
@@ -383,7 +388,7 @@ public class ImageModel {
         }
 
 
-        for (int i = 0; i < overlay.size(); i ++){
+        for (int i =0; i < overlay.size(); i++){
             renderedImage.setPixel(overlay.get(i).getX(), overlay.get(i).getY(), new PaintColor(0,0,0) );
         }
             //updateCanvas();
