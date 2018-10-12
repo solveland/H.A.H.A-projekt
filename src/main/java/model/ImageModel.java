@@ -4,8 +4,6 @@ import model.tools.*;
 import model.utils.PaintColor;
 import model.utils.Pixel;
 
-import javafx.scene.Node;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,6 +34,7 @@ public class ImageModel {
     private EraserTool eraserTool;
     private ZoomTool zoomTool;
     private SelectTool selectTool;
+    private ShapeTool shapeTool;
 
     private ToolSettings ts = new ToolSettings(5);
 
@@ -48,7 +47,7 @@ public class ImageModel {
         height = sizeY;
 
 
-
+        shapeTool = new ShapeTool();
         pencilTool = new PencilTool();
         bucketFillTool = new BucketFillTool();
         eraserTool = new EraserTool();
@@ -178,6 +177,10 @@ public class ImageModel {
             buffer.getLayer().setPixel(p.getX(),p.getY(),p.getColor());
         }
         updateCanvas();
+    }
+
+    public void activateShapeTool(){
+        setActiveTool(shapeTool);
     }
 
     public void activatePencilTool(){
@@ -360,7 +363,7 @@ public class ImageModel {
         if(!layerList.isEmpty()) {
             for (PaintLayer l : reversedLayerList()) {
                 if (l.isVisible()) {
-                    for (int i =0; i < oldOverlay.size(); i+=5){
+                    for (int i =0; i < oldOverlay.size(); i++){
                         renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(),
                                 PaintColor.alphaBlend(l.getPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY()),renderedImage.getPixel(oldOverlay.get(i).getX(),oldOverlay.get(i).getY())));
                     }
@@ -379,7 +382,8 @@ public class ImageModel {
             layer.resetChangeTracker();
         }
 
-        for (int i =0; i < overlay.size(); i+=5){
+
+        for (int i = 0; i < overlay.size(); i ++){
             renderedImage.setPixel(overlay.get(i).getX(), overlay.get(i).getY(), new PaintColor(0,0,0) );
         }
             //updateCanvas();

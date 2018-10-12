@@ -219,6 +219,14 @@ public class PaintController {
     }
 
     @FXML
+    public void setShapeTool(){
+        image.activateShapeTool();
+        brushBar.setVisible(false);
+        opacitySlider.setValue(1);
+
+    }
+
+    @FXML
     public void zoom(boolean setZoom) {
         double delta = 1.05;
         image.setZoomScaleX(canvas.getScaleX());

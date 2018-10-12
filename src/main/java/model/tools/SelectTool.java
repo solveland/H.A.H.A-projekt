@@ -60,11 +60,11 @@ public class SelectTool implements ITool{
     private void drawSelectedToolArea (ArrayList<Pixel> arrayList, ArrayList<Pixel> oldArrayList, Point endPoint){
             oldArrayList.addAll(arrayList);
             arrayList.clear();
-            for (int i = startPoint.getX(); i < endPoint.getX(); i++) {
-                for (int j = startPoint.getY(); j < endPoint.getY(); j++) {
-                    if ((j == startPoint.getY() || j == endPoint.getY() - 1) && (i >= startPoint.getX() && i < endPoint.getX())) {
+            for (int i = startPoint.getX(); i <= endPoint.getX(); i++) {
+                for (int j = startPoint.getY(); j <= endPoint.getY(); j++) {
+                    if ((j == startPoint.getY() || j == endPoint.getY()) && (i >= startPoint.getX() && i < endPoint.getX())) {
                         arrayList.add(new Pixel(i ,j, paintColor));
-                    } else if ((i == startPoint.getX() || i == endPoint.getX() - 1) && (j >= startPoint.getY() && j < endPoint.getY())) {
+                    } else if ((i == startPoint.getX() || i == endPoint.getX()) && (j >= startPoint.getY() && j < endPoint.getY())) {
                         arrayList.add(new Pixel(i ,j, paintColor));
                     }
                 }
