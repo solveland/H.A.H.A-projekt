@@ -356,7 +356,7 @@ public class ImageModel {
                 renderedImage.setPixel(x, y, PaintColor.blank);
             }
         }
-        for (int i =0; i < oldOverlay.size(); i+=5){
+        for (int i =0; i < oldOverlay.size(); i++){
             renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(), PaintColor.blank );
         }
 
@@ -364,11 +364,10 @@ public class ImageModel {
         if(!layerList.isEmpty()) {
             for (PaintLayer l : reversedLayerList()) {
                 if (l.isVisible()) {
-                    for (int i =0; i < oldOverlay.size(); i+=5){
+                    for (int i =0; i < oldOverlay.size(); i++){
                         renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(),
-                                PaintColor.alphaBlend(l.getPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY()),renderedImage.getPixel(oldOverlay.get(i).getX(),oldOverlay.get(i).getY())));
+                                PaintColor.alphaBlend(l.getPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY()), renderedImage.getPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY())));
                     }
-                    oldOverlay.clear();
                     for (int x = minX; x < maxX; x++) {
                         for (int y = minY; y < maxY; y++) {
                             if ((l.getPixel(x, y).getAlpha() != 0)) {
@@ -378,13 +377,14 @@ public class ImageModel {
                     }
                 }
             }
+            oldOverlay.clear();
         }
 
         for(PaintLayer layer : layerList){
             layer.resetChangeTracker();
         }
 
-        for (int i =0; i < overlay.size(); i+=5){
+        for (int i =0; i < overlay.size(); i++){
             renderedImage.setPixel(overlay.get(i).getX(), overlay.get(i).getY(), new PaintColor(0,0,0) );
         }
             //updateCanvas();
