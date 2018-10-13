@@ -169,7 +169,7 @@ public class PaintController {
                 pl.setPixel(x, y, new PaintColor(loadedImage.getRGB(x, y)));
             }
         }
-        image.updateRenderedImage();
+        image.updateCanvas();
     }
 
     //Temporär testfunktion -> låter den vara image.getimage()....

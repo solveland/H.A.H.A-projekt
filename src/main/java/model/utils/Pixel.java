@@ -1,22 +1,24 @@
 package model.utils;
 
 public class Pixel {
-    private int x;
-    private int y;
-    private PaintColor color;
+    private final Point<Integer> position;
+    private final PaintColor color;
 
     public Pixel(int x, int y, PaintColor color){
-        this.x = x;
-        this.y = y;
+        position = new Point(x,y);
         this.color = color;
     }
 
     public int getX() {
-        return x;
+        return position.getX();
     }
 
     public int getY() {
-        return y;
+        return position.getY();
+    }
+
+    public Point<Integer> getPosition(){
+        return position;
     }
 
     public PaintColor getColor() {

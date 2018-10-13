@@ -8,7 +8,7 @@ import model.utils.PaintColor;
 import java.util.ArrayList;
 
 public class SelectTool implements ITool{
-    private Point startPoint;
+    private Point<Integer> startPoint;
     private PaintColor paintColor;
 
     public SelectTool(){
@@ -16,7 +16,7 @@ public class SelectTool implements ITool{
     }
 
 
-    private void selectRectangleArea (Point endPoint){
+    private void selectRectangleArea (Point<Integer> endPoint){
         int startX = startPoint.getX();
         int startY = startPoint.getY();
         int endX = endPoint.getX();
@@ -57,7 +57,7 @@ public class SelectTool implements ITool{
     }
 
 
-    private void drawSelectedToolArea (ArrayList<Pixel> arrayList, ArrayList<Pixel> oldArrayList, Point endPoint){
+    private void drawSelectedToolArea (ArrayList<Pixel> arrayList, ArrayList<Pixel> oldArrayList, Point<Integer> endPoint){
             oldArrayList.addAll(arrayList);
             arrayList.clear();
             for (int i = startPoint.getX(); i < endPoint.getX(); i++) {

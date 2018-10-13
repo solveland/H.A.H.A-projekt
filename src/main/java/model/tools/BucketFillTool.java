@@ -28,7 +28,7 @@ public class BucketFillTool implements ITool {
     private void flood(int x, int y, PaintLayer layer) {
 
        PaintColor oldColor = layer.getPixel(x, y);
-       Point p = new Point(x,y);
+       Point<Integer> p = new Point(x,y);
        Queue<Point> Q = new LinkedList<Point>();
        if (oldColor.equals(newColor)) return;
        if (layer.getPixel(x,y) != oldColor) return;
@@ -36,7 +36,7 @@ public class BucketFillTool implements ITool {
        layer.setPixel(x,y, newColor);
        ((LinkedList<Point>) Q).addLast(p);
        while (!Q.isEmpty()){
-           Point n = ((LinkedList<Point>) Q).pop();
+           Point<Integer> n = ((LinkedList<Point>) Q).pop();
            if (n.getX() > 0 && layer.getPixel(n.getX() -1, n.getY()).equals(oldColor)){
                undoBuffer.addPixel(n.getX()-1,n.getY(),oldColor);
                layer.setPixel(n.getX()-1, n.getY(), newColor);

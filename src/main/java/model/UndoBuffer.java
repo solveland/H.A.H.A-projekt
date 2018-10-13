@@ -2,21 +2,27 @@ package model;
 
 import model.utils.PaintColor;
 import model.utils.Pixel;
+import model.utils.Point;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class UndoBuffer {
-    public List<Pixel> pixels;
+    List<Pixel> pixels;
     private PaintLayer layer;
+    private HashSet<Point<Integer>> pointHashSet;
 
     public UndoBuffer(PaintLayer layer){
         this.layer = layer;
         pixels = new ArrayList<>();
+        pointHashSet = new HashSet<>();
     }
 
     public void addPixel(int x, int y,PaintColor color){
-        pixels.add(new Pixel(x,y,color));
+        Pixel p = new Pixel(x,y,color);
+        pixels.add(p);
+        pointHashSet.add(p.getPosition());
     }
 
     public PaintLayer getLayer() {
@@ -24,12 +30,6 @@ public class UndoBuffer {
     }
 
     public boolean contains(int x, int y){
-        //TODO: Implement a hash set to speed this up
-        for(Pixel p : pixels){
-            if (p.getX() == x && p.getY() == y){
-                return true;
-            }
-        }
-        return false;
+        return pointHashSet.contains(new Point<Integer>(x,y));
     }
 }

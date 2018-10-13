@@ -333,7 +333,6 @@ public class ImageModel {
     ///// LAYER END ////// RENDER START //////
 
     public void updateRenderedImage() {
-        // Clear the image before we draw new pixels.
         renderImage(0,width,0,height);
     }
 
