@@ -68,7 +68,14 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                           <Button onAction="#zoomIn" />
+                           <Button onAction="#setShapeTool" prefHeight="27.0" prefWidth="39.0">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@shapes.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
                            <Button onAction="#setSelectTool" text="Select" />
                            <Button text="-" />
                            <Button onAction="#undoButton" text="Undo">

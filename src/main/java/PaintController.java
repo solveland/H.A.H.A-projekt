@@ -1,3 +1,4 @@
+import javafx.scene.input.MouseButton;
 import model.ImageModel;
 import model.PaintLayer;
 
@@ -48,15 +49,16 @@ public class PaintController {
 
     private ImageModel image;
     private PaintView view;
-    private LayerListController lController;
 
     public static double clamp(double value, double min, double max) {
 
-        if (Double.compare(value, min) < 0)
+        if (Double.compare(value, min) < 0) {
             return min;
+        }
 
-        if (Double.compare(value, max) > 0)
+        if (Double.compare(value, max) > 0) {
             return max;
+        }
 
         return value;
     }
@@ -64,13 +66,18 @@ public class PaintController {
     public void initialize() {
         image = new ImageModel(600, 600);
         view = new PaintView(600, 600);
-        lController = new LayerListController(image);
+        LayerListController lController = new LayerListController(image);
         image.addObserver(view);
         image.addObserver(lController);
         borderPane.setRight(lController.getListPane());
 
+
+
         canvas.setImage(view.getImage());
         canvas.setOnMouseDragged(e -> {
+            if (e.getButton() == MouseButton.SECONDARY){
+                return;
+            }
             int x = (int) Math.floor(e.getX());
             int y = (int) Math.floor(e.getY());
             if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
@@ -80,6 +87,9 @@ public class PaintController {
         });
 
         canvas.setOnMouseReleased(e -> {
+            if (e.getButton() == MouseButton.SECONDARY){
+                return;
+            }
             int x = (int) Math.floor(e.getX());
             int y = (int) Math.floor(e.getY());
             if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
@@ -89,6 +99,9 @@ public class PaintController {
         });
 
         canvas.setOnMousePressed(e -> {
+            if (e.getButton() == MouseButton.SECONDARY){
+                return;
+            }
             int x = (int) Math.floor(e.getX());
             int y = (int) Math.floor(e.getY());
             if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
@@ -172,7 +185,6 @@ public class PaintController {
         image.updateCanvas();
     }
 
-    //Temporär testfunktion -> låter den vara image.getimage()....
     @FXML
     public void clearCanvas() {
         image.clearLayer();
@@ -216,6 +228,14 @@ public class PaintController {
     public void setZoomTool() {
         image.activateZoomTool();
         brushBar.setVisible(false);
+    }
+
+    @FXML
+    public void setShapeTool(){
+        image.activateShapeTool();
+        brushBar.setVisible(false);
+        opacitySlider.setValue(1);
+
     }
 
     @FXML
