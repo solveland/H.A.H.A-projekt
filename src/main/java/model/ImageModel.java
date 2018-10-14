@@ -1,8 +1,8 @@
 package model;
 
 import model.tools.*;
-import model.utils.PaintColor;
-import model.utils.Pixel;
+import model.pixel.PaintColor;
+import model.pixel.Pixel;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

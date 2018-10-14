@@ -3,8 +3,7 @@ package model.tools;
 import model.ImageModel;
 import model.PaintLayer;
 import model.UndoBuffer;
-import model.utils.PaintColor;
-import model.utils.Shape;
+import model.pixel.PaintColor;
 
 /**
  * This class is an abstraction of a pencil/eraser.

@@ -1,6 +1,6 @@
 import model.ImageModel;
 import model.ModelObserver;
-import model.utils.PaintColor;
+import model.pixel.PaintColor;
 import model.PaintLayer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

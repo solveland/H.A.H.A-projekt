@@ -1,13 +1,11 @@
 package model.tools;
 
-import model.utils.Point;
+import model.pixel.Point;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface IShapeStrategy {
 
-    List<Point<Integer>> lineStrategy(Point<Integer> startPoint, Point<Integer> endPoint);
+    List<Point<Integer>> shapeStrategy(Point<Integer> startPoint, Point<Integer> endPoint);
 
 }

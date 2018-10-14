@@ -13,7 +13,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import model.utils.PaintColor;
+import model.pixel.PaintColor;
 import view.PaintView;
 
 import javax.imageio.ImageIO;

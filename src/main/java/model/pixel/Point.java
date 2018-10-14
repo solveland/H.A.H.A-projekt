@@ -1,4 +1,4 @@
-package model.utils;
+package model.pixel;
 
 public class Point <T> {
     private final T x;

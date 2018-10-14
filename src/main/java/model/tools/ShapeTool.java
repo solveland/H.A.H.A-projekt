@@ -2,11 +2,10 @@ package model.tools;
 
 import model.ImageModel;
 import model.UndoBuffer;
-import model.utils.PaintColor;
-import model.utils.Pixel;
-import model.utils.Point;
+import model.pixel.PaintColor;
+import model.pixel.Pixel;
+import model.pixel.Point;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,14 +13,14 @@ import java.util.List;
  */
 
 public class ShapeTool implements ITool {
-    Point<Integer> startPoint;
+    private Point<Integer> startPoint;
     private UndoBuffer undoBuffer;
-    PaintColor color = new PaintColor(255, 255, 255);
-    IShapeStrategy strategy;
+    private PaintColor color = new PaintColor(255, 255, 255);
+    private IShapeStrategy strategy;
 
 
     public ShapeTool(){
-        setStraightLineStrategy();
+        setTriangleStrategy();
     }
 
 
@@ -33,19 +32,19 @@ public class ShapeTool implements ITool {
 
     @Override
     public void onDrag(int x, int y, ImageModel imageModel) {
-        addToOverlay(imageModel.overlay, imageModel.oldOverlay, strategy.lineStrategy(startPoint, new Point(x, y)));
+        addToOverlay(imageModel.overlay, imageModel.oldOverlay, strategy.shapeStrategy(startPoint, new Point<>(x, y)));
 
     }
 
     @Override
     public void onPress(int x, int y, ImageModel imageModel) {
-        this.startPoint = new Point(x, y);
+        this.startPoint = new Point<>(x, y);
     }
 
     @Override
     public void onRelease(int x, int y, ImageModel imageModel) {
         undoBuffer = new UndoBuffer(imageModel.getActiveLayer());
-        addShapeToImage(imageModel, strategy.lineStrategy(startPoint, new Point(x, y)));
+        addShapeToImage(imageModel, strategy.shapeStrategy(startPoint, new Point<>(x, y)));
         imageModel.pushToUndoStack(undoBuffer);
 
     }
@@ -72,6 +71,8 @@ public class ShapeTool implements ITool {
     public void setStraightLineStrategy(){
         this.strategy = new StraightLineStrategy();
     }
+    public void setTriangleStrategy(){this.strategy = new TriangleStrategy(); }
+    public void setRectangleStrategy(){this.strategy = new RectangleStrategy(); }
 
 
 

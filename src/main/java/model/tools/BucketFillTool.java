@@ -1,8 +1,8 @@
 package model.tools;
 
 import model.*;
-import model.utils.PaintColor;
-import model.utils.Point;
+import model.pixel.PaintColor;
+import model.pixel.Point;
 
 import java.util.LinkedList;
 import java.util.Queue;

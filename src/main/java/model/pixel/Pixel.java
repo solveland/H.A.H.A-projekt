@@ -1,4 +1,4 @@
-package model.utils;
+package model.pixel;
 
 public class Pixel {
     private final Point<Integer> position;

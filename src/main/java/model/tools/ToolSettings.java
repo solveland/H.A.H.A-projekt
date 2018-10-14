@@ -1,7 +1,6 @@
 package model.tools;
 
-import model.utils.PaintColor;
-import model.utils.Shape;
+import model.pixel.PaintColor;
 
 public class ToolSettings {
     private PaintColor color;

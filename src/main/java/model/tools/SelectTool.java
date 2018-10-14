@@ -1,11 +1,10 @@
 package model.tools;
 
 import model.ImageModel;
-import model.utils.Pixel;
-import model.utils.Point;
-import model.utils.PaintColor;
+import model.pixel.Pixel;
+import model.pixel.Point;
+import model.pixel.PaintColor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SelectTool implements ITool{

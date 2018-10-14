@@ -1,7 +1,7 @@
 
 package model.tools;
 
-import model.utils.Point;
+import model.pixel.Point;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ public class StraightLineStrategy implements IShapeStrategy {
      * @return sum of all points on the line
      */
     @Override
-    public List<Point<Integer>> lineStrategy(Point<Integer> startPoint, Point<Integer> endPoint) {
+    public List<Point<Integer>> shapeStrategy(Point<Integer> startPoint, Point<Integer> endPoint) {
         List<Point<Integer>> result = new ArrayList<>();
         int w = endPoint.getX() - startPoint.getX();
         int h = endPoint.getY() - startPoint.getY();
@@ -41,8 +41,9 @@ public class StraightLineStrategy implements IShapeStrategy {
         int big = Math.abs(w);
         int small = Math.abs(h);
         if(!(big > small)){
-            big = Math.abs(h);
-            small = Math.abs(w);
+            int temp = big;
+            big = small;
+            small = temp;
             if(h < 0) {
                 dy2 = -1;
             }else if( h > 0) dy2 = 1;
@@ -52,7 +53,7 @@ public class StraightLineStrategy implements IShapeStrategy {
         int x = startPoint.getX();
         int y = startPoint.getY();
         for(int i=0; i<=big; i++){
-            result.add(new Point(x, y));
+            result.add(new Point<>(x, y));
             numerator += small;
             if(!(numerator < big)){
                 numerator -= big;

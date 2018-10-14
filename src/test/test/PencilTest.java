@@ -6,7 +6,7 @@ import com.pholser.junit.quickcheck.generator.InRange;
 
 import com.pholser.junit.quickcheck.runner.JUnitQuickcheck;
 import model.tools.ToolSettings;
-import model.utils.PaintColor;
+import model.pixel.PaintColor;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 

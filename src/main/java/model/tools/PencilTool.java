@@ -1,6 +1,6 @@
 package model.tools;
 
-import model.utils.PaintColor;
+import model.pixel.PaintColor;
 
 public class PencilTool extends AbstractPaintTool  {
 

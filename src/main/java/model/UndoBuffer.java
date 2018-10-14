@@ -1,8 +1,8 @@
 package model;
 
-import model.utils.PaintColor;
-import model.utils.Pixel;
-import model.utils.Point;
+import model.pixel.PaintColor;
+import model.pixel.Pixel;
+import model.pixel.Point;
 
 import java.util.ArrayList;
 import java.util.HashSet;
