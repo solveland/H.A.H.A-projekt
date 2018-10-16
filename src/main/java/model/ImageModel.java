@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-public class ImageModel {
+public class ImageModel implements IModel{
 
     private List<PaintLayer> layerList;
     private PaintLayer activeLayer;
@@ -165,8 +165,28 @@ public class ImageModel {
         updateCanvas();
     }
 
+    @Override
+    public void setPixel(int x, int y, PaintColor color) {
+        getActiveLayer().setPixel(x, y, color);
+    }
+
+    @Override
+    public PaintColor getPixelColor(int x, int y) {
+        return getActiveLayer().getPixel(x, y);
+    }
+
     public void pushToUndoStack(UndoBuffer buffer){
         undoBufferStack.push(buffer);
+    }
+
+    @Override
+    public List<Pixel> getOverlay() {
+        return overlay;
+    }
+
+    @Override
+    public List<Pixel> getOldOverlay() {
+        return oldOverlay;
     }
 
     public void undo(){

@@ -31,18 +31,18 @@ public class ShapeTool implements ITool {
     }
 
     @Override
-    public void onDrag(int x, int y, ImageModel imageModel) {
-        addToOverlay(imageModel.overlay, imageModel.oldOverlay, strategy.shapeStrategy(startPoint, new Point<>(x, y)));
+    public void onDrag(int x, int y, IModel imageModel) {
+        addToOverlay(imageModel.getOverlay(), imageModel.getOldOverlay(), strategy.shapeStrategy(startPoint, new Point<>(x, y)));
 
     }
 
     @Override
-    public void onPress(int x, int y, ImageModel imageModel) {
+    public void onPress(int x, int y, IModel imageModel) {
         this.startPoint = new Point<>(x, y);
     }
 
     @Override
-    public void onRelease(int x, int y, ImageModel imageModel) {
+    public void onRelease(int x, int y, IModel imageModel) {
         undoBuffer = new UndoBuffer(imageModel.getActiveLayer());
         addShapeToImage(imageModel, strategy.shapeStrategy(startPoint, new Point<>(x, y)));
         imageModel.pushToUndoStack(undoBuffer);
@@ -59,8 +59,8 @@ public class ShapeTool implements ITool {
 
 
 
-    private void addShapeToImage(ImageModel image, List<Point<Integer>> shape){
-        image.overlay.clear();
+    private void addShapeToImage(IModel image, List<Point<Integer>> shape){
+        image.getOverlay().clear();
         for(Point<Integer> i : shape){
             undoBuffer.addPixel(i.getX(), i.getY(), image.getActiveLayer().getPixel(i.getX(), i.getY()));
             image.getActiveLayer().setPixel(i.getX(), i.getY(), color);
