@@ -1,3 +1,4 @@
+import Services.ServiceFactory;
 import javafx.scene.input.MouseButton;
 import model.ImageModel;
 import model.PaintLayer;
@@ -19,6 +20,7 @@ import view.PaintView;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.List;
 
 public class PaintController {
 
@@ -49,6 +51,8 @@ public class PaintController {
 
     private ImageModel image;
     private PaintView view;
+
+    private File openedFile = null;
 
     public static double clamp(double value, double min, double max) {
 
@@ -156,33 +160,52 @@ public class PaintController {
 
     @FXML
     public void openFile() {
-        //Mycket av denna funktion måste flyttas till andra delar. pixlarna ska ändras i modellen, inte här t.ex.
         FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPEG Image (*.jpg)","*.jpg"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Bitmap Image (*.bmp)","*.bmp"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG image (*.png)","*.png"));
         File file = fileChooser.showOpenDialog(canvas.getScene().getWindow());
         if (file == null) {
             return;
         }
-        BufferedImage loadedImage;
-        try {
-            loadedImage = ImageIO.read(file);
-        } catch (java.io.IOException e) {
-            //Todo: Handle this exception
+        List<PaintLayer> layerList =ServiceFactory.getSaveAndLoader().openFile(file);
+        if (layerList == null || layerList.isEmpty()){
             return;
         }
-        view.setSize(loadedImage.getWidth(), loadedImage.getHeight());
-        image.deleteAllLayers();
-        image.setImageSize(loadedImage.getWidth(), loadedImage.getHeight());
+        openedFile = file;
+        loadImage(layerList);
+
+    }
+
+    private void loadImage(List<PaintLayer> layerList){
+        int width = layerList.get(0).getWidth();
+        int height = layerList.get(0).getHeight();
+        view.setSize(width,height);
         canvas.setImage(view.getImage());
-        canvas.setFitHeight(loadedImage.getHeight());
-        canvas.setFitWidth(loadedImage.getWidth());
-        image.createLayer(PaintColor.blank, "Background");
-        PaintLayer pl = image.getActiveLayer();
-        for (int x = 0; x < loadedImage.getWidth(); x++) {
-            for (int y = 0; y < loadedImage.getHeight(); y++) {
-                pl.setPixel(x, y, new PaintColor(loadedImage.getRGB(x, y)));
-            }
+        canvas.setFitHeight(height);
+        canvas.setFitWidth(width);
+        image.loadImage(layerList);
+    }
+
+    @FXML
+    public void saveFileAs() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG image (*.png)","*.png"));
+        File file = fileChooser.showSaveDialog(canvas.getScene().getWindow());
+        if (file == null){
+            return;
         }
-        image.updateCanvas();
+        ServiceFactory.getSaveAndLoader().saveFile(file,image.getLayerList());
+        openedFile = file;
+    }
+
+    @FXML
+    public void saveFile() {
+        if (openedFile == null){
+            saveFileAs();
+            return;
+        }
+        ServiceFactory.getSaveAndLoader().saveFile(openedFile,image.getLayerList());
     }
 
     @FXML

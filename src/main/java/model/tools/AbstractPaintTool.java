@@ -17,15 +17,15 @@ public abstract class AbstractPaintTool implements ITool {
     private Shape shape = Shape.CIRCLE;
     /* TODO: When we have a broader understanding of what the tools will require we have to move functionality to this class
      */
-    public void onPress(int x, int y, ImageModel imageModel){
+    public void onPress(int x, int y, IModel imageModel){
         undoBuffer = new UndoBuffer(imageModel.getActiveLayer());
         changePixels(x, y, imageModel.getActiveLayer());
         imageModel.pushToUndoStack(undoBuffer);
     }
-    public void onDrag(int x, int y, ImageModel imageModel){
+    public void onDrag(int x, int y, IModel imageModel){
         changePixels(x, y, imageModel.getActiveLayer());
     }
-    public void onRelease(int x, int y, ImageModel imageModel){
+    public void onRelease(int x, int y, IModel imageModel){
 
     }
 

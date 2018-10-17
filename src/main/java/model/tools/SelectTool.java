@@ -40,16 +40,16 @@ public class SelectTool implements ITool{
         this.startPoint = startPoint;
     }
 
-    public void onDrag(int x, int y, ImageModel imageModel){
-        Point endPoint = new Point (x,y);
+    public void onDrag(int x, int y, IModel imageModel){
+        Point<Integer> endPoint = new Point<> (x,y);
         selectRectangleArea(endPoint);
-        drawSelectedToolArea(imageModel.overlay,imageModel.oldOverlay, endPoint);
+        drawSelectedToolArea(imageModel.getOverlay(),imageModel.getOldOverlay(), endPoint);
     }
-    public void onPress(int x, int y, ImageModel imageModel){
-        Point startPoint = new Point (x,y);
+    public void onPress(int x, int y, IModel imageModel){
+        Point<Integer> startPoint = new Point<>(x,y);
         setStartPoint(startPoint);
     }
-    public void onRelease(int x, int y, ImageModel imageModel){
+    public void onRelease(int x, int y, IModel imageModel){
 
     }
     public void updateSettings(ToolSettings ts){

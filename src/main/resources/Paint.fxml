@@ -109,8 +109,8 @@
                           <items>
                               <MenuItem text="New" />
                               <MenuItem onAction="#openFile" text="Open" />
-                              <MenuItem text="Save" />
-                              <MenuItem text="Save As" />
+                              <MenuItem onAction="#saveFile" text="Save" />
+                              <MenuItem onAction="#saveFileAs" text="Save As" />
                               <SeparatorMenuItem />
                               <MenuItem text="Exit" />
                           </items>
