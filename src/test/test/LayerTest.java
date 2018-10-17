@@ -4,7 +4,7 @@ import com.pholser.junit.quickcheck.Property;
 import com.pholser.junit.quickcheck.generator.InRange;
 
 import com.pholser.junit.quickcheck.runner.JUnitQuickcheck;
-import model.utils.PaintColor;
+import model.pixel.PaintColor;
 
 import static org.junit.Assert.assertTrue;
 

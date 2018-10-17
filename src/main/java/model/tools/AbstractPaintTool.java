@@ -3,9 +3,12 @@ package model.tools;
 import model.ImageModel;
 import model.PaintLayer;
 import model.UndoBuffer;
-import model.utils.PaintColor;
-import model.utils.Shape;
+import model.pixel.PaintColor;
 
+/**
+ * This class is an abstraction of a pencil/eraser.
+ * It contains the shared logic used for both drawing and erasing pixels on a canvas.
+ */
 public abstract class AbstractPaintTool implements ITool {
     PaintColor[] brushBuffer;
     int size;
@@ -14,15 +17,15 @@ public abstract class AbstractPaintTool implements ITool {
     private Shape shape = Shape.CIRCLE;
     /* TODO: When we have a broader understanding of what the tools will require we have to move functionality to this class
      */
-    public void onPress(int x, int y, ImageModel imageModel){
+    public void onPress(int x, int y, IModel imageModel){
         undoBuffer = new UndoBuffer(imageModel.getActiveLayer());
         changePixels(x, y, imageModel.getActiveLayer());
         imageModel.pushToUndoStack(undoBuffer);
     }
-    public void onDrag(int x, int y, ImageModel imageModel){
+    public void onDrag(int x, int y, IModel imageModel){
         changePixels(x, y, imageModel.getActiveLayer());
     }
-    public void onRelease(int x, int y, ImageModel imageModel){
+    public void onRelease(int x, int y, IModel imageModel){
 
     }
 
@@ -36,7 +39,7 @@ public abstract class AbstractPaintTool implements ITool {
     }
 
     /**
-     * Checks the brushbuffer for colored pixels and sets layer accordingly
+     * Checks the brushbuffer for colored pixels and sets layer accordingly.
      */
     private void changePixels(int xPos, int yPos, PaintLayer layer){
         int diameter = size*2-1;
@@ -59,7 +62,7 @@ public abstract class AbstractPaintTool implements ITool {
     }
 
     /**
-     *  Updates the brush by calculating a circle with the brush size as radius and then gives each pixel a color (int)
+     *  Updates the brushBuffer depending on the shape, size and color variables. This is done by calculating the shape and then representing it as an array.
      */
 
     protected void updateBrush(){

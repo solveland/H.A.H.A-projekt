@@ -1,15 +1,15 @@
 package model;
 
 import model.tools.*;
-import model.utils.PaintColor;
-import model.utils.Pixel;
+import model.pixel.PaintColor;
+import model.pixel.Pixel;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-public class ImageModel {
+public class ImageModel implements IModel{
 
     private List<PaintLayer> layerList;
     private PaintLayer activeLayer;
@@ -24,8 +24,8 @@ public class ImageModel {
     private double oldZoomScaleY;
     private double oldZoomScaleX;
 
-    public ArrayList<Pixel> overlay;
-    public ArrayList<Pixel> oldOverlay;
+    public List<Pixel> overlay;
+    public List<Pixel> oldOverlay;
 
     private ITool activeTool;
 
@@ -34,6 +34,7 @@ public class ImageModel {
     private EraserTool eraserTool;
     private ZoomTool zoomTool;
     private SelectTool selectTool;
+    private ShapeTool shapeTool;
 
     private ToolSettings ts = new ToolSettings(5);
 
@@ -46,7 +47,7 @@ public class ImageModel {
         height = sizeY;
 
 
-
+        shapeTool = new ShapeTool();
         pencilTool = new PencilTool();
         bucketFillTool = new BucketFillTool();
         eraserTool = new EraserTool();
@@ -55,9 +56,9 @@ public class ImageModel {
         setActiveTool(pencilTool);
 
         layerList = new LinkedList<>();
-
         overlay = new ArrayList<>();
         oldOverlay = new ArrayList<>();
+
         renderedImage = new PaintLayer(sizeX, sizeY, new PaintColor(0,0,0,0), null);
 
         observers = new ArrayList<>();
@@ -70,11 +71,6 @@ public class ImageModel {
     }
 
 
-    public void setImageSize(int width, int height){
-        this.width = width;
-        this.height = height;
-        renderedImage = new PaintLayer(width,height,new PaintColor(0,0,0,0), null);
-    }
 
     public List<PaintLayer> getLayerList() {
         return layerList;
@@ -85,8 +81,9 @@ public class ImageModel {
     }
 
     public void updateCanvas() {
-        if (!layerList.isEmpty())
+        if (!layerList.isEmpty()) {
             updateRenderedRect();
+        }
 
         if (renderedImage.isChanged()) {
             int minX = renderedImage.getChangedMinX();
@@ -128,6 +125,10 @@ public class ImageModel {
         activeTool.updateSettings(ts);
     }
 
+    public ShapeTool getShapeTool() {
+        return shapeTool;
+    }
+
     public void setSize(int size){
         ts.setSize(size);
         activeTool.updateSettings(ts);
@@ -143,8 +144,28 @@ public class ImageModel {
         activeTool.updateSettings(ts);
     }
 
+    @Override
+    public void setPixel(int x, int y, PaintColor color) {
+        getActiveLayer().setPixel(x, y, color);
+    }
+
+    @Override
+    public PaintColor getPixelColor(int x, int y) {
+        return getActiveLayer().getPixel(x, y);
+    }
+
     public void pushToUndoStack(UndoBuffer buffer){
         undoBufferStack.push(buffer);
+    }
+
+    @Override
+    public List<Pixel> getOverlay() {
+        return overlay;
+    }
+
+    @Override
+    public List<Pixel> getOldOverlay() {
+        return oldOverlay;
     }
 
     public void undo(){
@@ -156,6 +177,10 @@ public class ImageModel {
             buffer.getLayer().setPixel(p.getX(),p.getY(),p.getColor());
         }
         updateCanvas();
+    }
+
+    public void activateShapeTool(){
+        setActiveTool(shapeTool);
     }
 
     public void activatePencilTool(){
@@ -246,8 +271,9 @@ public class ImageModel {
     public void createLayer(PaintColor bgColor, String name) {
         int index = 0;
 
-        if (!layerList.isEmpty())
+        if (!layerList.isEmpty()) {
             index = indexOfActiveLayer();
+        }
 
         PaintLayer newLayer = new PaintLayer(width, height, bgColor, name);
         layerList.add(index, newLayer);
@@ -287,13 +313,13 @@ public class ImageModel {
     }
 
     public void setActiveLayer(PaintLayer layer) {
-        activeLayer = layer;
-        updateLayerGUI();
-    }
+        if(activeLayer != null){
+            if(activeLayer.hasSelectedArea()){
+                layer.selectArea(activeLayer.getSelectedStartPoint(), activeLayer.getSelectedEndPoint());
+            }
+        }
 
-    public void deleteAllLayers(){
-        layerList.clear();
-        activeLayer = null;
+        activeLayer = layer;
         updateLayerGUI();
     }
 
@@ -315,8 +341,9 @@ public class ImageModel {
             return;
         }
 
-        if (i >= layerList.size())
+        if (i >= layerList.size()) {
             i = layerList.size() - 1;
+        }
 
         layerList.remove(movingLayer);
         layerList.add(i, movingLayer);
@@ -366,7 +393,8 @@ public class ImageModel {
                 renderedImage.setPixel(x, y, PaintColor.blank);
             }
         }
-        for (int i =0; i < oldOverlay.size(); i+=5){
+        // SelectTool
+        for (int i =0; i < oldOverlay.size(); i++){
             renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(), PaintColor.blank );
         }
 
@@ -374,29 +402,43 @@ public class ImageModel {
         if(!layerList.isEmpty()) {
             for (PaintLayer l : reversedLayerList()) {
                 if (l.isVisible()) {
+                    // SelectTool
+                    for (int i =0; i < oldOverlay.size(); i++){
+                        renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(),
+                                PaintColor.alphaBlend(l.getPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY()), renderedImage.getPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY())));
+                    }
+
                     for (int x = minX; x < maxX; x++) {
                         for (int y = minY; y < maxY; y++) {
-                            if ((l.getPixel(x, y).getAlpha() != 0))
-                                renderedImage.setPixel(x, y, PaintColor.alphaBlend(l.getPixel(x, y),renderedImage.getPixel(x,y)));
+                            if ((l.getPixel(x, y).getAlpha() != 0)) {
+                                renderedImage.setPixel(x, y, PaintColor.alphaBlend(l.getPixel(x, y), renderedImage.getPixel(x, y)));
+                            }
                         }
                     }
-                    for (int i =0; i < oldOverlay.size(); i+=5){
-                        renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(),
-                                PaintColor.alphaBlend(l.getPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY()),renderedImage.getPixel(oldOverlay.get(i).getX(),oldOverlay.get(i).getY())));
-                    }
-                    oldOverlay.clear();
                 }
             }
+            oldOverlay.clear();
         }
 
         for(PaintLayer layer : layerList){
             layer.resetChangeTracker();
         }
 
-        for (int i =0; i < overlay.size(); i+=5){
+        // SelectTool
+        for (int i =0; i < overlay.size(); i++){
             renderedImage.setPixel(overlay.get(i).getX(), overlay.get(i).getY(), new PaintColor(0,0,0) );
         }
-            //updateCanvas();
+        //updateCanvas();
+    }
+
+    public void loadImage(List<PaintLayer> newLayerList){
+        layerList = newLayerList;
+        setActiveLayer(newLayerList.get(0));
+        updateLayerGUI();
+        width = newLayerList.get(0).getWidth();
+        height = newLayerList.get(0).getHeight();
+        renderedImage = new PaintLayer(width,height,PaintColor.blank, null);
+        updateCanvas();
     }
 
     private void renderTransparent() {
@@ -420,4 +462,12 @@ public class ImageModel {
     }
 
     ///// RENDER END //////
+
+    public void deselectArea(){
+        overlay.clear();
+        oldOverlay.clear();
+        activeLayer.setIsSelectedArea(false);
+        updateRenderedImage();
+    }
+
 }

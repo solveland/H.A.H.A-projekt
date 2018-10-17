@@ -69,8 +69,22 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                           <Button onAction="#zoomIn" />
-                           <Button onAction="#setSelectTool" text="Select" />
+                           <Button onAction="#setShapeTool" prefHeight="27.0" prefWidth="39.0">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@shapes.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                           <Button onAction="#setSelectTool">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@selectTool.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
                            <Button text="-" />
                            <Button onAction="#undoButton" text="Undo">
                      <font>
@@ -103,8 +117,8 @@
                           <items>
                               <MenuItem text="New" />
                               <MenuItem onAction="#openFile" text="Open" />
-                              <MenuItem text="Save" />
-                              <MenuItem text="Save As" />
+                              <MenuItem onAction="#saveFile" text="Save" />
+                              <MenuItem onAction="#saveFileAs" text="Save As" />
                               <SeparatorMenuItem />
                               <MenuItem text="Exit" />
                           </items>

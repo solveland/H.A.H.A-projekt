@@ -82,8 +82,9 @@ public class LayerItem extends AnchorPane implements Serializable {
         });
 
         editableText.setOnKeyPressed(e -> {
-            if (e.getCode().equals(KeyCode.ENTER))
+            if (e.getCode().equals(KeyCode.ENTER)) {
                 layerItemPane.requestFocus();
+            }
         });
 
         layerName.setOnMouseClicked(e -> {

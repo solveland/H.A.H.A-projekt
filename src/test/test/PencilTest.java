@@ -1,18 +1,12 @@
 import model.ImageModel;
-import model.PaintLayer;
-import model.tools.PencilTool;
 import com.pholser.junit.quickcheck.Property;
 import com.pholser.junit.quickcheck.generator.InRange;
-
 import com.pholser.junit.quickcheck.runner.JUnitQuickcheck;
-import model.tools.ToolSettings;
-import model.utils.PaintColor;
-import org.junit.Test;
+import model.pixel.PaintColor;
 import static org.junit.Assert.assertTrue;
-
 import org.junit.runner.RunWith;
 
-import java.awt.*;
+
 
 
 @RunWith(JUnitQuickcheck.class)
