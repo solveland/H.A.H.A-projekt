@@ -4,8 +4,6 @@ import model.tools.*;
 import model.utils.PaintColor;
 import model.utils.Pixel;
 
-import javafx.scene.Node;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -140,29 +138,9 @@ public class ImageModel {
         activeTool.updateSettings(ts);
     }
 
-
-
-
     public void setToolShape(String s){
         ts.setShape(s);
         activeTool.updateSettings(ts);
-    }
-
-    private void updateLayerGUI() {
-        int minX = renderedImage.getChangedMinX();
-        int maxX = renderedImage.getChangedMaxX();
-        int minY = renderedImage.getChangedMinY();
-        int maxY = renderedImage.getChangedMaxY();
-
-        for (ModelObserver o : observers) {
-            o.notifyObservers(renderedImage, minX, maxX, minY, maxY, layerList, "layerUpdate");
-        }
-    }
-
-    public void clearLayer()
-    {
-        activeLayer.clearLayer();
-        updateCanvas();
     }
 
     public void pushToUndoStack(UndoBuffer buffer){
@@ -228,6 +206,23 @@ public class ImageModel {
     }
     //// LAYER ///////
 
+    private void updateLayerGUI() {
+        int minX = renderedImage.getChangedMinX();
+        int maxX = renderedImage.getChangedMaxX();
+        int minY = renderedImage.getChangedMinY();
+        int maxY = renderedImage.getChangedMaxY();
+
+        for (ModelObserver o : observers) {
+            o.notifyObservers(renderedImage, minX, maxX, minY, maxY, layerList, "layerUpdate");
+        }
+    }
+
+    public void clearLayer()
+    {
+        activeLayer.clearLayer();
+        updateCanvas();
+    }
+
     private List<PaintLayer> reversedLayerList() {
         LinkedList<PaintLayer> reversedList = new LinkedList<>();
 
@@ -257,7 +252,6 @@ public class ImageModel {
         PaintLayer newLayer = new PaintLayer(width, height, bgColor, name);
         layerList.add(index, newLayer);
 
-
         setActiveLayer(newLayer);
 
         updateRenderedImage();
@@ -266,24 +260,25 @@ public class ImageModel {
         newLayerCount++;
     }
 
-    // Deletes the active layer and selects a new active layer or null if no layers exist.
+    // Deletes the active layer and selects a new active layer or none if no layers exist.
     public void deleteActiveLayer(){
         if (!layerList.isEmpty()) {
             int index = indexOfActiveLayer();
 
-            clearLayer();
             undoBufferStack.removeIf(undoBuffer ->{
                 return undoBuffer.getLayer() == activeLayer;
             });
             layerList.remove(index);
 
+            // Select the layer above the deleted layer or the topmost layer if the deleted layer is at the top.
             if (!layerList.isEmpty()) {
                 if (index > 0) {
                     index -= 1;
                 }
-                activeLayer = layerList.get(index);
+                updateRenderedImage();
+                setActiveLayer(layerList.get(index));
             } else {
-                activeLayer = null;
+                setActiveLayer(null);
                 renderTransparent();
             }
 
@@ -293,6 +288,7 @@ public class ImageModel {
 
     public void setActiveLayer(PaintLayer layer) {
         activeLayer = layer;
+        updateLayerGUI();
     }
 
     public void deleteAllLayers(){
@@ -312,11 +308,12 @@ public class ImageModel {
         return -1;
     }
 
-    public void moveLayerTo(int index, PaintLayer movingLayer) {
+    public void moveLayerIndex(int index, PaintLayer movingLayer) {
         int i = index;
 
-        if (layerList.indexOf(movingLayer) < i)
-            i -= 1;
+        if (i == layerList.indexOf(movingLayer)) {
+            return;
+        }
 
         if (i >= layerList.size())
             i = layerList.size() - 1;
@@ -327,14 +324,31 @@ public class ImageModel {
 
         updateRenderedImage();
         updateLayerGUI();
-        updateCanvas();
+    }
+
+    public void moveLayerAbove(int index, PaintLayer movingLayer){
+        int newIndex = index;
+
+        if (layerList.indexOf(movingLayer) < newIndex)
+            newIndex -= 1;
+
+        moveLayerIndex(newIndex, movingLayer);
+    }
+
+    public void moveLayerUnder(int index, PaintLayer movingLayer){
+        int newIndex = index +1;
+
+        if (layerList.indexOf(movingLayer) < newIndex)
+            newIndex -= 1;
+
+        moveLayerIndex(newIndex, movingLayer);
     }
 
     ///// LAYER END ////// RENDER START //////
 
     public void updateRenderedImage() {
-        // Clear the image before we draw new pixels.
         renderImage(0,width,0,height);
+        updateCanvas();
     }
 
     private void updateRenderedRect() {
@@ -360,17 +374,17 @@ public class ImageModel {
         if(!layerList.isEmpty()) {
             for (PaintLayer l : reversedLayerList()) {
                 if (l.isVisible()) {
-                    for (int i =0; i < oldOverlay.size(); i+=5){
-                        renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(),
-                                PaintColor.alphaBlend(l.getPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY()),renderedImage.getPixel(oldOverlay.get(i).getX(),oldOverlay.get(i).getY())));
-                    }
-                    oldOverlay.clear();
                     for (int x = minX; x < maxX; x++) {
                         for (int y = minY; y < maxY; y++) {
                             if ((l.getPixel(x, y).getAlpha() != 0))
                                 renderedImage.setPixel(x, y, PaintColor.alphaBlend(l.getPixel(x, y),renderedImage.getPixel(x,y)));
                         }
                     }
+                    for (int i =0; i < oldOverlay.size(); i+=5){
+                        renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(),
+                                PaintColor.alphaBlend(l.getPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY()),renderedImage.getPixel(oldOverlay.get(i).getX(),oldOverlay.get(i).getY())));
+                    }
+                    oldOverlay.clear();
                 }
             }
         }
@@ -383,8 +397,6 @@ public class ImageModel {
             renderedImage.setPixel(overlay.get(i).getX(), overlay.get(i).getY(), new PaintColor(0,0,0) );
         }
             //updateCanvas();
-
-
     }
 
     private void renderTransparent() {
@@ -394,6 +406,17 @@ public class ImageModel {
             }
         }
         updateCanvas();
+    }
+
+    public PaintLayer getRenderedImage() {
+        PaintLayer imageCopy = new PaintLayer(renderedImage.getWidth(), renderedImage.getHeight(), renderedImage.getBgColor(), "");
+        for (int x = 0; x < renderedImage.getWidth(); x++) {
+            for (int y = 0; y < renderedImage.getHeight(); y++) {
+                imageCopy.setPixel(x, y, renderedImage.getPixel(x, y));
+            }
+        }
+
+        return imageCopy;
     }
 
     ///// RENDER END //////

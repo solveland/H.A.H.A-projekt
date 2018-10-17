@@ -121,4 +121,8 @@ public class PaintLayer {
     public void setName(String name) {
         this.name = name;
     }
+
+    public PaintColor getBgColor() {
+        return bgColor;
+    }
 }

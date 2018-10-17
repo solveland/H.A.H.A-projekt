@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ColorPicker?>
@@ -21,7 +22,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane id="background" fx:id="borderPane" prefHeight="800" prefWidth="600" styleClass="hud" stylesheets="@Stylesheet.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane id="background" fx:id="borderPane" prefHeight="800" prefWidth="600" stylesheets="@Stylesheet.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
 
     <left>
             <ToolBar fx:id="toolBar" prefHeight="371.0" prefWidth="57.0" BorderPane.alignment="CENTER">
@@ -151,19 +152,18 @@
       </AnchorPane>
     </top>
    <center>
-      <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" minViewportHeight="600.0" minViewportWidth="600.0" prefViewportHeight="600.0" prefViewportWidth="600.0" styleClass="no-border-scroll">
+      <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" minViewportHeight="600.0" minViewportWidth="600.0" prefViewportHeight="600.0" prefViewportWidth="600.0">
          <content>
             <StackPane fx:id="stackPane" styleClass="scrollPane" BorderPane.alignment="CENTER">
                <children>
                   <ImageView fx:id="canvas" fitHeight="600.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" smooth="false" />
-                  <AnchorPane mouseTransparent="true">
-                     <children>
-                        <ImageView fitHeight="736.0" fitWidth="613.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                     </children>
-                  </AnchorPane>
                </children>
             </StackPane>
          </content>
+         <styleClass>
+            <String fx:value="no-border-scroll" />
+            <String fx:value="hud" />
+         </styleClass>
       </ScrollPane>
    </center>
 

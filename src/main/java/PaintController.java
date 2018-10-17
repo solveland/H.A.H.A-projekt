@@ -128,6 +128,8 @@ public class PaintController {
 
         sendColorState();
 
+        setPencil();
+
     }
 
     private void sendColorState(){
