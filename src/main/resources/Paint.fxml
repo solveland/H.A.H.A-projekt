@@ -76,7 +76,14 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                           <Button onAction="#setSelectTool" text="Select" />
+                           <Button onAction="#setSelectTool">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@selectTool.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
                            <Button text="-" />
                            <Button onAction="#undoButton" text="Undo">
                      <font>
@@ -163,11 +170,6 @@
             <StackPane fx:id="stackPane" styleClass="scrollPane" BorderPane.alignment="CENTER">
                <children>
                   <ImageView fx:id="canvas" fitHeight="600.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" smooth="false" />
-                  <AnchorPane mouseTransparent="true">
-                     <children>
-                        <ImageView fitHeight="736.0" fitWidth="613.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                     </children>
-                  </AnchorPane>
                </children>
             </StackPane>
          </content>

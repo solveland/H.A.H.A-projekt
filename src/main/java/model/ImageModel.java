@@ -125,6 +125,10 @@ public class ImageModel implements IModel{
         activeTool.updateSettings(ts);
     }
 
+    public ShapeTool getShapeTool() {
+        return shapeTool;
+    }
+
     public void setSize(int size){
         ts.setSize(size);
         activeTool.updateSettings(ts);
@@ -312,6 +316,12 @@ public class ImageModel implements IModel{
     }
 
     public void setActiveLayer(PaintLayer layer) {
+        if(activeLayer != null){
+            if(activeLayer.hasSelectedArea()){
+                layer.selectArea(activeLayer.getSelectedStartPoint(), activeLayer.getSelectedEndPoint());
+            }
+        }
+
         activeLayer = layer;
     }
 
@@ -350,6 +360,7 @@ public class ImageModel implements IModel{
 
     public void updateRenderedImage() {
         renderImage(0,width,0,height);
+        updateCanvas();
     }
 
     private void updateRenderedRect() {
@@ -367,6 +378,7 @@ public class ImageModel implements IModel{
                 renderedImage.setPixel(x, y, PaintColor.blank);
             }
         }
+        // SelectTool
         for (int i =0; i < oldOverlay.size(); i++){
             renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(), PaintColor.blank );
         }
@@ -375,6 +387,7 @@ public class ImageModel implements IModel{
         if(!layerList.isEmpty()) {
             for (PaintLayer l : reversedLayerList()) {
                 if (l.isVisible()) {
+                    // SelectTool
                     for (int i =0; i < oldOverlay.size(); i++){
                         renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(),
                                 PaintColor.alphaBlend(l.getPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY()), renderedImage.getPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY())));
@@ -395,13 +408,10 @@ public class ImageModel implements IModel{
             layer.resetChangeTracker();
         }
 
-
+        // SelectTool
         for (int i =0; i < overlay.size(); i++){
             renderedImage.setPixel(overlay.get(i).getX(), overlay.get(i).getY(), new PaintColor(0,0,0) );
         }
-            //updateCanvas();
-
-
     }
 
     public void loadImage(List<PaintLayer> newLayerList){
@@ -421,6 +431,13 @@ public class ImageModel implements IModel{
             }
         }
         updateCanvas();
+    }
+
+    public void deselectArea(){
+        overlay.clear();
+        oldOverlay.clear();
+        activeLayer.setIsSelectedArea(false);
+        updateRenderedImage();
     }
 
     ///// RENDER END //////
