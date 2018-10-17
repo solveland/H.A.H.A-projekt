@@ -71,11 +71,6 @@ public class ImageModel implements IModel{
     }
 
 
-    public void setImageSize(int width, int height){
-        this.width = width;
-        this.height = height;
-        renderedImage = new PaintLayer(width,height,new PaintColor(0,0,0,0), null);
-    }
 
     public List<PaintLayer> getLayerList() {
         return layerList;
@@ -320,12 +315,6 @@ public class ImageModel implements IModel{
         activeLayer = layer;
     }
 
-    public void deleteAllLayers(){
-        layerList.clear();
-        activeLayer = null;
-        updateLayerGUI();
-    }
-
     public PaintLayer getActiveLayer() {
         return activeLayer;
     }
@@ -413,6 +402,16 @@ public class ImageModel implements IModel{
             //updateCanvas();
 
 
+    }
+
+    public void loadImage(List<PaintLayer> newLayerList){
+        layerList = newLayerList;
+        setActiveLayer(newLayerList.get(0));
+        updateLayerGUI();
+        width = newLayerList.get(0).getWidth();
+        height = newLayerList.get(0).getHeight();
+        renderedImage = new PaintLayer(width,height,PaintColor.blank, null);
+        updateCanvas();
     }
 
     private void renderTransparent() {

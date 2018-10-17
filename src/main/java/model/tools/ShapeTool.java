@@ -62,6 +62,10 @@ public class ShapeTool implements ITool {
     private void addShapeToImage(IModel image, List<Point<Integer>> shape){
         image.getOverlay().clear();
         for(Point<Integer> i : shape){
+            if (undoBuffer.contains(i.getX(),i.getY())){
+                continue;
+                //Don't need to paint twice in the same spot
+            }
             undoBuffer.addPixel(i.getX(), i.getY(), image.getActiveLayer().getPixel(i.getX(), i.getY()));
             image.getActiveLayer().setPixel(i.getX(), i.getY(), color);
         }
