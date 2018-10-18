@@ -19,7 +19,7 @@ public class ShapeTool implements ITool {
     private IShapeStrategy strategy;
 
 
-    public ShapeTool(){
+    public ShapeTool() {
         setTriangleStrategy();
     }
 
@@ -48,21 +48,21 @@ public class ShapeTool implements ITool {
         imageModel.pushToUndoStack(undoBuffer);
 
     }
-    private void addToOverlay(List<Pixel> arrayList, List<Pixel> oldArrayList, List<Point<Integer>> shape){
+
+    private void addToOverlay(List<Pixel> arrayList, List<Pixel> oldArrayList, List<Point<Integer>> shape) {
         oldArrayList.addAll(arrayList);
         arrayList.clear();
-        for(Point<Integer> i : shape){
+        for (Point<Integer> i : shape) {
             arrayList.add(new Pixel(i.getX(), i.getY(), color));
         }
 
     }
 
 
-
-    private void addShapeToImage(IModel image, List<Point<Integer>> shape){
+    private void addShapeToImage(IModel image, List<Point<Integer>> shape) {
         image.getOverlay().clear();
-        for(Point<Integer> i : shape){
-            if (undoBuffer.contains(i.getX(),i.getY())){
+        for (Point<Integer> i : shape) {
+            if (undoBuffer.contains(i.getX(), i.getY())) {
                 continue;
                 //Don't need to paint twice in the same spot
             }
@@ -72,12 +72,17 @@ public class ShapeTool implements ITool {
     }
 
 
-    public void setStraightLineStrategy(){
+    public void setStraightLineStrategy() {
         this.strategy = new StraightLineStrategy();
     }
-    public void setTriangleStrategy(){this.strategy = new TriangleStrategy(); }
-    public void setRectangleStrategy(){this.strategy = new RectangleStrategy(); }
 
+    public void setTriangleStrategy() {
+        this.strategy = new TriangleStrategy();
+    }
+
+    public void setRectangleStrategy() {
+        this.strategy = new RectangleStrategy();
+    }
 
 
 }

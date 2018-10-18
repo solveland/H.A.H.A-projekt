@@ -17,7 +17,7 @@ public class EraserTool extends AbstractPaintTool {
      */
 
     @Override
-    PaintColor getPixelColor(int x, int y,PaintColor oldPixel) {
+    PaintColor getPixelColor(double dist,PaintColor oldPixel) {
         return PaintColor.blank;
     }
 }

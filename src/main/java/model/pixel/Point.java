@@ -1,6 +1,6 @@
 package model.pixel;
 
-public class Point <T> {
+public class Point <T extends Number> {
     private final T x;
     private final T y;
 

@@ -4,7 +4,7 @@ public class ServiceFactory {
 
     private static ISaveLoad saveAndLoader = new ImageSaveLoad();
 
-    public static ISaveLoad getSaveAndLoader(){
+    public static ISaveLoad getSaveAndLoader() {
         return saveAndLoader;
     }
 

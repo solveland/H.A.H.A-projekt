@@ -361,14 +361,16 @@ public class ImageModel implements IModel{
     }
 
     private void renderImage(int minX,int maxX,int minY,int maxY){
-        // Clear the rectangle before we draw new pixels.
+        // Fill in a checkered background to make transparent parts easier to see
+        PaintColor bg1 = new PaintColor(180,180,180);
+        PaintColor bg2 = new PaintColor(130,130,130);
         for (int x = minX; x < maxX; x++) {
             for (int y = minY; y < maxY; y++) {
-                renderedImage.setPixel(x, y, PaintColor.blank);
+                renderedImage.setPixel(x, y, ((x/20 + y/20) % 2 == 0)? bg1 : bg2);
             }
         }
         for (int i =0; i < oldOverlay.size(); i++){
-            renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(), PaintColor.blank );
+            renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(), ((oldOverlay.get(i).getX()/20 + oldOverlay.get(i).getY()/20) % 2 == 0)? bg1 : bg2);
         }
 
         // Draws the image from bottom layer to top layer to make a top layer render over the bottom layer.
@@ -415,9 +417,11 @@ public class ImageModel implements IModel{
     }
 
     private void renderTransparent() {
+        PaintColor bg1 = new PaintColor(180,180,180);
+        PaintColor bg2 = new PaintColor(130,130,130);
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                renderedImage.setPixel(x, y, PaintColor.blank);
+                renderedImage.setPixel(x, y, ((x/20 + y/20) % 2 == 0)? bg1 : bg2);
             }
         }
         updateCanvas();
