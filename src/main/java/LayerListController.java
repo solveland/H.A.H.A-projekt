@@ -159,17 +159,6 @@ public class LayerListController extends StackPane implements ModelObserver, Lay
         if (!layerViewList.isEmpty()) {
             int index = indexOfSelectedItem();
 
-            layerViewList.remove(index);
-
-            // Select the layer above the deleted layer or the topmost layer if the deleted layer is at the top.
-            if (!layerViewList.isEmpty()) {
-                if (index > 0)
-                    index -= 1;
-
-                LayerItem i = (LayerItem) layerViewList.get(index);
-                i.setSelected();
-            }
-
             image.deleteActiveLayer();
         }
 
@@ -242,7 +231,7 @@ public class LayerListController extends StackPane implements ModelObserver, Lay
         layerItem.setOnDragDetected(e -> {
             layerItem.startFullDrag();
             layerItem.setCursor(Cursor.CLOSED_HAND);
-            dragImage = layerItem.imageCopy();
+            dragImage = layerItem.getSnapShot(1.25);
             frontPane.getChildren().add(dragImage);
             mouseY = e.getSceneY();
             dragImage.setManaged(false);
@@ -251,6 +240,7 @@ public class LayerListController extends StackPane implements ModelObserver, Lay
             e.consume();
         });
 
+        // Shows the image of the dragged layer.
         layerItem.setOnMouseDragged(e -> {
             if (e.getSource().getClass().equals(LayerItem.class)) {
                 double deltaY = e.getSceneY() - mouseY;
@@ -297,7 +287,7 @@ public class LayerListController extends StackPane implements ModelObserver, Lay
             if (e.getGestureSource().getClass().equals(LayerItem.class)) {
                 LayerItem source = (LayerItem) e.getGestureSource();
 
-                image.moveLayerTo(layerViewList.indexOf(layerItem), source.getLayer());
+                image.moveLayerAbove(layerViewList.indexOf(layerItem), source.getLayer());
             }
             e.consume();
         });
@@ -307,7 +297,7 @@ public class LayerListController extends StackPane implements ModelObserver, Lay
             if (e.getGestureSource().getClass().equals(LayerItem.class)) {
                 LayerItem source = (LayerItem) e.getGestureSource();
 
-                image.moveLayerTo(layerViewList.indexOf(layerItem) + 1, source.getLayer());
+                image.moveLayerUnder(layerViewList.indexOf(layerItem), source.getLayer());
             }
             e.consume();
         });

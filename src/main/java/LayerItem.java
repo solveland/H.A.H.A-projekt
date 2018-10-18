@@ -46,8 +46,7 @@ public class LayerItem extends AnchorPane implements Serializable {
 
     private String selectedColor;
     private String originalColor;
-    private String borderUpColor;
-    private String borderDownColor;
+    private String borderColor;
 
     public LayerItem(String name, PaintLayer layer)
     {
@@ -68,8 +67,7 @@ public class LayerItem extends AnchorPane implements Serializable {
         layerName.setText(name);
         selectedColor = "-fx-background-color: -layer-highlight;";
         originalColor = "-fx-background-color: -layer-background;";
-        borderUpColor = "-fx-border-color: white -dark-black -dark-black -dark-black;";
-        borderDownColor = "-fx-border-color: -dark-black -dark-black white -dark-black;";
+        borderColor = "-fx-border-color: white";
 
         editableText.focusedProperty().addListener(new ChangeListener<Boolean>() {
            @Override
@@ -118,7 +116,6 @@ public class LayerItem extends AnchorPane implements Serializable {
         }
     }
 
-
     public void addObserver(LayerObserver observer) {
         observers.add(observer);
     }
@@ -157,15 +154,15 @@ public class LayerItem extends AnchorPane implements Serializable {
 
     private void setBorder(String side) {
         switch (side) {
-            case "Up":
-                topBorderPane.setStyle("-fx-border-width: 1 0 0 0;" +  borderUpColor);
+            case "Top":
+                topBorderPane.setStyle("-fx-border-width: 1 0 0 0;" +  borderColor);
                 break;
-            case "Down":
-                bottomBorderPane.setStyle("-fx-border-width: 0 0 1 0;" + borderDownColor);
+            case "Bottom":
+                bottomBorderPane.setStyle("-fx-border-width: 0 0 1 0;" + borderColor);
                 break;
-            case "Original":
-                topBorderPane.setStyle("-fx-border-width: 0;");
-                bottomBorderPane.setStyle("-fx-border-width: 0;");
+            case "noBorder":
+                topBorderPane.setStyle("-fx-border-width: 0 0 0 0;");
+                bottomBorderPane.setStyle("-fx-border-width: 0 0 0 0;");
                 break;
             default:
                 break;
@@ -178,42 +175,42 @@ public class LayerItem extends AnchorPane implements Serializable {
     private void setBorderEvents() {
         topBorderPane.addEventFilter(MouseDragEvent.MOUSE_DRAG_ENTERED, e -> {
             if (e.getGestureSource().getClass().equals(LayerItem.class)) {
-                setBorder("Up");
+                setBorder("Top");
                 e.consume();
             }
         });
 
         topBorderPane.addEventFilter(MouseDragEvent.MOUSE_DRAG_EXITED, e -> {
             if (e.getGestureSource().getClass().equals(LayerItem.class)) {
-                setBorder("Original");
+                setBorder("noBorder");
                 e.consume();
             }
         });
 
         bottomBorderPane.addEventFilter(MouseDragEvent.MOUSE_DRAG_ENTERED, e -> {
             if (e.getGestureSource().getClass().equals(LayerItem.class)) {
-                setBorder("Down");
+                setBorder("Bottom");
                 e.consume();
             }
         });
 
         bottomBorderPane.addEventFilter(MouseDragEvent.MOUSE_DRAG_EXITED, e -> {
             if (e.getGestureSource().getClass().equals(LayerItem.class)) {
-                setBorder("Original");
+                setBorder("noBorder");
                 e.consume();
             }
         });
     }
 
-    public ImageView imageCopy() {
+    public ImageView getSnapShot(double scale) {
         Bounds bounds = layerItemPane.getLayoutBounds();
 
         WritableImage image = new WritableImage(
-                (int) Math.round(bounds.getWidth() * 1.25),
-                (int) Math.round(bounds.getHeight() * 1.25));
+                (int) Math.round(bounds.getWidth() * scale),
+                (int) Math.round(bounds.getHeight() * scale));
 
         SnapshotParameters spa = new SnapshotParameters();
-        spa.setTransform(javafx.scene.transform.Transform.scale(1.25, 1.25));
+        spa.setTransform(javafx.scene.transform.Transform.scale(scale, scale));
 
         ImageView view = new ImageView(layerItemPane.snapshot(spa, image));
         view.setFitWidth(bounds.getWidth());

@@ -1,4 +1,10 @@
+
 import Services.ServiceFactory;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.input.ContextMenuEvent;
+
 import javafx.scene.input.MouseButton;
 import model.ImageModel;
 import model.PaintLayer;
@@ -16,9 +22,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import model.pixel.PaintColor;
 import view.PaintView;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
 
@@ -48,6 +51,12 @@ public class PaintController {
     private Label opacityLabel;
     @FXML
     private ComboBox<String> shapeBox;
+    @FXML
+    private ContextMenu contextMenu;
+    @FXML
+    private MenuItem item1;
+    @FXML
+    private Label label;
 
     private ImageModel image;
     private PaintView view;
@@ -74,6 +83,8 @@ public class PaintController {
         image.addObserver(view);
         image.addObserver(lController);
         borderPane.setRight(lController.getListPane());
+        contextMenu = new ContextMenu();
+        item1 = new MenuItem("Deselect");
 
 
 
@@ -145,7 +156,35 @@ public class PaintController {
 
         sendColorState();
 
+        setPencil();
+
+        //Deselect selected area - rightclick
+        item1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                image.deselectArea();
+            }
+        });
+
+        contextMenu.getItems().add(item1);
+
+
+        canvas.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+            @Override
+            public void handle(ContextMenuEvent event) {
+                if(image.getActiveLayer().hasSelectedArea()){
+                    contextMenu.show(canvas, event.getScreenX(), event.getScreenY());
+                }
+            }
+        });
+
     }
+
+
+
+
+
+
 
     private void sendColorState(){
         Color javafxcolor = colorPicker.getValue();
@@ -220,9 +259,6 @@ public class PaintController {
         opacityLabel.setVisible(true);
         brushBar.setVisible(true);
     }
-
-
-    ////////////////////////////////////////// ZOOM ///////////////////////////////////////////////
 
     @FXML
     public void setFillTool() {

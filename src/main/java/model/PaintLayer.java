@@ -1,6 +1,10 @@
 package model;
 
 import model.pixel.PaintColor;
+import model.pixel.Pixel;
+import model.pixel.Point;
+
+import java.util.List;
 
 public class PaintLayer {
 
@@ -12,6 +16,11 @@ public class PaintLayer {
     private boolean visible;
     private PaintColor bgColor;
     private String name;
+
+    private Point<Integer> selectedStartPoint;
+    private Point<Integer> selectedEndPoint;
+
+    private Boolean isSelectedArea;
 
     public PaintLayer(int sizeX, int sizeY, PaintColor bgColor, String name) {
         height = sizeY;
@@ -29,6 +38,8 @@ public class PaintLayer {
         changedMinY = 0;
         changedMaxY = height;
         changed = true;
+
+        isSelectedArea = false;
     }
 
     public int getWidth() {
@@ -40,6 +51,17 @@ public class PaintLayer {
     }
 
     public void setPixel(int x, int y, PaintColor rgb) {
+        if(isSelectedArea){
+            int minX = (selectedStartPoint.getX() < selectedEndPoint.getX()) ? selectedStartPoint.getX() : selectedEndPoint.getX();
+            int maxX = (selectedStartPoint.getX() > selectedEndPoint.getX()) ? selectedStartPoint.getX() : selectedEndPoint.getX();
+            int minY = (selectedStartPoint.getY() < selectedEndPoint.getY()) ? selectedStartPoint.getY() : selectedEndPoint.getY();
+            int maxY = (selectedStartPoint.getY() > selectedEndPoint.getY()) ? selectedStartPoint.getY() : selectedEndPoint.getY();
+
+            if ((x <= minX || x >= maxX) || (y <= minY || y >= maxY) ){
+                return;
+            }
+        }
+
         pixelArray[y * width + x] = rgb;
         if (!changed) {
             changedMinX = x;
@@ -60,6 +82,14 @@ public class PaintLayer {
                 changedMaxY = y + 1;
             }
         }
+    }
+
+    public Point<Integer> getSelectedStartPoint() {
+        return selectedStartPoint;
+    }
+
+    public Point<Integer> getSelectedEndPoint() {
+        return selectedEndPoint;
     }
 
     public PaintColor getPixel(int x, int y) {
@@ -85,6 +115,22 @@ public class PaintLayer {
         changedMaxY = 0;
         changed = false;
     }
+
+    public void selectArea(Point<Integer> startPoint, Point<Integer> endPoint){
+        selectedStartPoint = startPoint;
+        selectedEndPoint = endPoint;
+        isSelectedArea = true;
+    }
+
+    public Boolean hasSelectedArea() {
+        return isSelectedArea;
+    }
+
+    public void setIsSelectedArea(Boolean selectedArea) {
+        this.isSelectedArea = selectedArea;
+    }
+
+
 
     public int getChangedMinX() {
         return changedMinX;
@@ -120,5 +166,9 @@ public class PaintLayer {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public PaintColor getBgColor() {
+        return bgColor;
     }
 }
