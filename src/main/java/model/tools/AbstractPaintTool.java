@@ -35,7 +35,7 @@ public abstract class AbstractPaintTool implements ITool {
                     continue;
                 }
                 double dist = DistanceHelper.distToSegmentSquared(oldPoint, newPoint, new Point<>((double) xc, (double) yc));
-                if (dist < size * size - 0.5) {
+                if (dist < (size - 0.5) * (size - 0.5)) {
                     undoBuffer.addPixel(xc,yc,imageModel.getActiveLayer().getPixel(xc,yc));
                     imageModel.getActiveLayer().setPixel(xc, yc, getPixelColor(dist,imageModel.getActiveLayer().getPixel(xc,yc)));
                 }

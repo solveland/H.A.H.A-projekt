@@ -30,8 +30,6 @@ public class PencilTest {
         im.setColor(color);
         im.onPress(x, y);
 
-
-
         for(int xi = 0; xi < limit; xi++){
             for(int yi = 0; yi < limit; yi++) {
 
