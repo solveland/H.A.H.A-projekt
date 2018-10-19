@@ -95,9 +95,9 @@ public class PaintController {
             }
             int x = (int) Math.floor(e.getX());
             int y = (int) Math.floor(e.getY());
-            if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
+            /*if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
                 return;
-            }
+            }*/
             image.onDrag(x, y);
         });
 
@@ -107,9 +107,9 @@ public class PaintController {
             }
             int x = (int) Math.floor(e.getX());
             int y = (int) Math.floor(e.getY());
-            if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
+            /*if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
                 return;
-            }
+            }*/
             image.onRelease(x, y);
         });
 
@@ -119,9 +119,9 @@ public class PaintController {
             }
             int x = (int) Math.floor(e.getX());
             int y = (int) Math.floor(e.getY());
-            if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
+            /*if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
                 return;
-            }
+            }*/
             image.onPress(x, y);
         });
 

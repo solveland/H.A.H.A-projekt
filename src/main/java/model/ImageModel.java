@@ -173,9 +173,13 @@ public class ImageModel implements IModel{
             return;
         }
         UndoBuffer buffer = undoBufferStack.pop();
+        // Need to deselect layer temporarily because the layer being selected can block setPixel
+        boolean oldSelected = buffer.getLayer().getIsSelectedArea();
+        buffer.getLayer().setIsSelectedArea(false);
         for(Pixel p : buffer.pixels){
             buffer.getLayer().setPixel(p.getX(),p.getY(),p.getColor());
         }
+        buffer.getLayer().setIsSelectedArea(oldSelected);
         updateCanvas();
     }
 
@@ -314,7 +318,7 @@ public class ImageModel implements IModel{
 
     public void setActiveLayer(PaintLayer layer) {
         if(activeLayer != null){
-            if(activeLayer.hasSelectedArea()){
+            if(activeLayer.hasSelectedArea() && layer != null){
                 layer.selectArea(activeLayer.getSelectedStartPoint(), activeLayer.getSelectedEndPoint());
             }
         }

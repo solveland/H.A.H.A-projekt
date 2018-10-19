@@ -20,6 +20,8 @@ public class PaintLayer {
     private Point<Integer> selectedStartPoint;
     private Point<Integer> selectedEndPoint;
 
+
+
     private Boolean isSelectedArea;
 
     public PaintLayer(int sizeX, int sizeY, PaintColor bgColor, String name) {
@@ -158,6 +160,10 @@ public class PaintLayer {
 
     public void toggleVisible() {
         visible = !visible;
+    }
+
+    public Boolean getIsSelectedArea() {
+        return isSelectedArea;
     }
 
     public String getName() {

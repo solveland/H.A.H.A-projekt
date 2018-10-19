@@ -32,8 +32,9 @@ public class ShapeTool implements ITool {
 
     @Override
     public void onDrag(int x, int y, IModel imageModel) {
-        addToOverlay(imageModel.getOverlay(), imageModel.getOldOverlay(), strategy.shapeStrategy(startPoint, new Point<>(x, y)));
-
+        List<Point<Integer>> pointList = strategy.shapeStrategy(startPoint, new Point<>(x, y));
+        removeOutsidePoints(pointList,imageModel);
+        addToOverlay(imageModel.getOverlay(), imageModel.getOldOverlay(), pointList);
     }
 
     @Override
@@ -44,7 +45,9 @@ public class ShapeTool implements ITool {
     @Override
     public void onRelease(int x, int y, IModel imageModel) {
         undoBuffer = new UndoBuffer(imageModel.getActiveLayer());
-        addShapeToImage(imageModel, strategy.shapeStrategy(startPoint, new Point<>(x, y)));
+        List<Point<Integer>> pointList = strategy.shapeStrategy(startPoint, new Point<>(x, y));
+        removeOutsidePoints(pointList,imageModel);
+        addShapeToImage(imageModel, pointList);
         imageModel.pushToUndoStack(undoBuffer);
 
     }
@@ -69,6 +72,12 @@ public class ShapeTool implements ITool {
             undoBuffer.addPixel(i.getX(), i.getY(), image.getActiveLayer().getPixel(i.getX(), i.getY()));
             image.getActiveLayer().setPixel(i.getX(), i.getY(), color);
         }
+    }
+
+    private void removeOutsidePoints(List<Point<Integer>> pointList, IModel imageModel){
+        pointList.removeIf(p -> {
+            return (p.getX() < 0 || p.getY() < 0 || p.getX() >= imageModel.getActiveLayer().getWidth() || p.getY() >= imageModel.getActiveLayer().getHeight());
+        });
     }
 
 

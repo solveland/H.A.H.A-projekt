@@ -26,7 +26,7 @@ public class SelectTool implements ITool{
 
     public void onDrag(int x, int y, IModel imageModel){
         Point<Integer> endPoint = new Point<> (x,y);
-        drawSelectedToolArea(imageModel.getOverlay(),imageModel.getOldOverlay(), endPoint);
+        drawSelectedToolArea(imageModel.getOverlay(),imageModel.getOldOverlay(), endPoint,imageModel.getActiveLayer().getWidth(),imageModel.getActiveLayer().getHeight());
     }
     public void onPress(int x, int y, IModel imageModel){
         Point<Integer> startPoint = new Point<>(x,y);
@@ -42,14 +42,14 @@ public class SelectTool implements ITool{
     }
 
 
-    private void drawSelectedToolArea (List<Pixel> arrayList, List<Pixel> oldArrayList, Point<Integer> endPoint){
+    private void drawSelectedToolArea (List<Pixel> arrayList, List<Pixel> oldArrayList, Point<Integer> endPoint, int maxWidth, int maxHeight){
         oldArrayList.addAll(arrayList);
         arrayList.clear();
 
-        int minX = (startPoint.getX() < endPoint.getX()) ? startPoint.getX() : endPoint.getX();
-        int maxX = (startPoint.getX() > endPoint.getX()) ? startPoint.getX() : endPoint.getX();
-        int minY = (startPoint.getY() < endPoint.getY()) ? startPoint.getY() : endPoint.getY();
-        int maxY = (startPoint.getY() > endPoint.getY()) ? startPoint.getY() : endPoint.getY();
+        int minX = Math.max((startPoint.getX() < endPoint.getX()) ? startPoint.getX() : endPoint.getX(),0);
+        int maxX = Math.min((startPoint.getX() > endPoint.getX()) ? startPoint.getX() : endPoint.getX(),maxWidth - 1);
+        int minY = Math.max((startPoint.getY() < endPoint.getY()) ? startPoint.getY() : endPoint.getY(),0);
+        int maxY = Math.min((startPoint.getY() > endPoint.getY()) ? startPoint.getY() : endPoint.getY(),maxHeight - 1);
 
         for(int i = minX; i <= maxX; i++){
             if (i % 5 == 0){
