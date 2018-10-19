@@ -26,7 +26,6 @@ public class SelectTest {
                                              @InRange(minInt = 0, maxInt = 255) int green,
                                              @InRange(minInt = 0, maxInt = 255) int blue,
                                              @InRange(minInt = 0, maxInt = 255) int red,
-                                             @InRange(minInt = 0, maxInt = 255) int alpha,
                                              @InRange(minInt = 150, maxInt = 200) int limit) {
 
         ImageModel image = new ImageModel(limit, limit);
@@ -69,7 +68,6 @@ public class SelectTest {
                                              @InRange(minInt = 0, maxInt = 255) int green,
                                              @InRange(minInt = 0, maxInt = 255) int blue,
                                              @InRange(minInt = 0, maxInt = 255) int red,
-                                             @InRange(minInt = 0, maxInt = 255) int alpha,
                                              @InRange(minInt = 150, maxInt = 200) int limit) {
 
         ImageModel image = new ImageModel(limit, limit);

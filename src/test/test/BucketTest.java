@@ -105,7 +105,6 @@ public class BucketTest {
         int a = 120;
         int b = 120;
 
-
         PaintColor initColor = new PaintColor(red, blue, green);
         PaintLayer paintLayer = new PaintLayer(limit, limit, new PaintColor(255, 255, 255), "test");
         image.setActiveLayer(paintLayer);

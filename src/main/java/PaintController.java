@@ -125,9 +125,9 @@ public class PaintController {
             image.onPress(x, y);
         });
 
-        /* Tar bort denna så länge eftersom jag flyttar tillbaka allt till modellen
-        stackPane.setOnMousePressed(e ->{
-                    if(activeTool == zoomTool) {
+        // Tar bort denna så länge eftersom jag flyttar tillbaka allt till modellen
+        /*stackPane.setOnMousePressed(e ->{
+                    if(image.activateZoomTool() == zoo) {
                         if (e.isAltDown())
                             zoom(false);
                         else
@@ -344,7 +344,7 @@ public class PaintController {
         zoom(false);
     }
 
-    private void setZoomPercent(double percent) {
+    public void setZoomPercent(double percent) {
         canvas.setScaleY(percent);
         canvas.setScaleX(percent);
     }

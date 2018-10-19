@@ -1,6 +1,7 @@
 package model.tools;
 
-import model.*;
+import model.PaintLayer;
+import model.UndoBuffer;
 import model.pixel.PaintColor;
 import model.pixel.Point;
 
@@ -29,7 +30,7 @@ public class BucketFillTool implements ITool {
     }
 
     /**
-     * An algorithm for filling an area while checking the color of the edges.
+     * An algorithm for filling an area with the same color while checking the color of the edges.
      * @param x an x-coordinate value of clicked pixel
      * @param y an y-coordinate value of clicked pixel
      * @param layer a layer used to render on
@@ -81,15 +82,5 @@ public class BucketFillTool implements ITool {
     public void updateSettings(ToolSettings ts){
         this.newColor = ts.getPaintColor();
     }
-
-
-
-
-
-
-
-
-
-
 
 }

@@ -9,6 +9,10 @@ import model.pixel.PaintColor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * SelectTool class for the select feature.
+ */
+
 public class SelectTool implements ITool{
     private Point<Integer> startPoint;
     private PaintColor paintColor;
@@ -42,6 +46,12 @@ public class SelectTool implements ITool{
     }
 
 
+    /**
+     * This method checks how the user creates the rectangle and adds the pixels to a list. It checks the direction of the drag.
+     * @param arrayList a list that contains all pixels when drawing the rectangle for the selected area.
+     * @param oldArrayList a copy of arraylist with the same pixels.
+     * @param endPoint a point used when creating a rectangle for the selected area.
+     */
     private void drawSelectedToolArea (List<Pixel> arrayList, List<Pixel> oldArrayList, Point<Integer> endPoint){
         oldArrayList.addAll(arrayList);
         arrayList.clear();
@@ -65,11 +75,4 @@ public class SelectTool implements ITool{
             }
         }
     }
-
-
-
-
-
-
-
 }
