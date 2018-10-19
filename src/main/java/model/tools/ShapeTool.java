@@ -19,7 +19,7 @@ public class ShapeTool implements ITool {
     private IShapeStrategy strategy;
 
 
-    public ShapeTool(){
+    public ShapeTool() {
         setTriangleStrategy();
     }
 
@@ -32,8 +32,9 @@ public class ShapeTool implements ITool {
 
     @Override
     public void onDrag(int x, int y, IModel imageModel) {
-        addToOverlay(imageModel.getOverlay(), imageModel.getOldOverlay(), strategy.shapeStrategy(startPoint, new Point<>(x, y)));
-
+        List<Point<Integer>> pointList = strategy.shapeStrategy(startPoint, new Point<>(x, y));
+        removeOutsidePoints(pointList,imageModel);
+        addToOverlay(imageModel.getOverlay(), imageModel.getOldOverlay(), pointList);
     }
 
     @Override
@@ -44,25 +45,27 @@ public class ShapeTool implements ITool {
     @Override
     public void onRelease(int x, int y, IModel imageModel) {
         undoBuffer = new UndoBuffer(imageModel.getActiveLayer());
-        addShapeToImage(imageModel, strategy.shapeStrategy(startPoint, new Point<>(x, y)));
+        List<Point<Integer>> pointList = strategy.shapeStrategy(startPoint, new Point<>(x, y));
+        removeOutsidePoints(pointList,imageModel);
+        addShapeToImage(imageModel, pointList);
         imageModel.pushToUndoStack(undoBuffer);
 
     }
-    private void addToOverlay(List<Pixel> arrayList, List<Pixel> oldArrayList, List<Point<Integer>> shape){
+
+    private void addToOverlay(List<Pixel> arrayList, List<Pixel> oldArrayList, List<Point<Integer>> shape) {
         oldArrayList.addAll(arrayList);
         arrayList.clear();
-        for(Point<Integer> i : shape){
+        for (Point<Integer> i : shape) {
             arrayList.add(new Pixel(i.getX(), i.getY(), color));
         }
 
     }
 
 
-
-    private void addShapeToImage(IModel image, List<Point<Integer>> shape){
+    private void addShapeToImage(IModel image, List<Point<Integer>> shape) {
         image.getOverlay().clear();
-        for(Point<Integer> i : shape){
-            if (undoBuffer.contains(i.getX(),i.getY())){
+        for (Point<Integer> i : shape) {
+            if (undoBuffer.contains(i.getX(), i.getY())) {
                 continue;
                 //Don't need to paint twice in the same spot
             }
@@ -71,13 +74,24 @@ public class ShapeTool implements ITool {
         }
     }
 
+    private void removeOutsidePoints(List<Point<Integer>> pointList, IModel imageModel){
+        pointList.removeIf(p -> {
+            return (p.getX() < 0 || p.getY() < 0 || p.getX() >= imageModel.getActiveLayer().getWidth() || p.getY() >= imageModel.getActiveLayer().getHeight());
+        });
+    }
 
-    public void setStraightLineStrategy(){
+
+    public void setStraightLineStrategy() {
         this.strategy = new StraightLineStrategy();
     }
-    public void setTriangleStrategy(){this.strategy = new TriangleStrategy(); }
-    public void setRectangleStrategy(){this.strategy = new RectangleStrategy(); }
 
+    public void setTriangleStrategy() {
+        this.strategy = new TriangleStrategy();
+    }
+
+    public void setRectangleStrategy() {
+        this.strategy = new RectangleStrategy();
+    }
 
 
 }

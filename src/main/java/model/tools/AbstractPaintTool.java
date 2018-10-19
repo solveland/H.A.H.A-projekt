@@ -1,32 +1,59 @@
 package model.tools;
 
-import model.ImageModel;
-import model.PaintLayer;
 import model.UndoBuffer;
+import model.pixel.DistanceHelper;
 import model.pixel.PaintColor;
+import model.pixel.Point;
 
 /**
  * This class is an abstraction of a pencil/eraser.
  * It contains the shared logic used for both drawing and erasing pixels on a canvas.
  */
 public abstract class AbstractPaintTool implements ITool {
-    PaintColor[] brushBuffer;
-    int size;
+    private int size;
     protected PaintColor color;
     private UndoBuffer undoBuffer;
+    private Point<Double> oldPoint;
     private Shape shape = Shape.CIRCLE;
-    /* TODO: When we have a broader understanding of what the tools will require we have to move functionality to this class
-     */
-    public void onPress(int x, int y, IModel imageModel){
-        undoBuffer = new UndoBuffer(imageModel.getActiveLayer());
-        changePixels(x, y, imageModel.getActiveLayer());
-        imageModel.pushToUndoStack(undoBuffer);
-    }
-    public void onDrag(int x, int y, IModel imageModel){
-        changePixels(x, y, imageModel.getActiveLayer());
-    }
-    public void onRelease(int x, int y, IModel imageModel){
 
+    public void onPress(int x, int y, IModel imageModel) {
+        undoBuffer = new UndoBuffer(imageModel.getActiveLayer());
+        imageModel.pushToUndoStack(undoBuffer);
+        oldPoint = new Point<>((double) x, (double) y);
+        onDrag(x,y,imageModel);
+    }
+
+    public void onDrag(int x, int y, IModel imageModel) {
+        Point<Double> newPoint = new Point<Double>((double) x, (double) y);
+        int minX = Math.max(0, Math.min(x, oldPoint.getX().intValue()) - size);
+        int minY = Math.max(0, Math.min(y, oldPoint.getY().intValue()) - size);
+        int maxX = Math.min(imageModel.getActiveLayer().getWidth(), Math.max(x, oldPoint.getX().intValue()) + size);
+        int maxY = Math.min(imageModel.getActiveLayer().getHeight(), Math.max(y, oldPoint.getY().intValue()) + size);
+        for (int xc = minX; xc < maxX; xc++) {
+            for (int yc = minY; yc < maxY; yc++) {
+                paintPixel(xc,yc,newPoint,imageModel,undoBuffer,oldPoint);
+            }
+        }
+        oldPoint = newPoint;
+    }
+
+    void paintPixel(int x, int y,Point<Double> newPoint,IModel imageModel,UndoBuffer undoBuffer,Point<Double> oldPoint){
+        if(undoBuffer.contains(x,y)){
+            return;
+        }
+        double dist = DistanceHelper.distToSegmentSquared(oldPoint, newPoint, new Point<>((double) x, (double) y));
+        if (dist < (size - 0.5) * (size - 0.5)) {
+            undoBuffer.addPixel(x,y,imageModel.getActiveLayer().getPixel(x,y));
+            imageModel.getActiveLayer().setPixel(x, y, getPixelColor(dist,imageModel.getActiveLayer().getPixel(x,y)));
+        }
+    }
+
+    public void onRelease(int x, int y, IModel imageModel) {
+
+    }
+
+    public int getSize(){
+        return size;
     }
 
 
@@ -35,64 +62,12 @@ public abstract class AbstractPaintTool implements ITool {
         this.size = ts.getSize();
         this.color = ts.getPaintColor();
         this.shape = ts.getShape();
-        updateBrush();
-    }
-
-    /**
-     * Checks the brushbuffer for colored pixels and sets layer accordingly.
-     */
-    private void changePixels(int xPos, int yPos, PaintLayer layer){
-        int diameter = size*2-1;
-        for(int yc = 0; yc < diameter; yc++){
-            for(int xc = 0; xc < diameter; xc++){
-                if(brushBuffer[yc*diameter +xc].getAlpha() != 0 ){
-                    int pixelX = xc+xPos - diameter/2;
-                    int pixelY = yc+yPos - diameter/2;
-                    if(pixelX < 0 || pixelX >= layer.getWidth() || pixelY < 0 ||pixelY >= layer.getHeight() || layer.getPixel(xc+xPos - diameter/2,yc+yPos - diameter/2) == getPixelColor(xc, yc,layer.getPixel(xc+xPos - diameter/2,yc+yPos - diameter/2))){
-                        continue;
-                    }
-                    if (undoBuffer.contains(xc + xPos - diameter/2, yc + yPos - diameter/2)){
-                        continue;
-                    }
-                    undoBuffer.addPixel(xc+xPos - diameter/2,yc+yPos - diameter/2,layer.getPixel(xc+xPos - diameter/2,yc+yPos - diameter/2));
-                    layer.setPixel(xc+xPos - diameter/2,yc+yPos - diameter/2, getPixelColor(xc, yc,layer.getPixel(xc + xPos - diameter / 2,yc + yPos - diameter / 2)));
-                }
-            }
-        }
-    }
-
-    /**
-     *  Updates the brushBuffer depending on the shape, size and color variables. This is done by calculating the shape and then representing it as an array.
-     */
-
-    protected void updateBrush(){
-        int brushDiameter = size * 2 - 1;
-        PaintColor empty = new PaintColor(0,0,0,0);
-        brushBuffer = new PaintColor[brushDiameter * brushDiameter];
-        int midPoint = size -1;
-        if(shape == Shape.CIRCLE) {
-            for (int y = 0; y < brushDiameter; y++) {
-                for (int x = 0; x < brushDiameter; x++) {
-                    if (Math.sqrt((x - midPoint) * (x - midPoint) + (y - midPoint) * (y - midPoint)) > size - 0.5) {
-                        brushBuffer[y * brushDiameter + x] = empty;
-                    } else {
-                        brushBuffer[y * brushDiameter + x] = color;
-                    }
-
-                }
-            }
-        }else if(shape == Shape.SQUARE){
-            for (int y = 0; y < brushDiameter; y++) {
-                for (int x = 0; x < brushDiameter; x++) {
-                    brushBuffer[y * brushDiameter + x] = color;
-                }
-            }
-        }
     }
 
 
 
-    abstract PaintColor getPixelColor(int x, int y,PaintColor oldColor);
+
+    abstract PaintColor getPixelColor(double dist, PaintColor oldColor);
 
 
 }

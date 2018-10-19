@@ -30,6 +30,7 @@ public class ImageModel implements IModel{
     private ITool activeTool;
 
     private PencilTool pencilTool;
+    private BrushTool brushTool;
     private BucketFillTool bucketFillTool;
     private EraserTool eraserTool;
     private ZoomTool zoomTool;
@@ -52,6 +53,7 @@ public class ImageModel implements IModel{
         bucketFillTool = new BucketFillTool();
         eraserTool = new EraserTool();
         zoomTool = new ZoomTool();
+        brushTool = new BrushTool();
         selectTool = new SelectTool();
         setActiveTool(pencilTool);
 
@@ -173,9 +175,13 @@ public class ImageModel implements IModel{
             return;
         }
         UndoBuffer buffer = undoBufferStack.pop();
+        // Need to deselect layer temporarily because the layer being selected can block setPixel
+        boolean oldSelected = buffer.getLayer().getIsSelectedArea();
+        buffer.getLayer().setIsSelectedArea(false);
         for(Pixel p : buffer.pixels){
             buffer.getLayer().setPixel(p.getX(),p.getY(),p.getColor());
         }
+        buffer.getLayer().setIsSelectedArea(oldSelected);
         updateCanvas();
     }
 
@@ -185,6 +191,10 @@ public class ImageModel implements IModel{
 
     public void activatePencilTool(){
         setActiveTool(pencilTool);
+    }
+
+    public void activateBrushTool(){
+        setActiveTool(brushTool);
     }
 
     public void activateFillTool(){
@@ -314,7 +324,7 @@ public class ImageModel implements IModel{
 
     public void setActiveLayer(PaintLayer layer) {
         if(activeLayer != null){
-            if(activeLayer.hasSelectedArea()){
+            if(activeLayer.hasSelectedArea() && layer != null){
                 layer.selectArea(activeLayer.getSelectedStartPoint(), activeLayer.getSelectedEndPoint());
             }
         }
@@ -387,15 +397,17 @@ public class ImageModel implements IModel{
     }
 
     private void renderImage(int minX,int maxX,int minY,int maxY){
-        // Clear the rectangle before we draw new pixels.
+        // Fill in a checkered background to make transparent parts easier to see
+        PaintColor bg1 = new PaintColor(180,180,180);
+        PaintColor bg2 = new PaintColor(130,130,130);
         for (int x = minX; x < maxX; x++) {
             for (int y = minY; y < maxY; y++) {
-                renderedImage.setPixel(x, y, PaintColor.blank);
+                renderedImage.setPixel(x, y, ((x/20 + y/20) % 2 == 0)? bg1 : bg2);
             }
         }
         // SelectTool
         for (int i =0; i < oldOverlay.size(); i++){
-            renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(), PaintColor.blank );
+            renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(), ((oldOverlay.get(i).getX()/20 + oldOverlay.get(i).getY()/20) % 2 == 0)? bg1 : bg2);
         }
 
         // Draws the image from bottom layer to top layer to make a top layer render over the bottom layer.
@@ -442,9 +454,11 @@ public class ImageModel implements IModel{
     }
 
     private void renderTransparent() {
+        PaintColor bg1 = new PaintColor(180,180,180);
+        PaintColor bg2 = new PaintColor(130,130,130);
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                renderedImage.setPixel(x, y, PaintColor.blank);
+                renderedImage.setPixel(x, y, ((x/20 + y/20) % 2 == 0)? bg1 : bg2);
             }
         }
         updateCanvas();
