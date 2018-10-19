@@ -31,21 +31,29 @@ public abstract class AbstractPaintTool implements ITool {
         int maxY = Math.min(imageModel.getActiveLayer().getHeight(), Math.max(y, oldPoint.getY().intValue()) + size);
         for (int xc = minX; xc < maxX; xc++) {
             for (int yc = minY; yc < maxY; yc++) {
-                if(undoBuffer.contains(xc,yc)){
-                    continue;
-                }
-                double dist = DistanceHelper.distToSegmentSquared(oldPoint, newPoint, new Point<>((double) xc, (double) yc));
-                if (dist < (size - 0.5) * (size - 0.5)) {
-                    undoBuffer.addPixel(xc,yc,imageModel.getActiveLayer().getPixel(xc,yc));
-                    imageModel.getActiveLayer().setPixel(xc, yc, getPixelColor(dist,imageModel.getActiveLayer().getPixel(xc,yc)));
-                }
+                paintPixel(xc,yc,newPoint,imageModel,undoBuffer,oldPoint);
             }
         }
         oldPoint = newPoint;
     }
 
+    void paintPixel(int x, int y,Point<Double> newPoint,IModel imageModel,UndoBuffer undoBuffer,Point<Double> oldPoint){
+        if(undoBuffer.contains(x,y)){
+            return;
+        }
+        double dist = DistanceHelper.distToSegmentSquared(oldPoint, newPoint, new Point<>((double) x, (double) y));
+        if (dist < (size - 0.5) * (size - 0.5)) {
+            undoBuffer.addPixel(x,y,imageModel.getActiveLayer().getPixel(x,y));
+            imageModel.getActiveLayer().setPixel(x, y, getPixelColor(dist,imageModel.getActiveLayer().getPixel(x,y)));
+        }
+    }
+
     public void onRelease(int x, int y, IModel imageModel) {
 
+    }
+
+    public int getSize(){
+        return size;
     }
 
 

@@ -30,6 +30,7 @@ public class ImageModel implements IModel{
     private ITool activeTool;
 
     private PencilTool pencilTool;
+    private BrushTool brushTool;
     private BucketFillTool bucketFillTool;
     private EraserTool eraserTool;
     private ZoomTool zoomTool;
@@ -52,6 +53,7 @@ public class ImageModel implements IModel{
         bucketFillTool = new BucketFillTool();
         eraserTool = new EraserTool();
         zoomTool = new ZoomTool();
+        brushTool = new BrushTool();
         selectTool = new SelectTool();
         setActiveTool(pencilTool);
 
@@ -189,6 +191,10 @@ public class ImageModel implements IModel{
 
     public void activatePencilTool(){
         setActiveTool(pencilTool);
+    }
+
+    public void activateBrushTool(){
+        setActiveTool(brushTool);
     }
 
     public void activateFillTool(){

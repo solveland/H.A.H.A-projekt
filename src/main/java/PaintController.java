@@ -156,7 +156,7 @@ public class PaintController {
 
         sendColorState();
 
-        setPencil();
+        setBrush();
 
         //Deselect selected area - rightclick
         item1.setOnAction(new EventHandler<ActionEvent>() {
@@ -255,6 +255,14 @@ public class PaintController {
     @FXML
     public void setPencil() {
         image.activatePencilTool();
+        opacitySlider.setVisible(true);
+        opacityLabel.setVisible(true);
+        brushBar.setVisible(true);
+    }
+
+    @FXML
+    public void setBrush(){
+        image.activateBrushTool();
         opacitySlider.setVisible(true);
         opacityLabel.setVisible(true);
         brushBar.setVisible(true);
