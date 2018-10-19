@@ -114,7 +114,7 @@ public class BucketTest {
         image.onPress(x, y);
 
         image.activateShapeTool();
-        image.getShapeTool().setRectangleStrategy();
+        image.setToolShape("Rectangle");
         image.setColor(black);
         image.onPress(x, y);
         image.onRelease(a, b);
