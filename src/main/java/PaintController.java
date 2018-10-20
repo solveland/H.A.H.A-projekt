@@ -99,9 +99,6 @@ public class PaintController implements ModelObserver {
             }
             int x = (int) Math.floor(e.getX());
             int y = (int) Math.floor(e.getY());
-            if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
-                return;
-            }
             image.onDrag(x, y);
         });
 
@@ -111,9 +108,6 @@ public class PaintController implements ModelObserver {
             }
             int x = (int) Math.floor(e.getX());
             int y = (int) Math.floor(e.getY());
-            if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
-                return;
-            }
             image.onRelease(x, y);
         });
 
@@ -123,9 +117,6 @@ public class PaintController implements ModelObserver {
             }
             int x = (int) Math.floor(e.getX());
             int y = (int) Math.floor(e.getY());
-            if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
-                return;
-            }
             image.onPress(x, y);
         });
 
@@ -160,7 +151,7 @@ public class PaintController implements ModelObserver {
 
         sendColorState();
 
-        setPencil();
+        setBrushTool();
 
         //Deselect selected area - rightclick
         item1.setOnAction(new EventHandler<ActionEvent>() {
@@ -271,6 +262,13 @@ public class PaintController implements ModelObserver {
     public void setEyedropperTool(){
         image.activateEyedropperTool();
         brushBar.setVisible(false);
+    }
+
+    @FXML public void setBrushTool(){
+        image.activateBrushTool();
+        opacitySlider.setVisible(true);
+        opacityLabel.setVisible(true);
+        brushBar.setVisible(true);
     }
 
     @FXML

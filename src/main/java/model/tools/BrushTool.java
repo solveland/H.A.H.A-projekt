@@ -9,8 +9,9 @@ import java.util.HashMap;
 
 public class BrushTool extends AbstractPaintTool {
 
-    HashMap<Point<Integer>,Double> closestDistMap;
-    HashMap<Point<Integer>,PaintColor> origColorMap;
+    private HashMap<Point<Integer>,Double> closestDistMap;
+    private HashMap<Point<Integer>,PaintColor> origColorMap;
+    private double hardness = 0.8;
 
     public BrushTool() {
         closestDistMap = new HashMap<>();
@@ -48,6 +49,6 @@ public class BrushTool extends AbstractPaintTool {
 
     @Override
     PaintColor getPixelColor(double dist, PaintColor oldColor) {
-        return PaintColor.alphaBlend(new PaintColor(color.getRed(),color.getGreen(),color.getBlue(),(int)((255-((Math.sqrt(dist)/getSize())*255))* color.getAlphaRatio())),oldColor);
+        return PaintColor.alphaBlend(new PaintColor(color.getRed(),color.getGreen(),color.getBlue(),(int)(Math.min(((255-((Math.sqrt(dist)/getSize())*255))/hardness),255)* color.getAlphaRatio())),oldColor);
     }
 }
