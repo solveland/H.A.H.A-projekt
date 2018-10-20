@@ -1,10 +1,7 @@
 package model;
 
 import model.pixel.PaintColor;
-import model.pixel.Pixel;
 import model.pixel.Point;
-
-import java.util.List;
 
 public class PaintLayer {
 
@@ -22,7 +19,7 @@ public class PaintLayer {
 
 
 
-    private Boolean isSelectedArea;
+    private Boolean selection;
 
     public PaintLayer(int sizeX, int sizeY, PaintColor bgColor, String name) {
         height = sizeY;
@@ -41,7 +38,7 @@ public class PaintLayer {
         changedMaxY = height;
         changed = true;
 
-        isSelectedArea = false;
+        selection = false;
     }
 
     public int getWidth() {
@@ -53,7 +50,7 @@ public class PaintLayer {
     }
 
     public void setPixel(int x, int y, PaintColor rgb) {
-        if(isSelectedArea){
+        if(selection){
             int minX = (selectedStartPoint.getX() < selectedEndPoint.getX()) ? selectedStartPoint.getX() : selectedEndPoint.getX();
             int maxX = (selectedStartPoint.getX() > selectedEndPoint.getX()) ? selectedStartPoint.getX() : selectedEndPoint.getX();
             int minY = (selectedStartPoint.getY() < selectedEndPoint.getY()) ? selectedStartPoint.getY() : selectedEndPoint.getY();
@@ -121,18 +118,16 @@ public class PaintLayer {
     public void selectArea(Point<Integer> startPoint, Point<Integer> endPoint){
         selectedStartPoint = startPoint;
         selectedEndPoint = endPoint;
-        isSelectedArea = true;
+        selection = true;
     }
 
-    public Boolean hasSelectedArea() {
-        return isSelectedArea;
+    public Boolean hasSelection() {
+        return selection;
     }
 
-    public void setIsSelectedArea(Boolean selectedArea) {
-        this.isSelectedArea = selectedArea;
+    public void setSelection(Boolean selection) {
+        this.selection = selection;
     }
-
-
 
     public int getChangedMinX() {
         return changedMinX;
@@ -160,10 +155,6 @@ public class PaintLayer {
 
     public void toggleVisible() {
         visible = !visible;
-    }
-
-    public Boolean getIsSelectedArea() {
-        return isSelectedArea;
     }
 
     public String getName() {

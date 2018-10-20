@@ -7,7 +7,7 @@ import javafx.scene.input.ContextMenuEvent;
 
 import javafx.scene.input.MouseButton;
 import model.ImageModel;
-import model.ModelObserver;
+import model.ImageModelObserver;
 import model.PaintLayer;
 
 import javafx.fxml.FXML;
@@ -22,12 +22,13 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import model.pixel.PaintColor;
-import model.tools.ZoomTool;
+import model.PaintOverlay;
 import view.PaintView;
+
 import java.io.File;
 import java.util.List;
 
-public class PaintController implements ModelObserver {
+public class PaintController implements ImageModelObserver {
 
     private static final double MAX_SCALE = 15.0d;
     private static final double MIN_SCALE = 0.1d;
@@ -62,7 +63,6 @@ public class PaintController implements ModelObserver {
 
     private ImageModel image;
     private PaintView view;
-    private PaintColor observerColor;
 
     private File openedFile = null;
 
@@ -91,34 +91,11 @@ public class PaintController implements ModelObserver {
 
         image.addObserver(this);
 
-
         canvas.setImage(view.getImage());
-        canvas.setOnMouseDragged(e -> {
-            if (e.getButton() == MouseButton.SECONDARY) {
-                return;
-            }
-            int x = (int) Math.floor(e.getX());
-            int y = (int) Math.floor(e.getY());
-            image.onDrag(x, y);
-        });
 
-        canvas.setOnMouseReleased(e -> {
-            if (e.getButton() == MouseButton.SECONDARY) {
-                return;
-            }
-            int x = (int) Math.floor(e.getX());
-            int y = (int) Math.floor(e.getY());
-            image.onRelease(x, y);
-        });
-
-        canvas.setOnMousePressed(e -> {
-            if (e.getButton() == MouseButton.SECONDARY) {
-                return;
-            }
-            int x = (int) Math.floor(e.getX());
-            int y = (int) Math.floor(e.getY());
-            image.onPress(x, y);
-        });
+        setImageDragEvent(canvas);
+        setImagePressEvent(canvas);
+        setImageReleaseEvent(canvas);
 
         stackPane.setOnMousePressed(e ->{
                     if(image.getActiveTool().equals(image.getZoomTool())) {
@@ -167,7 +144,7 @@ public class PaintController implements ModelObserver {
         canvas.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
             @Override
             public void handle(ContextMenuEvent event) {
-                if (image.getActiveLayer().hasSelectedArea()) {
+                if (image.getActiveLayer().hasSelection()) {
                     contextMenu.show(canvas, event.getScreenX(), event.getScreenY());
                 }
             }
@@ -356,8 +333,8 @@ public class PaintController implements ModelObserver {
         setZoomPercent(2);
     }
 
-
-    public void notifyObservers(PaintLayer layer, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, String id){
+    @Override
+    public void notifyObservers(PaintLayer layer, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, PaintOverlay overlay, String id){
         if(id.equals("colorPickerUpdate")){
             Color c = new Color(color.getRedRatio(),color.getGreenRatio(), color.getBlueRatio(), color.getAlphaRatio());
             colorPicker.setValue(c);
@@ -365,5 +342,38 @@ public class PaintController implements ModelObserver {
     }
 
     /////////////////////////////////////////////////////////////////////
+
+    private void setImageDragEvent (ImageView imageView) {
+        imageView.setOnMouseDragged(e -> {
+            if (e.getButton() == MouseButton.SECONDARY) {
+                return;
+            }
+            int x = (int) Math.floor(e.getX());
+            int y = (int) Math.floor(e.getY());
+            image.onDrag(x, y);
+        });
+    }
+
+    private void setImageReleaseEvent (ImageView imageView) {
+        imageView.setOnMouseReleased(e -> {
+            if (e.getButton() == MouseButton.SECONDARY) {
+                return;
+            }
+            int x = (int) Math.floor(e.getX());
+            int y = (int) Math.floor(e.getY());
+            image.onRelease(x, y);
+        });
+    }
+
+    private void setImagePressEvent (ImageView imageView) {
+        imageView.setOnMousePressed(e -> {
+            if (e.getButton() == MouseButton.SECONDARY) {
+                return;
+            }
+            int x = (int) Math.floor(e.getX());
+            int y = (int) Math.floor(e.getY());
+            image.onPress(x, y);
+        });
+    }
 
 }

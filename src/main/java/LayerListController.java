@@ -1,5 +1,5 @@
 import model.ImageModel;
-import model.ModelObserver;
+import model.ImageModelObserver;
 import model.pixel.PaintColor;
 import model.PaintLayer;
 import javafx.fxml.FXML;
@@ -11,14 +11,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
-
+import model.PaintOverlay;
 
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LayerListController extends StackPane implements ModelObserver, LayerObserver {
+public class LayerListController extends StackPane implements ImageModelObserver, LayerObserver {
 
     @FXML
     private StackPane frontPane;
@@ -83,7 +83,7 @@ public class LayerListController extends StackPane implements ModelObserver, Lay
         Listens to the model's layer list and updates the layer GUI.
      */
     @Override
-    public void notifyObservers(PaintLayer layer, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, String id) {
+    public void notifyObservers(PaintLayer layer, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, PaintOverlay overlay, String id) {
         if (id.equals("layerUpdate")) {
             if (!layerList.isEmpty()) {
                 updateLayerItemList(layerList);

@@ -31,7 +31,8 @@ public class Point <T extends Number> {
 
     @Override
     public int hashCode() {
-        int result = getX().hashCode();
+        int result = 7;
+        result = 31 * result + getX().hashCode();
         result = 31 * result + getY().hashCode();
         return result;
     }
