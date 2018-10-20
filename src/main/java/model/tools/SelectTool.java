@@ -1,13 +1,10 @@
 package model.tools;
 
-import model.ImageModel;
-import model.PaintLayer;
-import model.pixel.OverlayPixel;
+import model.PaintOverlay;
 import model.pixel.Pixel;
 import model.pixel.Point;
 import model.pixel.PaintColor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +29,7 @@ public class SelectTool implements ITool{
     public void onDrag(int x, int y, IModel imageModel){
         Point<Integer> endPoint = new Point<> (x,y);
         drawSelectedToolArea(imageModel.getSelectOverlay(), endPoint,imageModel.getActiveLayer().getWidth(),imageModel.getActiveLayer().getHeight());
+        imageModel.renderOverlay();
     }
     public void onPress(int x, int y, IModel imageModel){
         Point<Integer> startPoint = new Point<>(x,y);
@@ -53,7 +51,7 @@ public class SelectTool implements ITool{
      * @param endPoint a point used when creating a rectangle for the selected area.
      */
 
-    private void drawSelectedToolArea (OverlayPixel selectOverlay, Point<Integer> endPoint, int maxWidth, int maxHeight){
+    private void drawSelectedToolArea (PaintOverlay selectOverlay, Point<Integer> endPoint, int maxWidth, int maxHeight){
         List<Pixel> arrayList = selectOverlay.getOverlay();
         List<Pixel> oldArrayList = selectOverlay.getOldOverlay();
         oldArrayList.addAll(arrayList);

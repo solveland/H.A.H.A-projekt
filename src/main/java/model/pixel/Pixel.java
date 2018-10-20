@@ -9,6 +9,29 @@ public class Pixel {
         this.color = color;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == this){
+            return true;
+        }
+        if (!(o instanceof Pixel)){
+            return false;
+        }
+
+        Pixel p = (Pixel)o;
+
+
+        return p.position.equals(position);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + position.hashCode();
+        //hash = 31 * hash + color.hashCode();
+        return hash;
+    }
+
     public int getX() {
         return position.getX();
     }

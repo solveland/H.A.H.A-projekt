@@ -1,18 +1,17 @@
-package model.pixel;
+package model;
+
+import model.pixel.Pixel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class OverlayPixel {
+public class PaintOverlay {
     private List<Pixel> overlay;
     private List<Pixel> oldOverlay;
 
-    private Boolean changedPixels;
-
-    public OverlayPixel(){
+    public PaintOverlay(){
         overlay = new ArrayList<>();
         oldOverlay = new ArrayList<>();
-        changedPixels = false;
     }
 
     public List<Pixel> getOverlay() {
@@ -22,15 +21,5 @@ public class OverlayPixel {
     public List<Pixel> getOldOverlay() {
         return oldOverlay;
     }
-
-    public Boolean getChanged() {
-        return changedPixels;
-    }
-
-    public void setChanged(Boolean changedPixels) {
-        this.changedPixels = changedPixels;
-    }
-
-
 
 }

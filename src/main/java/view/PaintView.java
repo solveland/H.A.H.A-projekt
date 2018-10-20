@@ -6,15 +6,17 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
-import model.ModelObserver;
+import model.ImageModelObserver;
 import model.PaintLayer;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import model.pixel.PaintColor;
+import model.PaintOverlay;
+import model.pixel.Pixel;
 
 import java.util.List;
 
-public class PaintView implements ModelObserver {
+public class PaintView implements ImageModelObserver {
 
     private WritableImage image;
 
@@ -34,14 +36,25 @@ public class PaintView implements ModelObserver {
     // Draw the rendered image on update from model.
      */
     @Override
-    public void notifyObservers(PaintLayer layer, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, String id)
+    public void notifyObservers(PaintLayer renderedImage, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, PaintOverlay overlay, String id)
     {
         if (id.equals("imageUpdate")) {
             PixelWriter pw = image.getPixelWriter();
             for (int x = minX; x < maxX; x++) {
                 for (int y = minY; y < maxY; y++) {
-                    pw.setArgb(x, y, layer.getPixel(x, y).getValue());
+                    pw.setArgb(x, y, renderedImage.getPixel(x, y).getValue());
                 }
+            }
+        } else if (id.equals("overlayUpdate")) {
+            PixelWriter pw = image.getPixelWriter();
+
+            for (Pixel p : overlay.getOldOverlay()) {
+                // Delete the old overlay pixels
+                pw.setArgb(p.getX(), p.getY(), renderedImage.getPixel(p.getX(), p.getY()).getValue());
+            }
+                // Paint the new overlay pixels
+            for (Pixel p : overlay.getOverlay()) {
+                pw.setArgb(p.getX(), p.getY(), p.getColor().getValue());
             }
         }
     }

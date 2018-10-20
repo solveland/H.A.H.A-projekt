@@ -1,11 +1,5 @@
 package model.pixel;
 
-import javafx.scene.image.PixelWriter;
-import model.ModelObserver;
-import model.PaintLayer;
-
-import java.util.List;
-
 public class PaintColor {
     public static PaintColor blank = new PaintColor(0,0,0,0);
 
@@ -98,5 +92,11 @@ public class PaintColor {
         return new PaintColor(red,green,blue,alpha);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + colorValue;
+        return hash;
+    }
 
 }

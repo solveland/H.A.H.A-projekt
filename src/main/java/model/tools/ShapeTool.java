@@ -1,8 +1,7 @@
 package model.tools;
 
-import model.ImageModel;
 import model.UndoBuffer;
-import model.pixel.OverlayPixel;
+import model.PaintOverlay;
 import model.pixel.PaintColor;
 import model.pixel.Pixel;
 import model.pixel.Point;
@@ -47,6 +46,7 @@ public class ShapeTool implements ITool {
         List<Point<Integer>> pointList = strategy.shapeStrategy(startPoint, new Point<>(x, y));
         removeOutsidePoints(pointList,imageModel);
         addToOverlay(imageModel.getShapeOverlay(), pointList);
+        imageModel.renderOverlay();
     }
 
     @Override
@@ -61,12 +61,10 @@ public class ShapeTool implements ITool {
         removeOutsidePoints(pointList,imageModel);
         addShapeToImage(imageModel, pointList);
         imageModel.pushToUndoStack(undoBuffer);
-        imageModel.getShapeOverlay().getOldOverlay().addAll(imageModel.getShapeOverlay().getOverlay());
-        imageModel.getShapeOverlay().getOverlay().clear();
-
+        imageModel.renderOverlay();
     }
 
-    private void addToOverlay(OverlayPixel shapeOverlay, List<Point<Integer>> shape) {
+    private void addToOverlay(PaintOverlay shapeOverlay, List<Point<Integer>> shape) {
         List<Pixel> arrayList = shapeOverlay.getOverlay();
         List<Pixel> oldArrayList = shapeOverlay.getOldOverlay();
         oldArrayList.addAll(arrayList);
@@ -80,6 +78,7 @@ public class ShapeTool implements ITool {
 
 
     private void addShapeToImage(IModel image, List<Point<Integer>> shape) {
+        image.getShapeOverlay().getOldOverlay().addAll(image.getShapeOverlay().getOverlay());
         image.getShapeOverlay().getOverlay().clear();
         for (Point<Integer> i : shape) {
             if (undoBuffer.contains(i.getX(), i.getY())) {
