@@ -10,6 +10,7 @@ import model.ModelObserver;
 import model.PaintLayer;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import model.pixel.PaintColor;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class PaintView implements ModelObserver {
     // Draw the rendered image on update from model.
      */
     @Override
-    public void notifyObservers(PaintLayer layer, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, String id)
+    public void notifyObservers(PaintLayer layer, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, String id)
     {
         if (id.equals("imageUpdate")) {
             PixelWriter pw = image.getPixelWriter();

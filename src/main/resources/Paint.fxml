@@ -85,7 +85,14 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                           <Button text="-" />
+                           <Button onAction="#setEyedropperTool">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@eyedropperTool.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
                            <Button onAction="#undoButton" text="Undo">
                      <font>
                         <Font size="9.0" />

@@ -2,6 +2,7 @@ package model.tools;
 
 import model.PaintLayer;
 import model.UndoBuffer;
+import model.pixel.OverlayPixel;
 import model.pixel.PaintColor;
 import model.pixel.Pixel;
 
@@ -12,8 +13,9 @@ public interface IModel {
     void setPixel(int x, int y, PaintColor color);
     PaintColor getPixelColor(int x, int y);
     void pushToUndoStack(UndoBuffer undoBuffer);
-    List<Pixel> getOverlay();
-    List<Pixel> getOldOverlay();
+    OverlayPixel getSelectOverlay();
+    OverlayPixel getShapeOverlay();
     PaintLayer getActiveLayer();
+    void setColor(PaintColor color);
 
 }

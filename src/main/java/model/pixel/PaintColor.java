@@ -1,5 +1,11 @@
 package model.pixel;
 
+import javafx.scene.image.PixelWriter;
+import model.ModelObserver;
+import model.PaintLayer;
+
+import java.util.List;
+
 public class PaintColor {
     public static PaintColor blank = new PaintColor(0,0,0,0);
 

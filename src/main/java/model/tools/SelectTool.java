@@ -2,6 +2,7 @@ package model.tools;
 
 import model.ImageModel;
 import model.PaintLayer;
+import model.pixel.OverlayPixel;
 import model.pixel.Pixel;
 import model.pixel.Point;
 import model.pixel.PaintColor;
@@ -30,7 +31,7 @@ public class SelectTool implements ITool{
 
     public void onDrag(int x, int y, IModel imageModel){
         Point<Integer> endPoint = new Point<> (x,y);
-        drawSelectedToolArea(imageModel.getOverlay(),imageModel.getOldOverlay(), endPoint,imageModel.getActiveLayer().getWidth(),imageModel.getActiveLayer().getHeight());
+        drawSelectedToolArea(imageModel.getSelectOverlay(), endPoint,imageModel.getActiveLayer().getWidth(),imageModel.getActiveLayer().getHeight());
     }
     public void onPress(int x, int y, IModel imageModel){
         Point<Integer> startPoint = new Point<>(x,y);
@@ -45,15 +46,16 @@ public class SelectTool implements ITool{
 
     }
 
-    
+
     /**
      * This method checks how the user creates the rectangle and adds the pixels to a list. It checks the direction of the drag.
-     * @param arrayList a list that contains all pixels when drawing the rectangle for the selected area.
-     * @param oldArrayList a copy of arraylist with the same pixels.
+     * @param selectOverlay is a overlay object that contains two lists of pixels. One old and one new.
      * @param endPoint a point used when creating a rectangle for the selected area.
      */
 
-    private void drawSelectedToolArea (List<Pixel> arrayList, List<Pixel> oldArrayList, Point<Integer> endPoint, int maxWidth, int maxHeight){
+    private void drawSelectedToolArea (OverlayPixel selectOverlay, Point<Integer> endPoint, int maxWidth, int maxHeight){
+        List<Pixel> arrayList = selectOverlay.getOverlay();
+        List<Pixel> oldArrayList = selectOverlay.getOldOverlay();
         oldArrayList.addAll(arrayList);
         arrayList.clear();
 
@@ -75,5 +77,7 @@ public class SelectTool implements ITool{
                 arrayList.add(new Pixel(maxX, j, paintColor));
             }
         }
+        selectOverlay.setChanged(true);
+
     }
 }

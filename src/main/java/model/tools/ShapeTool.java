@@ -2,6 +2,7 @@ package model.tools;
 
 import model.ImageModel;
 import model.UndoBuffer;
+import model.pixel.OverlayPixel;
 import model.pixel.PaintColor;
 import model.pixel.Pixel;
 import model.pixel.Point;
@@ -34,7 +35,7 @@ public class ShapeTool implements ITool {
     public void onDrag(int x, int y, IModel imageModel) {
         List<Point<Integer>> pointList = strategy.shapeStrategy(startPoint, new Point<>(x, y));
         removeOutsidePoints(pointList,imageModel);
-        addToOverlay(imageModel.getOverlay(), imageModel.getOldOverlay(), pointList);
+        addToOverlay(imageModel.getShapeOverlay(), pointList);
     }
 
     @Override
@@ -49,21 +50,26 @@ public class ShapeTool implements ITool {
         removeOutsidePoints(pointList,imageModel);
         addShapeToImage(imageModel, pointList);
         imageModel.pushToUndoStack(undoBuffer);
+        imageModel.getShapeOverlay().getOldOverlay().addAll(imageModel.getShapeOverlay().getOverlay());
+        imageModel.getShapeOverlay().getOverlay().clear();
 
     }
 
-    private void addToOverlay(List<Pixel> arrayList, List<Pixel> oldArrayList, List<Point<Integer>> shape) {
+    private void addToOverlay(OverlayPixel shapeOverlay, List<Point<Integer>> shape) {
+        List<Pixel> arrayList = shapeOverlay.getOverlay();
+        List<Pixel> oldArrayList = shapeOverlay.getOldOverlay();
         oldArrayList.addAll(arrayList);
         arrayList.clear();
         for (Point<Integer> i : shape) {
             arrayList.add(new Pixel(i.getX(), i.getY(), color));
         }
+        shapeOverlay.setChanged(true);
 
     }
 
 
     private void addShapeToImage(IModel image, List<Point<Integer>> shape) {
-        image.getOverlay().clear();
+        image.getShapeOverlay().getOverlay().clear();
         for (Point<Integer> i : shape) {
             if (undoBuffer.contains(i.getX(), i.getY())) {
                 continue;

@@ -7,6 +7,7 @@ import javafx.scene.input.ContextMenuEvent;
 
 import javafx.scene.input.MouseButton;
 import model.ImageModel;
+import model.ModelObserver;
 import model.PaintLayer;
 
 import javafx.fxml.FXML;
@@ -21,11 +22,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import model.pixel.PaintColor;
+import model.tools.ZoomTool;
 import view.PaintView;
 import java.io.File;
 import java.util.List;
 
-public class PaintController {
+public class PaintController implements ModelObserver {
 
     private static final double MAX_SCALE = 15.0d;
     private static final double MIN_SCALE = 0.1d;
@@ -60,6 +62,7 @@ public class PaintController {
 
     private ImageModel image;
     private PaintView view;
+    private PaintColor observerColor;
 
     private File openedFile = null;
 
@@ -86,54 +89,54 @@ public class PaintController {
         contextMenu = new ContextMenu();
         item1 = new MenuItem("Deselect");
 
+        image.addObserver(this);
 
 
         canvas.setImage(view.getImage());
         canvas.setOnMouseDragged(e -> {
-            if (e.getButton() == MouseButton.SECONDARY){
+            if (e.getButton() == MouseButton.SECONDARY) {
                 return;
             }
             int x = (int) Math.floor(e.getX());
             int y = (int) Math.floor(e.getY());
-            /*if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
+            if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
                 return;
-            }*/
+            }
             image.onDrag(x, y);
         });
 
         canvas.setOnMouseReleased(e -> {
-            if (e.getButton() == MouseButton.SECONDARY){
+            if (e.getButton() == MouseButton.SECONDARY) {
                 return;
             }
             int x = (int) Math.floor(e.getX());
             int y = (int) Math.floor(e.getY());
-            /*if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
+            if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
                 return;
-            }*/
+            }
             image.onRelease(x, y);
         });
 
         canvas.setOnMousePressed(e -> {
-            if (e.getButton() == MouseButton.SECONDARY){
+            if (e.getButton() == MouseButton.SECONDARY) {
                 return;
             }
             int x = (int) Math.floor(e.getX());
             int y = (int) Math.floor(e.getY());
-            /*if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
+            if (y >= canvas.getFitHeight() || y < 0 || x >= canvas.getFitWidth() || x < 0) {
                 return;
-            }*/
+            }
             image.onPress(x, y);
         });
 
-        // Tar bort denna så länge eftersom jag flyttar tillbaka allt till modellen
-        /*stackPane.setOnMousePressed(e ->{
-                    if(image.activateZoomTool() == zoo) {
+        stackPane.setOnMousePressed(e ->{
+                    if(image.getActiveTool().equals(image.getZoomTool())) {
                         if (e.isAltDown())
                             zoom(false);
                         else
                         zoom(true);
                     }
-        });*/
+        });
 
 
         //Color Palette
@@ -142,6 +145,7 @@ public class PaintController {
         colorPicker.setOnAction(e -> {
             sendColorState();
         });
+
         clearCanvas();
 
         //Toolbar
@@ -156,7 +160,7 @@ public class PaintController {
 
         sendColorState();
 
-        setBrush();
+        setPencil();
 
         //Deselect selected area - rightclick
         item1.setOnAction(new EventHandler<ActionEvent>() {
@@ -172,7 +176,7 @@ public class PaintController {
         canvas.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
             @Override
             public void handle(ContextMenuEvent event) {
-                if(image.getActiveLayer().hasSelectedArea()){
+                if (image.getActiveLayer().hasSelectedArea()) {
                     contextMenu.show(canvas, event.getScreenX(), event.getScreenY());
                 }
             }
@@ -181,14 +185,9 @@ public class PaintController {
     }
 
 
-
-
-
-
-
-    private void sendColorState(){
+    private void sendColorState() {
         Color javafxcolor = colorPicker.getValue();
-        PaintColor color = new PaintColor(javafxcolor.getRed(),javafxcolor.getGreen(),javafxcolor.getBlue(),opacitySlider.getValue());
+        PaintColor color = new PaintColor(javafxcolor.getRed(), javafxcolor.getGreen(), javafxcolor.getBlue(), opacitySlider.getValue());
         image.setColor(color);
     }
 
@@ -200,15 +199,15 @@ public class PaintController {
     @FXML
     public void openFile() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPEG Image (*.jpg)","*.jpg"));
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Bitmap Image (*.bmp)","*.bmp"));
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG image (*.png)","*.png"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPEG Image (*.jpg)", "*.jpg"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Bitmap Image (*.bmp)", "*.bmp"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG image (*.png)", "*.png"));
         File file = fileChooser.showOpenDialog(canvas.getScene().getWindow());
         if (file == null) {
             return;
         }
-        List<PaintLayer> layerList =ServiceFactory.getSaveAndLoader().openFile(file);
-        if (layerList == null || layerList.isEmpty()){
+        List<PaintLayer> layerList = ServiceFactory.getSaveAndLoader().openFile(file);
+        if (layerList == null || layerList.isEmpty()) {
             return;
         }
         openedFile = file;
@@ -216,10 +215,10 @@ public class PaintController {
 
     }
 
-    private void loadImage(List<PaintLayer> layerList){
+    private void loadImage(List<PaintLayer> layerList) {
         int width = layerList.get(0).getWidth();
         int height = layerList.get(0).getHeight();
-        view.setSize(width,height);
+        view.setSize(width, height);
         canvas.setImage(view.getImage());
         canvas.setFitHeight(height);
         canvas.setFitWidth(width);
@@ -229,22 +228,22 @@ public class PaintController {
     @FXML
     public void saveFileAs() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG image (*.png)","*.png"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG image (*.png)", "*.png"));
         File file = fileChooser.showSaveDialog(canvas.getScene().getWindow());
-        if (file == null){
+        if (file == null) {
             return;
         }
-        ServiceFactory.getSaveAndLoader().saveFile(file,image.getLayerList());
+        ServiceFactory.getSaveAndLoader().saveFile(file, image.getLayerList());
         openedFile = file;
     }
 
     @FXML
     public void saveFile() {
-        if (openedFile == null){
+        if (openedFile == null) {
             saveFileAs();
             return;
         }
-        ServiceFactory.getSaveAndLoader().saveFile(openedFile,image.getLayerList());
+        ServiceFactory.getSaveAndLoader().saveFile(openedFile, image.getLayerList());
     }
 
     @FXML
@@ -261,19 +260,17 @@ public class PaintController {
     }
 
     @FXML
-    public void setBrush(){
-        image.activateBrushTool();
-        opacitySlider.setVisible(true);
-        opacityLabel.setVisible(true);
-        brushBar.setVisible(true);
-    }
-
-    @FXML
     public void setFillTool() {
 
         image.activateFillTool();
         brushBar.setVisible(false);
         opacitySlider.setValue(1);
+    }
+
+    @FXML
+    public void setEyedropperTool(){
+        image.activateEyedropperTool();
+        brushBar.setVisible(false);
     }
 
     @FXML
@@ -287,8 +284,9 @@ public class PaintController {
     }
 
     @FXML
-    public void setSelectTool(){
+    public void setSelectTool() {
         image.activateSelectTool();
+        brushBar.setVisible(false);
     }
 
     @FXML
@@ -298,7 +296,7 @@ public class PaintController {
     }
 
     @FXML
-    public void setShapeTool(){
+    public void setShapeTool() {
         image.activateShapeTool();
         brushBar.setVisible(false);
         opacitySlider.setValue(1);
@@ -326,20 +324,8 @@ public class PaintController {
         scaleY = clamp(scaleY, MIN_SCALE, MAX_SCALE);
         scaleX = clamp(scaleX, MIN_SCALE, MAX_SCALE);
 
-        /*
-        double fy = (image.getZoomScaleY() / image.getOldZoomScaleY()) - 1;
-        double fx = (image.getZoomScaleX() / image.getOldZoomScaleX()) - 1;
-
-        double dx = (scrollPane.getLayoutX() - (canvas.getBoundsInParent().getWidth() / 2 + canvas.getBoundsInParent().getMinX()));
-        double dy = (scrollPane.getLayoutY() - (canvas.getBoundsInParent().getHeight() / 2 + canvas.getBoundsInParent().getMinY()));
-        */
-
         canvas.setScaleY(scaleY);
         canvas.setScaleX(scaleX);
-        /*
-        canvas.setTranslateY(canvas.getTranslateY()-fy*dy);
-        canvas.setTranslateX(canvas.getTranslateX()-fx*dx);
-        */
     }
 
     @FXML
@@ -373,6 +359,12 @@ public class PaintController {
     }
 
 
+    public void notifyObservers(PaintLayer layer, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, String id){
+        if(id.equals("colorPickerUpdate")){
+            Color c = new Color(color.getRedRatio(),color.getGreenRatio(), color.getBlueRatio(), color.getAlphaRatio());
+            colorPicker.setValue(c);
+        }
+    }
 
     /////////////////////////////////////////////////////////////////////
 

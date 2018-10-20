@@ -1,5 +1,6 @@
 package model;
 
+import model.pixel.OverlayPixel;
 import model.tools.*;
 import model.pixel.PaintColor;
 import model.pixel.Pixel;
@@ -24,8 +25,9 @@ public class ImageModel implements IModel{
     private double oldZoomScaleY;
     private double oldZoomScaleX;
 
-    public List<Pixel> overlay;
-    public List<Pixel> oldOverlay;
+    private OverlayPixel selectOverlay;
+    private OverlayPixel shapeOverlay;
+    private List<OverlayPixel> overlayList;
 
     private ITool activeTool;
 
@@ -36,6 +38,7 @@ public class ImageModel implements IModel{
     private ZoomTool zoomTool;
     private SelectTool selectTool;
     private ShapeTool shapeTool;
+    private EyedropperTool eyedropperTool;
 
     private ToolSettings ts = new ToolSettings(5);
 
@@ -55,11 +58,17 @@ public class ImageModel implements IModel{
         zoomTool = new ZoomTool();
         brushTool = new BrushTool();
         selectTool = new SelectTool();
+        eyedropperTool = new EyedropperTool();
         setActiveTool(pencilTool);
 
         layerList = new LinkedList<>();
-        overlay = new ArrayList<>();
-        oldOverlay = new ArrayList<>();
+
+        overlayList = new ArrayList<>();
+        selectOverlay = new OverlayPixel();
+        shapeOverlay = new OverlayPixel();
+        overlayList.add(shapeOverlay);
+        overlayList.add(selectOverlay);
+
 
         renderedImage = new PaintLayer(sizeX, sizeY, new PaintColor(0,0,0,0), null);
 
@@ -94,7 +103,7 @@ public class ImageModel implements IModel{
             int maxY = renderedImage.getChangedMaxY();
 
             for (ModelObserver o : observers) {
-                o.notifyObservers(renderedImage, minX, maxX, minY, maxY, layerList, "imageUpdate");
+                o.notifyObservers(renderedImage, minX, maxX, minY, maxY, layerList, ts.getPaintColor(), "imageUpdate");
             }
 
             renderedImage.resetChangeTracker();
@@ -127,9 +136,15 @@ public class ImageModel implements IModel{
         activeTool.updateSettings(ts);
     }
 
+    public ITool getActiveTool() {
+        return activeTool;
+    }
+
     public ShapeTool getShapeTool() {
         return shapeTool;
     }
+
+    public ZoomTool getZoomTool(){return zoomTool;}
 
     public void setSize(int size){
         ts.setSize(size);
@@ -139,11 +154,27 @@ public class ImageModel implements IModel{
     public void setColor(PaintColor color){
         ts.setColor(color);
         activeTool.updateSettings(ts);
+        updateColorPicker();
+    }
+
+    private void updateColorPicker(){
+        int minX = renderedImage.getChangedMinX();
+        int maxX = renderedImage.getChangedMaxX();
+        int minY = renderedImage.getChangedMinY();
+        int maxY = renderedImage.getChangedMaxY();
+
+        for(ModelObserver observer: observers){
+            observer.notifyObservers(renderedImage, minX, maxX, minY, maxY, layerList, ts.getPaintColor(), "colorPickerUpdate" );
+        }
     }
 
     public void setToolShape(String s){
         ts.setShape(s);
         activeTool.updateSettings(ts);
+    }
+
+    public ToolSettings getTs() {
+        return ts;
     }
 
     @Override
@@ -161,13 +192,13 @@ public class ImageModel implements IModel{
     }
 
     @Override
-    public List<Pixel> getOverlay() {
-        return overlay;
+    public OverlayPixel getSelectOverlay() {
+        return selectOverlay;
     }
 
     @Override
-    public List<Pixel> getOldOverlay() {
-        return oldOverlay;
+    public OverlayPixel getShapeOverlay() {
+        return shapeOverlay;
     }
 
     public void undo(){
@@ -211,6 +242,8 @@ public class ImageModel implements IModel{
 
     public void activateSelectTool(){setActiveTool(selectTool);}
 
+    public void activateEyedropperTool(){setActiveTool(eyedropperTool);}
+
     public double getZoomScaleY(){
         return zoomScaleY;
     }
@@ -248,7 +281,7 @@ public class ImageModel implements IModel{
         int maxY = renderedImage.getChangedMaxY();
 
         for (ModelObserver o : observers) {
-            o.notifyObservers(renderedImage, minX, maxX, minY, maxY, layerList, "layerUpdate");
+            o.notifyObservers(renderedImage, minX, maxX, minY, maxY, layerList, ts.getPaintColor(), "layerUpdate");
         }
     }
 
@@ -406,8 +439,11 @@ public class ImageModel implements IModel{
             }
         }
         // SelectTool
-        for (int i =0; i < oldOverlay.size(); i++){
-            renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(), ((oldOverlay.get(i).getX()/20 + oldOverlay.get(i).getY()/20) % 2 == 0)? bg1 : bg2);
+        for(OverlayPixel overlay: overlayList){
+            List<Pixel> old = overlay.getOldOverlay();
+            for (int i =0; i < old.size(); i++){
+                renderedImage.setPixel(old.get(i).getX(), old.get(i).getY(), ((old.get(i).getX()/20 + old.get(i).getY()/20) % 2 == 0)? bg1 : bg2);
+            }
         }
 
         // Draws the image from bottom layer to top layer to make a top layer render over the bottom layer.
@@ -415,9 +451,13 @@ public class ImageModel implements IModel{
             for (PaintLayer l : reversedLayerList()) {
                 if (l.isVisible()) {
                     // SelectTool
-                    for (int i =0; i < oldOverlay.size(); i++){
-                        renderedImage.setPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY(),
-                                PaintColor.alphaBlend(l.getPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY()), renderedImage.getPixel(oldOverlay.get(i).getX(), oldOverlay.get(i).getY())));
+                    for(OverlayPixel overlay: overlayList){
+                        List<Pixel> old = overlay.getOldOverlay();
+                        for (int i =0; i < old.size(); i++){
+                            renderedImage.setPixel(old.get(i).getX(), old.get(i).getY(),
+                                    PaintColor.alphaBlend(l.getPixel(old.get(i).getX(), old.get(i).getY()), renderedImage.getPixel(old.get(i).getX(), old.get(i).getY())));
+
+                        }
                     }
 
                     for (int x = minX; x < maxX; x++) {
@@ -429,7 +469,10 @@ public class ImageModel implements IModel{
                     }
                 }
             }
-            oldOverlay.clear();
+            for(OverlayPixel overlay: overlayList) {
+                List<Pixel> old = overlay.getOldOverlay();
+                old.clear();
+            }
         }
 
         for(PaintLayer layer : layerList){
@@ -437,10 +480,15 @@ public class ImageModel implements IModel{
         }
 
         // SelectTool
-        for (int i =0; i < overlay.size(); i++){
-            renderedImage.setPixel(overlay.get(i).getX(), overlay.get(i).getY(), new PaintColor(0,0,0) );
+        for(OverlayPixel overlay: overlayList) {
+            if(overlay.getChanged()){
+                List<Pixel> newOverlay = overlay.getOverlay();
+                for (int i = 0; i < newOverlay.size(); i++) {
+                    renderedImage.setPixel(newOverlay.get(i).getX(), newOverlay.get(i).getY(), new PaintColor(0, 0, 0));
+                }
+            }
+            overlay.setChanged(false);
         }
-        //updateCanvas();
     }
 
     public void loadImage(List<PaintLayer> newLayerList){
@@ -478,8 +526,8 @@ public class ImageModel implements IModel{
     ///// RENDER END //////
 
     public void deselectArea(){
-        overlay.clear();
-        oldOverlay.clear();
+        selectOverlay.getOverlay().clear();
+        selectOverlay.getOldOverlay().clear();
         activeLayer.setIsSelectedArea(false);
         updateRenderedImage();
     }
