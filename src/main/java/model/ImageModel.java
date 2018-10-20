@@ -169,7 +169,24 @@ public class ImageModel implements IModel{
     }
 
     public void setToolShape(String s){
-        ts.setShape(s);
+        switch(s) {
+            case "Circle":
+                ts.setCircle();
+                break;
+            case "Square":
+                ts.setSquare();
+                break;
+            case "Rectangle":
+                ts.setRectangle();
+                break;
+            case "Triangle":
+                ts.setTriangle();
+                break;
+            case "Line":
+                ts.setLine();
+                break;
+            default: ts.setCircle();
+        }
         activeTool.updateSettings(ts);
     }
 

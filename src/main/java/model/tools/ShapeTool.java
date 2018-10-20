@@ -16,18 +16,29 @@ import java.util.List;
 public class ShapeTool implements ITool {
     private Point<Integer> startPoint;
     private UndoBuffer undoBuffer;
-    private PaintColor color = new PaintColor(255, 255, 255);
+    private PaintColor color;
     private IShapeStrategy strategy;
 
 
     public ShapeTool() {
-        setTriangleStrategy();
+        color = new PaintColor(255, 255, 255);
+        setEllipseStrategy();
+
     }
 
 
     @Override
     public void updateSettings(ToolSettings ts) {
         this.color = ts.getPaintColor();
+        if(ts.getShape() == Shape.TRIANGLE){
+            setTriangleStrategy();
+        }else if(ts.getShape() == Shape.RECTANGLE){
+            setRectangleStrategy();
+        }else if (ts.getShape() == Shape.LINE){
+            setStraightLineStrategy();
+        }else if(ts.getShape() == Shape.CIRCLE){
+
+        }
 
     }
 
@@ -81,23 +92,25 @@ public class ShapeTool implements ITool {
     }
 
     private void removeOutsidePoints(List<Point<Integer>> pointList, IModel imageModel){
-        pointList.removeIf(p -> {
-            return (p.getX() < 0 || p.getY() < 0 || p.getX() >= imageModel.getActiveLayer().getWidth() || p.getY() >= imageModel.getActiveLayer().getHeight());
-        });
+        pointList.removeIf(p -> (p.getX() < 0 || p.getY() < 0 || p.getX() >= imageModel.getActiveLayer().getWidth() || p.getY() >= imageModel.getActiveLayer().getHeight())
+        );
     }
 
 
-    public void setStraightLineStrategy() {
+    private void setStraightLineStrategy() {
         this.strategy = new StraightLineStrategy();
     }
 
-    public void setTriangleStrategy() {
+    private void setTriangleStrategy() {
         this.strategy = new TriangleStrategy();
     }
 
-    public void setRectangleStrategy() {
+    private void setRectangleStrategy() {
         this.strategy = new RectangleStrategy();
     }
 
+    private void setEllipseStrategy() {
+        this.strategy = new EllipseStrategy();
+    }
 
 }

@@ -20,13 +20,22 @@ public class ToolSettings {
         this.size = size;
     }
 
-    public void setShape(String shape){
-        if(shape.equals("Circle")) {
-            this.shape = Shape.CIRCLE;
-        }else if(shape.equals("Square")) {
-            this.shape = Shape.SQUARE;
-        }
+    public void setLine(){
+       this.shape = Shape.LINE;
     }
+    public void setTriangle(){
+        this.shape = Shape.TRIANGLE;
+    }
+    public void setRectangle(){
+        this.shape = Shape.RECTANGLE;
+    }
+    public void setSquare(){
+        this.shape = Shape.SQUARE;
+    }
+    public void setCircle(){
+        this.shape = Shape.CIRCLE;
+    }
+
     public PaintColor getPaintColor() {
         return color;
     }
