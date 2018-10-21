@@ -1,7 +1,7 @@
 package model.tools;
 
 import model.pixel.Pixel;
-import utilities.DistanceHelper;
+import model.utilities.DistanceHelper;
 import model.pixel.PaintColor;
 import model.pixel.Point;
 
