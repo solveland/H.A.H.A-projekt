@@ -1,6 +1,5 @@
 package model.tools;
 
-import model.UndoBuffer;
 import model.PaintOverlay;
 import model.pixel.PaintColor;
 import model.pixel.Pixel;
@@ -14,7 +13,6 @@ import java.util.List;
 
 public class ShapeTool implements ITool {
     private Point<Integer> startPoint;
-    private UndoBuffer undoBuffer;
     private PaintColor color;
     private IShapeStrategy strategy;
 
@@ -56,11 +54,10 @@ public class ShapeTool implements ITool {
 
     @Override
     public void onRelease(int x, int y, IModel imageModel) {
-        undoBuffer = new UndoBuffer(imageModel.getActiveLayer());
+        imageModel.openNewUndoBuffer();
         List<Point<Integer>> pointList = strategy.shapeStrategy(startPoint, new Point<>(x, y));
         removeOutsidePoints(pointList,imageModel);
         addShapeToImage(imageModel, pointList);
-        imageModel.pushToUndoStack(undoBuffer);
         imageModel.renderOverlay();
     }
 
@@ -81,17 +78,17 @@ public class ShapeTool implements ITool {
         image.getShapeOverlay().getOldOverlay().addAll(image.getShapeOverlay().getOverlay());
         image.getShapeOverlay().getOverlay().clear();
         for (Point<Integer> i : shape) {
-            if (undoBuffer.contains(i.getX(), i.getY())) {
+            if (image.existsInUndoBuffer(new Point<>(i.getX(),i.getY()))) {
                 continue;
                 //Don't need to paint twice in the same spot
             }
-            undoBuffer.addPixel(i.getX(), i.getY(), image.getActiveLayer().getPixel(i.getX(), i.getY()));
-            image.getActiveLayer().setPixel(i.getX(), i.getY(), color);
+            image.addToUndoBuffer(new Pixel(i.getX(), i.getY(), image.getPixelColor(i.getX(), i.getY())));
+            image.setPixel(i.getX(), i.getY(), color);
         }
     }
 
     private void removeOutsidePoints(List<Point<Integer>> pointList, IModel imageModel){
-        pointList.removeIf(p -> (p.getX() < 0 || p.getY() < 0 || p.getX() >= imageModel.getActiveLayer().getWidth() || p.getY() >= imageModel.getActiveLayer().getHeight())
+        pointList.removeIf(p -> (p.getX() < 0 || p.getY() < 0 || p.getX() >= imageModel.getWidth() || p.getY() >= imageModel.getHeight())
         );
     }
 

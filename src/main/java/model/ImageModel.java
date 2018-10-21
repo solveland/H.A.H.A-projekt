@@ -1,5 +1,6 @@
 package model;
 
+import model.pixel.Point;
 import model.tools.*;
 import model.pixel.PaintColor;
 import model.pixel.Pixel;
@@ -530,6 +531,36 @@ public class ImageModel implements IModel{
         }
 
         updateOverlay();
+    }
+
+    @Override
+    public void openNewUndoBuffer() {
+        undoBufferStack.push(new UndoBuffer(activeLayer));
+    }
+
+    @Override
+    public void addToUndoBuffer(Pixel pixel) {
+        undoBufferStack.peek().addPixel(pixel);
+    }
+
+    @Override
+    public boolean existsInUndoBuffer(Point<Integer> point) {
+        return undoBufferStack.peek().contains(point);
+    }
+
+    @Override
+    public int getWidth() {
+        return width;
+    }
+
+    @Override
+    public int getHeight() {
+        return height;
+    }
+
+    @Override
+    public void selectArea(Point<Integer> start, Point<Integer> end) {
+        activeLayer.selectArea(start,end);
     }
 
     public void updateOverlay() {

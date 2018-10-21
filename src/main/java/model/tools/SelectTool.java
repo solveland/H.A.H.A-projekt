@@ -28,7 +28,7 @@ public class SelectTool implements ITool{
 
     public void onDrag(int x, int y, IModel imageModel){
         Point<Integer> endPoint = new Point<> (x,y);
-        drawSelectedToolArea(imageModel.getSelectOverlay(), endPoint,imageModel.getActiveLayer().getWidth(),imageModel.getActiveLayer().getHeight());
+        drawSelectedToolArea(imageModel.getSelectOverlay(), endPoint,imageModel.getWidth(),imageModel.getHeight());
         imageModel.renderOverlay();
     }
     public void onPress(int x, int y, IModel imageModel){
@@ -38,7 +38,7 @@ public class SelectTool implements ITool{
 
     public void onRelease(int x, int y, IModel imageModel){
         Point endPoint = new Point (x,y);
-        imageModel.getActiveLayer().selectArea(startPoint, endPoint);
+        imageModel.selectArea(startPoint, endPoint);
     }
     public void updateSettings(ToolSettings ts){
 

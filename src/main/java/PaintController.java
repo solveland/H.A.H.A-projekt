@@ -109,11 +109,12 @@ public class PaintController implements ImageModelObserver {
     }
 
     public void initialize() {
-        image = new ImageModel(600, 600);
         view = new PaintView(600, 600);
+        image = new ImageModel(600, 600);
         LayerListController lController = new LayerListController(image);
         image.addObserver(view);
         image.addObserver(lController);
+        image.updateRenderedImage();
         borderPane.setRight(lController.getListPane());
         contextMenu = new ContextMenu();
         item1 = new MenuItem("Deselect");
@@ -143,8 +144,6 @@ public class PaintController implements ImageModelObserver {
         colorPicker.setOnAction(e -> {
             sendColorState();
         });
-
-        clearCanvas();
 
         //Toolbar
         sizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 5));
@@ -195,6 +194,7 @@ public class PaintController implements ImageModelObserver {
         pencilShort();
         zoomShort();
         selectShort();
+        image.updateCanvas();
     }
 
     private void pencilShort (){

@@ -20,7 +20,10 @@ public class UndoBuffer {
     }
 
     public void addPixel(int x, int y,PaintColor color){
-        Pixel p = new Pixel(x,y,color);
+        addPixel(new Pixel(x,y,color));
+    }
+
+    public void addPixel(Pixel p){
         pixels.add(p);
         pointHashSet.add(p.getPosition());
     }
@@ -29,7 +32,7 @@ public class UndoBuffer {
         return layer;
     }
 
-    public boolean contains(int x, int y){
-        return pointHashSet.contains(new Point<Integer>(x,y));
+    public boolean contains(Point<Integer> p){
+        return pointHashSet.contains(p);
     }
 }

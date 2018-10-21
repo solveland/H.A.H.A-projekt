@@ -1,4 +1,6 @@
-package model.pixel;
+package utilities;
+
+import model.pixel.Point;
 
 public class DistanceHelper {
 

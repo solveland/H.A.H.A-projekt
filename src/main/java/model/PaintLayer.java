@@ -32,7 +32,7 @@ public class PaintLayer {
         for (int i = 0; i < sizeX * sizeY; i++) {
             pixelArray[i] = bgColor;
         }
-        changedMinX = width;
+        changedMaxX = width;
         changedMinX = 0;
         changedMinY = 0;
         changedMaxY = height;

@@ -1,11 +1,10 @@
 package model.tools;
 
-import model.UndoBuffer;
-import model.pixel.DistanceHelper;
+import model.pixel.Pixel;
+import utilities.DistanceHelper;
 import model.pixel.PaintColor;
 import model.pixel.Point;
 
-import javax.tools.Tool;
 import java.util.HashMap;
 
 public class BrushTool extends AbstractPaintTool {
@@ -20,22 +19,22 @@ public class BrushTool extends AbstractPaintTool {
     }
 
     @Override
-    void paintPixel(int x, int y,Point<Double> newPoint,IModel imageModel,UndoBuffer undoBuffer,Point<Double> oldPoint){
+    void paintPixel(int x, int y,Point<Double> newPoint,IModel imageModel,Point<Double> oldPoint){
         Point<Integer> pos = new Point<>(x,y);
         double dist = DistanceHelper.distToSegmentSquared(oldPoint, newPoint, new Point<>((double) x, (double) y));
         if (dist < (getSize() - 0.5) * (getSize() - 0.5)) {
-            if(undoBuffer.contains(x,y)){
+            if(imageModel.existsInUndoBuffer(new Point<>(x,y))){
                 if (closestDistMap.get(pos) <= dist){
                     return;
                 }
             } else {
-                undoBuffer.addPixel(x, y, imageModel.getActiveLayer().getPixel(x, y));
-                origColorMap.put(pos,imageModel.getActiveLayer().getPixel(x, y));
-                imageModel.getActiveLayer().setPixel(x, y, getPixelColor(dist,imageModel.getActiveLayer().getPixel(x,y)));
+                imageModel.addToUndoBuffer(new Pixel(x,y,imageModel.getPixelColor(x,y)));
+                origColorMap.put(pos,imageModel.getPixelColor(x, y));
+                imageModel.setPixel(x, y, getPixelColor(dist,imageModel.getPixelColor(x,y)));
                 closestDistMap.put(pos,dist);
                 return;
             }
-            imageModel.getActiveLayer().setPixel(x, y, getPixelColor(dist,origColorMap.get(pos)));
+            imageModel.setPixel(x, y, getPixelColor(dist,origColorMap.get(pos)));
             closestDistMap.replace(pos,dist);
         }
     }
