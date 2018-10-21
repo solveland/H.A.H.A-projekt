@@ -1,17 +1,17 @@
 package model.tools;
 
-import model.UndoBuffer;
-import model.PaintOverlay;
 import model.pixel.PaintColor;
 import model.pixel.Pixel;
 import model.pixel.Point;
+
+import java.util.List;
 
 public interface IModel {
 
     void setPixel(int x, int y, PaintColor color);
     PaintColor getPixelColor(int x, int y);
-    PaintOverlay getSelectOverlay();
-    PaintOverlay getShapeOverlay();
+    void addToShapeOverlay(List<Pixel> pixelList);
+    void addToSelectOverlay(List<Pixel> pixelList);
     void setColor(PaintColor color);
     void renderOverlay();
     void openNewUndoBuffer();

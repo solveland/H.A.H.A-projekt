@@ -203,19 +203,20 @@ public class ImageModel implements IModel{
         return getActiveLayer().getPixel(x, y);
     }
 
+    @Override
+    public void addToShapeOverlay(List<Pixel> pixelList) {
+        shapeOverlay.setNewOverlay(pixelList);
+    }
+
+    @Override
+    public void addToSelectOverlay(List<Pixel> pixelList) {
+        selectOverlay.setNewOverlay(pixelList);
+    }
+
     public void pushToUndoStack(UndoBuffer buffer){
         undoBufferStack.push(buffer);
     }
 
-    @Override
-    public PaintOverlay getSelectOverlay() {
-        return selectOverlay;
-    }
-
-    @Override
-    public PaintOverlay getShapeOverlay() {
-        return shapeOverlay;
-    }
 
     public void undo(){
         if(undoBufferStack.empty()){

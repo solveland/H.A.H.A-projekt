@@ -22,4 +22,9 @@ public class PaintOverlay {
         return oldOverlay;
     }
 
+    public void setNewOverlay(List<Pixel> pixels){
+        oldOverlay = overlay;
+        overlay = pixels;
+    }
+
 }

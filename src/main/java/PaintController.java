@@ -148,7 +148,7 @@ public class PaintController implements ImageModelObserver {
         colorPicker.setOnAction(e -> {
             sendColorState();
         });
-        
+
         sizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 5));
         sizeSpinner.setEditable(true);
         sizeSpinner.valueProperty().addListener((obs, oldvalue, newvalue) -> image.setSize(newvalue));

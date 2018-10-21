@@ -1,10 +1,10 @@
 package model.tools;
 
-import model.PaintOverlay;
 import model.pixel.PaintColor;
 import model.pixel.Pixel;
 import model.pixel.Point;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,7 +43,7 @@ public class ShapeTool implements ITool {
     public void onDrag(int x, int y, IModel imageModel) {
         List<Point<Integer>> pointList = strategy.shapeStrategy(startPoint, new Point<>(x, y));
         removeOutsidePoints(pointList,imageModel);
-        addToOverlay(imageModel.getShapeOverlay(), pointList);
+        addToOverlay(imageModel, pointList);
         imageModel.renderOverlay();
     }
 
@@ -61,22 +61,21 @@ public class ShapeTool implements ITool {
         imageModel.renderOverlay();
     }
 
-    private void addToOverlay(PaintOverlay shapeOverlay, List<Point<Integer>> shape) {
-        List<Pixel> arrayList = shapeOverlay.getOverlay();
-        List<Pixel> oldArrayList = shapeOverlay.getOldOverlay();
-        oldArrayList.addAll(arrayList);
+    private void addToOverlay(IModel imageModel, List<Point<Integer>> shape) {
+        List<Pixel> arrayList = new ArrayList<>();
         arrayList.clear();
         for (Point<Integer> i : shape) {
             arrayList.add(new Pixel(i.getX(), i.getY(), color));
         }
         //shapeOverlay.setChanged(true);
+        imageModel.addToShapeOverlay(arrayList);
 
     }
 
 
     private void addShapeToImage(IModel image, List<Point<Integer>> shape) {
-        image.getShapeOverlay().getOldOverlay().addAll(image.getShapeOverlay().getOverlay());
-        image.getShapeOverlay().getOverlay().clear();
+        //Empty the overlay
+        image.addToShapeOverlay(new ArrayList<>());
         for (Point<Integer> i : shape) {
             if (image.existsInUndoBuffer(new Point<>(i.getX(),i.getY()))) {
                 continue;

@@ -1,10 +1,10 @@
 package model.tools;
 
-import model.PaintOverlay;
 import model.pixel.Pixel;
 import model.pixel.Point;
 import model.pixel.PaintColor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,7 +28,7 @@ public class SelectTool implements ITool{
 
     public void onDrag(int x, int y, IModel imageModel){
         Point<Integer> endPoint = new Point<> (x,y);
-        drawSelectedToolArea(imageModel.getSelectOverlay(), endPoint,imageModel.getWidth(),imageModel.getHeight());
+        drawSelectedToolArea(imageModel, endPoint,imageModel.getWidth(),imageModel.getHeight());
         imageModel.renderOverlay();
     }
     public void onPress(int x, int y, IModel imageModel){
@@ -47,15 +47,11 @@ public class SelectTool implements ITool{
 
     /**
      * This method checks how the user creates the rectangle and adds the pixels to a list. It checks the direction of the drag.
-     * @param selectOverlay is a overlay object that contains two lists of pixels. One old and one new.
      * @param endPoint a point used when creating a rectangle for the selected area.
      */
 
-    private void drawSelectedToolArea (PaintOverlay selectOverlay, Point<Integer> endPoint, int maxWidth, int maxHeight){
-        List<Pixel> arrayList = selectOverlay.getOverlay();
-        List<Pixel> oldArrayList = selectOverlay.getOldOverlay();
-        oldArrayList.addAll(arrayList);
-        arrayList.clear();
+    private void drawSelectedToolArea (IModel imageModel, Point<Integer> endPoint, int maxWidth, int maxHeight){
+        List<Pixel> arrayList = new ArrayList<>();
 
         int minX = Math.max((startPoint.getX() < endPoint.getX()) ? startPoint.getX() : endPoint.getX(),0);
         int maxX = Math.min((startPoint.getX() > endPoint.getX()) ? startPoint.getX() : endPoint.getX(),maxWidth - 1);
@@ -75,7 +71,8 @@ public class SelectTool implements ITool{
                 arrayList.add(new Pixel(maxX, j, paintColor));
             }
         }
-        //selectOverlay.setChanged(true);
+
+        imageModel.addToSelectOverlay(arrayList);
 
     }
 }
