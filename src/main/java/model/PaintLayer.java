@@ -3,6 +3,13 @@ package model;
 import model.pixel.PaintColor;
 import model.pixel.Point;
 
+/*
+AUTHOR: Anthony Tao, Henrik Tao, Hampus Ekberg, August Sölveland
+RESPONSIBILITY: Defines a layer of an image
+USED BY: ImageModel, ImageSaveLoad, LayerItem, LayerListController, LayerObserver, PaintController, PaintView
+USES: PaintColor, Point
+ */
+
 public class PaintLayer {
 
     private PaintColor[] pixelArray;

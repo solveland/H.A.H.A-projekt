@@ -2,7 +2,6 @@ import com.pholser.junit.quickcheck.Property;
 import com.pholser.junit.quickcheck.generator.InRange;
 import com.pholser.junit.quickcheck.runner.JUnitQuickcheck;
 import model.ImageModel;
-import model.PaintLayer;
 import model.pixel.PaintColor;
 import org.junit.runner.RunWith;
 
@@ -43,12 +42,17 @@ public class UndoTest {
         PaintColor color1 = new PaintColor(red1, green1, blue1);
         PaintColor color2 = new PaintColor(red2,green2,blue2);
 
-        //Make a layer and fill it with a background color
+
         PaintColor bgColor = new PaintColor(bgred,bggreen,bgblue);
-        PaintLayer paintLayer = new PaintLayer(limit, limit, bgColor, "test");
+
+        // Fill layer with the background color
+        for (int xi = 0; xi < limit; xi++) {
+            for (int yi = 0; yi < limit; yi++) {
+                image.setPixel(xi,yi,bgColor);
+            }
+        }
 
         //Use some different tools
-        image.setActiveLayer(paintLayer);
         image.activateBrushTool();
         image.setColor(color1);
         image.onPress(x1, y1);
@@ -71,6 +75,7 @@ public class UndoTest {
 
         //Undoing 4 times should clear everything
 
+
         for(int i = 0; i < 4;i++){
             image.undo();
         }
@@ -79,9 +84,7 @@ public class UndoTest {
 
         for (int xi = 0; xi < limit; xi++) {
             for (int yi = 0; yi < limit; yi++) {
-
                 assertTrue(image.getActiveLayer().getPixel(xi, yi).equals(bgColor));
-
             }
         }
     }

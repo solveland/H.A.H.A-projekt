@@ -1,5 +1,12 @@
 package model.pixel;
 
+/*
+AUTHOR: Henrik Tao
+RESPONSIBILITY: General class for a 2d point
+USED BY: ImageModel, PaintLayer, UndoBuffer, Most tools, DistanceHelper
+USES:
+ */
+
 public class Point <T extends Number> {
     private final T x;
     private final T y;

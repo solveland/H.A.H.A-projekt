@@ -8,6 +8,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+/*
+AUTHOR: Hampus Ekberg
+RESPONSIBILITY: Saves a list of "old" pixels that can be reverted if the user chooses to undo what they did.
+USED BY: ImageModel
+USES: PaintLayer, Point, Pixel
+ */
+
 public class UndoBuffer {
     List<Pixel> pixels;
     private PaintLayer layer;

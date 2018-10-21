@@ -1,5 +1,12 @@
 package model.pixel;
 
+/*
+AUTHOR: Hampus Ekberg
+RESPONSIBILITY: To define color
+USED BY: Most parts of the model
+USES:
+ */
+
 public class PaintColor {
     public static PaintColor blank = new PaintColor(0,0,0,0);
 

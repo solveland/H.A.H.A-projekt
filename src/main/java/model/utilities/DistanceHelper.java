@@ -2,6 +2,13 @@ package model.utilities;
 
 import model.pixel.Point;
 
+/*
+AUTHOR: Hampus Ekberg
+RESPONSIBILITY: A helper class for functions that calculate distances between points/lines
+USED BY: BrushTool
+USES: Point
+ */
+
 public class DistanceHelper {
 
     public static double dist2(Point<Double> p1, Point<Double> p2){

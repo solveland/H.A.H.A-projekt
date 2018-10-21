@@ -8,6 +8,13 @@ import model.pixel.Pixel;
 import java.util.*;
 import java.util.List;
 
+/*
+AUTHOR: Henrik Tao, Anthony Tao, August Sölveland, Hampus Ekberg
+RESPONSIBILITY: A broad connection point between the different parts of the model
+USED BY: PaintController, LayerListController, Main
+USES: Most other classes in the model package
+ */
+
 public class ImageModel implements IModel{
 
     private List<PaintLayer> layerList;

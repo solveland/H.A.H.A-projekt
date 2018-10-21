@@ -1,5 +1,5 @@
 
-import Services.ServiceFactory;
+import services.ServiceFactory;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -23,7 +23,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import model.pixel.PaintColor;
 import model.PaintOverlay;
-import model.tools.PencilTool;
 import view.PaintView;
 
 import java.io.File;

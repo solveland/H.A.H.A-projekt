@@ -1,5 +1,12 @@
 package model.pixel;
 
+/*
+AUTHOR: Hampus Ekberg
+RESPONSIBILITY: A composition of a color and a point, used to define a pixel on the image
+USED BY: ImageModel, PaintOverlay, UndoBuffer, Most tools, PaintView
+USES: Point & PaintColor
+ */
+
 public class Pixel {
     private final Point<Integer> position;
     private final PaintColor color;

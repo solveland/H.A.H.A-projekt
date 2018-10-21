@@ -1,4 +1,4 @@
-package Services;
+package services;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.WritableImage;
@@ -11,8 +11,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.awt.image.BufferedImage.TYPE_4BYTE_ABGR;
-import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
+/*
+AUTHOR: Hampus Ekberg
+RESPONSIBILITY: Saves and Loads images to the program
+USED BY: PaintController
+USES: Javafx, PaintLayer, PaintColor
+ */
 
 public class ImageSaveLoad implements ISaveLoad {
     @Override

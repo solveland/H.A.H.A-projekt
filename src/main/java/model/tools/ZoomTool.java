@@ -1,8 +1,5 @@
 package model.tools;
 
-import model.ImageModel;
-import model.tools.ITool;
-
 public class ZoomTool implements ITool {
 
 
