@@ -1,11 +1,11 @@
 
 import Services.ServiceFactory;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.*;
 
-import javafx.scene.input.MouseButton;
 import model.ImageModel;
 import model.ImageModelObserver;
 import model.PaintLayer;
@@ -61,6 +61,28 @@ public class PaintController implements ImageModelObserver {
     @FXML
     private Label label;
 
+
+    //BUTTONS
+    @FXML
+    public Button brushButton;
+    @FXML
+    public Button eyedropperButton;
+    @FXML
+    public Button eraserButton;
+    @FXML
+    public Button undoButton;
+    @FXML
+    public Button fillButton;
+    @FXML
+    public Button pencilButton;
+    @FXML
+    public Button zoomButton;
+    @FXML
+    public Button selectButton;
+
+    private Boolean mouseDown;
+
+
     private ImageModel image;
     private PaintView view;
 
@@ -88,6 +110,7 @@ public class PaintController implements ImageModelObserver {
         borderPane.setRight(lController.getListPane());
         contextMenu = new ContextMenu();
         item1 = new MenuItem("Deselect");
+        mouseDown = false;
 
         image.addObserver(this);
 
@@ -150,6 +173,138 @@ public class PaintController implements ImageModelObserver {
             }
         });
 
+        ////////// SHORTCUTS ////////////
+        brushButtonShort();
+        eyedropperShort();
+        eraserShort();
+        undoShort();
+        fillShort();
+        pencilShort();
+        zoomShort();
+        selectShort();
+    }
+
+    private void pencilShort (){
+        Platform.runLater(()->{
+            brushButton.getScene().getAccelerators().put(
+                    new KeyCodeCombination(KeyCode.P),
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            if(!mouseDown){
+                                pencilButton.fire();
+                            }
+
+
+
+                        }
+                    });
+        });
+    }
+
+    private void selectShort (){
+        Platform.runLater(()->{
+            brushButton.getScene().getAccelerators().put(
+                    new KeyCodeCombination(KeyCode.M),
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            if(!mouseDown) {
+                                selectButton.fire();
+                            }
+                        }
+                    });
+        });
+    }
+
+    private void zoomShort (){
+        Platform.runLater(()->{
+            brushButton.getScene().getAccelerators().put(
+                    new KeyCodeCombination(KeyCode.Z),
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            if(!mouseDown) {
+                                zoomButton.fire();
+                            }
+                        }
+                    });
+        });
+    }
+
+    private void fillShort (){
+        Platform.runLater(()->{
+            brushButton.getScene().getAccelerators().put(
+                    new KeyCodeCombination(KeyCode.G),
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            if(!mouseDown) {
+                                fillButton.fire();
+                            }
+                        }
+                    });
+        });
+    }
+
+    private void brushButtonShort (){
+        Platform.runLater(()->{
+            brushButton.getScene().getAccelerators().put(
+                    new KeyCodeCombination(KeyCode.B),
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            if(!mouseDown) {
+                                brushButton.fire();
+                            }
+                        }
+                    });
+        });
+    }
+
+    private void eyedropperShort (){
+        Platform.runLater(()->{
+            brushButton.getScene().getAccelerators().put(
+                    new KeyCodeCombination(KeyCode.I),
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            if(!mouseDown) {
+                                eyedropperButton.fire();
+                            }
+                        }
+                    });
+        });
+    }
+
+    private void eraserShort (){
+        Platform.runLater(()->{
+            brushButton.getScene().getAccelerators().put(
+                    new KeyCodeCombination(KeyCode.E),
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            if(!mouseDown) {
+                                eraserButton.fire();
+                            }
+                        }
+                    });
+        });
+    }
+
+    private void undoShort (){
+        Platform.runLater(()->{
+            brushButton.getScene().getAccelerators().put(
+                    new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN),
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            if(!mouseDown) {
+                                undoButton.fire();
+                            }
+                        }
+                    });
+        });
     }
 
 
@@ -341,8 +496,6 @@ public class PaintController implements ImageModelObserver {
         }
     }
 
-    /////////////////////////////////////////////////////////////////////
-
     private void setImageDragEvent (ImageView imageView) {
         imageView.setOnMouseDragged(e -> {
             if (e.getButton() == MouseButton.SECONDARY) {
@@ -362,6 +515,7 @@ public class PaintController implements ImageModelObserver {
             int x = (int) Math.floor(e.getX());
             int y = (int) Math.floor(e.getY());
             image.onRelease(x, y);
+            mouseDown = false;
         });
     }
 
@@ -373,6 +527,7 @@ public class PaintController implements ImageModelObserver {
             int x = (int) Math.floor(e.getX());
             int y = (int) Math.floor(e.getY());
             image.onPress(x, y);
+            mouseDown = true;
         });
     }
 

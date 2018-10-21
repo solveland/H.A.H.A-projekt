@@ -37,7 +37,7 @@ public class SelectTest {
         image.onRelease(a,b);
 
         //If an area has been selected
-        assertTrue(image.getActiveLayer().hasSelectedArea());
+        assertTrue(image.getActiveLayer().hasSelection());
 
         //Draw a pixel on canvas. If inside of selected area then pixel will be drawn.
         // If outside of selected area, then pixel will not be drawn.
@@ -79,7 +79,7 @@ public class SelectTest {
         image.onRelease(a,b);
 
         //If an area has been selected
-        assertTrue(image.getActiveLayer().hasSelectedArea());
+        assertTrue(image.getActiveLayer().hasSelection());
 
         //Draw a pixel on canvas. If inside of selected area then pixel will be drawn.
         // If outside of selected area, then pixel will not be drawn.

@@ -29,15 +29,15 @@
                 <items>
                     <VBox prefHeight="305.0" prefWidth="38.0" styleClass="segmented-button-bar, vbox">
                        <children>
-                           <Button>
+                           <Button fx:id="pencilButton" onAction="#setPencil">
                      <graphic>
-                        <ImageView fitHeight="24.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="24.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@arrow.png" />
+                              <Image url="@pencil.png" />
                            </image>
                         </ImageView>
                      </graphic></Button>
-                           <Button onAction="#setPencil" prefHeight="20.0" prefWidth="22.0">
+                           <Button fx:id="brushButton" onAction="#setBrushTool" prefHeight="20.0" prefWidth="22.0">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -45,7 +45,7 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                           <Button onAction="#setFillTool">
+                           <Button fx:id="fillButton" onAction="#setFillTool">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -53,7 +53,7 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                           <Button onAction="#setEraserTool">
+                           <Button fx:id="eraserButton" onAction="#setEraserTool">
                      <graphic>
                        <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -61,7 +61,7 @@
                            </image>
                        </ImageView>
                      </graphic></Button>
-                           <Button onAction="#setZoomTool">
+                           <Button fx:id="zoomButton" onAction="#setZoomTool">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -77,7 +77,7 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                           <Button onAction="#setSelectTool">
+                           <Button fx:id="selectButton" onAction="#setSelectTool">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -85,7 +85,7 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                           <Button onAction="#setEyedropperTool">
+                           <Button fx:id="eyedropperButton" onAction="#setEyedropperTool">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -93,7 +93,7 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                           <Button onAction="#undoButton" text="Undo">
+                           <Button fx:id="undoButton" onAction="#undoButton" text="Undo">
                      <font>
                         <Font size="9.0" />
                      </font></Button>

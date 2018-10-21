@@ -8,7 +8,11 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
+import model.ImageModel;
 
 public class Main extends Application {
 
@@ -20,7 +24,6 @@ public class Main extends Application {
         //Parent root = FXMLLoader.load(getClass().getResource("Paint.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
-        stage.setScene(scene);
         stage.setMaximized(true);
 
 
