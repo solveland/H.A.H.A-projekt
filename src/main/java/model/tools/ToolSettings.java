@@ -6,6 +6,8 @@ public class ToolSettings {
     private PaintColor color;
     private int size;
     private Shape shape;
+    private double hardness;
+
 
     public ToolSettings(int size){
         this.size = size;
@@ -36,6 +38,8 @@ public class ToolSettings {
         this.shape = Shape.CIRCLE;
     }
 
+
+
     public PaintColor getPaintColor() {
         return color;
     }
@@ -46,5 +50,13 @@ public class ToolSettings {
 
     public Shape getShape() {
         return shape;
+    }
+
+    public double getHardness() {
+        return hardness;
+    }
+
+    public void setHardness(double hardness) {
+        this.hardness = hardness;
     }
 }

@@ -52,6 +52,10 @@ public class PaintController implements ImageModelObserver {
     private Slider opacitySlider;
     @FXML
     private Label opacityLabel;
+
+    @FXML
+    private Label hardnessLabel;
+
     @FXML
     private ComboBox<String> shapeBox;
     @FXML
@@ -60,6 +64,9 @@ public class PaintController implements ImageModelObserver {
     private MenuItem item1;
     @FXML
     private Label label;
+
+    @FXML
+    private Slider hardnessSlider;
 
 
     //BUTTONS
@@ -172,6 +179,12 @@ public class PaintController implements ImageModelObserver {
                 }
             }
         });
+
+        hardnessSlider.valueProperty().addListener((obs,oldValue,newValue) -> {
+            image.setHardness(newValue.doubleValue());
+        });
+
+        hardnessSlider.setValue(0.5);
 
         ////////// SHORTCUTS ////////////
         brushButtonShort();
@@ -380,6 +393,8 @@ public class PaintController implements ImageModelObserver {
         opacitySlider.setVisible(true);
         opacityLabel.setVisible(true);
         brushBar.setVisible(true);
+        hardnessSlider.setVisible(false);
+        hardnessLabel.setVisible(false);
     }
 
     @FXML
@@ -401,6 +416,8 @@ public class PaintController implements ImageModelObserver {
         opacitySlider.setVisible(true);
         opacityLabel.setVisible(true);
         brushBar.setVisible(true);
+        hardnessSlider.setVisible(true);
+        hardnessLabel.setVisible(true);
     }
 
     @FXML
@@ -411,6 +428,8 @@ public class PaintController implements ImageModelObserver {
         opacitySlider.setVisible(false);
         opacityLabel.setVisible(false);
         opacitySlider.setValue(1);
+        hardnessSlider.setVisible(false);
+        hardnessLabel.setVisible(false);
     }
 
     @FXML

@@ -306,6 +306,11 @@ public class ImageModel implements IModel{
         updateCanvas();
     }
 
+    public void setHardness(double hardness) {
+        ts.setHardness(hardness);
+        activeTool.updateSettings(ts);
+    }
+
     private List<PaintLayer> reversedLayerList() {
         LinkedList<PaintLayer> reversedList = new LinkedList<>();
 

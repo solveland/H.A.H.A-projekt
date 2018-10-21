@@ -5,6 +5,8 @@ import model.pixel.DistanceHelper;
 import model.pixel.PaintColor;
 import model.pixel.Point;
 
+import java.util.Random;
+
 /**
  * This class is an abstraction of a pencil/eraser.
  * It contains the shared logic used for both drawing and erasing pixels on a canvas.
@@ -15,12 +17,15 @@ public abstract class AbstractPaintTool implements ITool {
     private UndoBuffer undoBuffer;
     private Point<Double> oldPoint;
     private Shape shape = Shape.CIRCLE;
+    Random rand;
 
     public void onPress(int x, int y, IModel imageModel) {
         undoBuffer = new UndoBuffer(imageModel.getActiveLayer());
         imageModel.pushToUndoStack(undoBuffer);
         oldPoint = new Point<>((double) x, (double) y);
+        rand = new Random();
         onDrag(x,y,imageModel);
+
     }
 
     public void onDrag(int x, int y, IModel imageModel) {

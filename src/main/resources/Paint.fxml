@@ -22,7 +22,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane id="background" fx:id="borderPane" prefHeight="800" prefWidth="600" stylesheets="@Stylesheet.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane id="background" fx:id="borderPane" prefHeight="800" prefWidth="779.0" stylesheets="@Stylesheet.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
 
     <left>
             <ToolBar fx:id="toolBar" prefHeight="371.0" prefWidth="57.0" BorderPane.alignment="CENTER">
@@ -164,6 +164,8 @@
                   <ComboBox fx:id="shapeBox" prefHeight="27.0" prefWidth="60.0" />
                   <Label fx:id="opacityLabel" text="Opacity:" />
                   <Slider fx:id="opacitySlider" blockIncrement="0.05" max="1.0" value="1.0" />
+                  <Label fx:id="hardnessLabel" text="Hardness:" />
+                  <Slider fx:id="hardnessSlider" blockIncrement="0.05" max="1.0" value="1.0" />
                </items>
                <padding>
                   <Insets left="25.0" />

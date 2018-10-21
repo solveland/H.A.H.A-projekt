@@ -5,13 +5,14 @@ import model.pixel.DistanceHelper;
 import model.pixel.PaintColor;
 import model.pixel.Point;
 
+import javax.tools.Tool;
 import java.util.HashMap;
 
 public class BrushTool extends AbstractPaintTool {
 
     private HashMap<Point<Integer>,Double> closestDistMap;
     private HashMap<Point<Integer>,PaintColor> origColorMap;
-    private double hardness = 0.4;
+    private double hardness;
 
     public BrushTool() {
         closestDistMap = new HashMap<>();
@@ -49,6 +50,15 @@ public class BrushTool extends AbstractPaintTool {
 
     @Override
     PaintColor getPixelColor(double dist, PaintColor oldColor) {
-        return PaintColor.alphaBlend(new PaintColor(color.getRed(),color.getGreen(),color.getBlue(),(int)(Math.min(((255-((Math.sqrt(dist)/getSize())*255))/hardness),255)* color.getAlphaRatio())),oldColor);
+        if (hardness > 0.99){
+            return PaintColor.alphaBlend(color,oldColor);
+        }
+        return PaintColor.alphaBlend(new PaintColor(color.getRed(),color.getGreen(),color.getBlue(),(int)(Math.min(((255-((Math.sqrt(dist)/getSize())*255))/(1-hardness)),255)* color.getAlphaRatio())),oldColor);
+    }
+
+    @Override
+    public void updateSettings(ToolSettings ts){
+        super.updateSettings(ts);
+        hardness = ts.getHardness();
     }
 }
