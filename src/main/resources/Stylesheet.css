@@ -7,19 +7,47 @@
     -layer-highlight: rgb(102, 124, 135);
     -fx-background-color: -light-black;
     -layer-background: rgb(65, 68, 70);
+    -selected-color: rgb(29, 29, 29)
 }
 
 .scrollPane {
     -fx-background-color: -dark-highlight;
 }
 
-.tool-bar{
+.left-tool-bar{
     -fx-base: -dark-black;
     -fx-background-radius: 0 5 5 0;
 }
 
+.top-tool-bar{
+    -fx-base: -dark-black;
+    -fx-background-radius: 0 0 0 0;
+    -fx-border-width: 0;
+}
+
 .hud{
     -fx-base: -dark-black;
+}
+
+
+.pressed-tool-button {
+    -fx-background-color: -fx-inner-border, -fx-outer-border, -fx-body-color;
+}
+
+.toggle-button {
+    -fx-background-color: transparent;
+}
+
+.toggle-button:hover {
+    -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;
+}
+
+.toggle-button:pressed {
+    -fx-background-color: -fx-inner-border, -fx-outer-border, -fx-body-color;
+}
+
+.toggle-button:selected {
+    -fx-background-color: -fx-inner-border, -fx-outer-border, -selected-color;
 }
 
 .button {
@@ -29,8 +57,6 @@
 .button:hover {
     -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;
 }
-
-
 
 .no-border-scroll {
     -fx-background-color: transparent;

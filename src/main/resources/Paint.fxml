@@ -13,6 +13,7 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -25,74 +26,77 @@
 <BorderPane id="background" fx:id="borderPane" prefHeight="800" prefWidth="779.0" stylesheets="@Stylesheet.css" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
 
     <left>
-            <ToolBar fx:id="toolBar" prefHeight="371.0" prefWidth="57.0" BorderPane.alignment="CENTER">
+            <ToolBar fx:id="toolBar" prefHeight="371.0" prefWidth="57.0" styleClass="left-tool-bar" BorderPane.alignment="CENTER">
                 <items>
-                    <VBox prefHeight="305.0" prefWidth="38.0" styleClass="segmented-button-bar, vbox">
+                    <VBox prefHeight="305.0" prefWidth="38.0" spacing="2.0" styleClass="segmented-button-bar, vbox">
                        <children>
-                           <Button fx:id="pencilButton" onAction="#setPencil">
+                           <ToggleButton fx:id="pencilButton" mnemonicParsing="false" onAction="#setPencil">
                      <graphic>
-                        <ImageView fitHeight="24.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@pencil.png" />
                            </image>
                         </ImageView>
-                     </graphic></Button>
-                           <Button fx:id="brushButton" onAction="#setBrushTool" prefHeight="20.0" prefWidth="22.0">
+                     </graphic>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin></ToggleButton>
+                           <ToggleButton fx:id="brushButton" mnemonicParsing="false" onAction="#setBrushTool" prefHeight="20.0" prefWidth="22.0">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@paint-brush.png" />
                            </image>
                         </ImageView>
-                     </graphic></Button>
-                           <Button fx:id="fillButton" onAction="#setFillTool">
+                     </graphic></ToggleButton>
+                           <ToggleButton fx:id="fillButton" mnemonicParsing="false" onAction="#setFillTool">
                      <graphic>
-                        <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true" styleClass="button1">
                            <image>
                               <Image url="@paint-bucket.png" />
                            </image>
                         </ImageView>
-                     </graphic></Button>
-                           <Button fx:id="eraserButton" onAction="#setEraserTool">
+                     </graphic></ToggleButton>
+                           <ToggleButton fx:id="eraserButton" mnemonicParsing="false" onAction="#setEraserTool">
                      <graphic>
                        <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                                <Image url="@eraser.png" />
                            </image>
                        </ImageView>
-                     </graphic></Button>
-                           <Button fx:id="zoomButton" onAction="#setZoomTool">
+                     </graphic></ToggleButton>
+                           <ToggleButton fx:id="zoomButton" mnemonicParsing="false" onAction="#setZoomTool">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@magnifiying-glass.png" />
                            </image>
                         </ImageView>
-                     </graphic></Button>
-                           <Button onAction="#setShapeTool" prefHeight="27.0" prefWidth="39.0">
+                     </graphic></ToggleButton>
+                           <ToggleButton fx:id="shapeButton" mnemonicParsing="false" onAction="#setShapeTool" prefHeight="27.0" prefWidth="39.0">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@shapes.png" />
                            </image>
                         </ImageView>
-                     </graphic></Button>
-                           <Button fx:id="selectButton" onAction="#setSelectTool">
+                     </graphic></ToggleButton>
+                           <ToggleButton fx:id="selectButton" mnemonicParsing="false" onAction="#setSelectTool">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@selectTool.png" />
                            </image>
                         </ImageView>
-                     </graphic></Button>
-                           <Button fx:id="eyedropperButton" onAction="#setEyedropperTool">
+                     </graphic></ToggleButton>
+                           <ToggleButton fx:id="eyedropperButton" mnemonicParsing="false" onAction="#setEyedropperTool">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@eyedropperTool.png" />
                            </image>
                         </ImageView>
-                     </graphic></Button>
+                     </graphic></ToggleButton>
                            <Button fx:id="undoButton" onAction="#undoButton" text="Undo">
                      <font>
                         <Font size="9.0" />
@@ -103,7 +107,7 @@
                      </font></Button>
                   <ColorPicker fx:id="colorPicker" nodeOrientation="LEFT_TO_RIGHT" prefHeight="26.0" prefWidth="30.0">
                      <VBox.margin>
-                        <Insets top="5.0" />
+                        <Insets left="4.0" top="5.0" />
                      </VBox.margin></ColorPicker>
                        </children>
                <padding>
@@ -111,6 +115,9 @@
                </padding>
                     </VBox>
                 </items>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
             </ToolBar>
 
     </left>
@@ -156,7 +163,7 @@
                   </Menu>
                   </menus>
               </MenuBar>
-            <ToolBar fx:id="brushBar" layoutY="25.0" prefHeight="37.0" prefWidth="672.0" style="-fx-spacing: 10px;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <ToolBar fx:id="brushBar" layoutY="26.0" prefHeight="37.0" prefWidth="672.0" style="-fx-spacing: 10px;" styleClass="top-tool-bar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
                <items>
                   <Label text="Size:" />
                   <Spinner fx:id="sizeSpinner" prefHeight="27.0" prefWidth="120.0" />

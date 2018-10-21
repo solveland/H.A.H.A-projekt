@@ -23,6 +23,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import model.pixel.PaintColor;
 import model.PaintOverlay;
+import model.tools.PencilTool;
 import view.PaintView;
 
 import java.io.File;
@@ -70,22 +71,26 @@ public class PaintController implements ImageModelObserver {
 
 
     //BUTTONS
+    ToggleGroup tg;
+
     @FXML
-    public Button brushButton;
+    public ToggleButton brushButton;
     @FXML
-    public Button eyedropperButton;
+    public ToggleButton shapeButton;
     @FXML
-    public Button eraserButton;
+    public ToggleButton eyedropperButton;
+    @FXML
+    public ToggleButton eraserButton;
     @FXML
     public Button undoButton;
     @FXML
-    public Button fillButton;
+    public ToggleButton fillButton;
     @FXML
-    public Button pencilButton;
+    public ToggleButton pencilButton;
     @FXML
-    public Button zoomButton;
+    public ToggleButton zoomButton;
     @FXML
-    public Button selectButton;
+    public ToggleButton selectButton;
 
     private Boolean mouseDown;
 
@@ -136,7 +141,6 @@ public class PaintController implements ImageModelObserver {
                     }
         });
 
-
         //Color Palette
         colorPicker.setValue(Color.BLACK);
 
@@ -146,7 +150,7 @@ public class PaintController implements ImageModelObserver {
 
         clearCanvas();
 
-        //Toolbar
+        //Top Toolbar
         sizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 5));
         sizeSpinner.setEditable(true);
         sizeSpinner.valueProperty().addListener((obs, oldvalue, newvalue) -> image.setSize(newvalue));
@@ -157,6 +161,17 @@ public class PaintController implements ImageModelObserver {
         shapeBox.valueProperty().addListener((obs, oldvalue, newvalue) -> image.setToolShape(newvalue));
 
         sendColorState();
+
+        // Left Toolbar buttons
+        tg = new ToggleGroup();
+        pencilButton.setToggleGroup(tg);
+        brushButton.setToggleGroup(tg);
+        eraserButton.setToggleGroup(tg);
+        shapeButton.setToggleGroup(tg);
+        fillButton.setToggleGroup(tg);
+        zoomButton.setToggleGroup(tg);
+        selectButton.setToggleGroup(tg);
+        eyedropperButton.setToggleGroup(tg);
 
         setBrushTool();
 
@@ -395,20 +410,22 @@ public class PaintController implements ImageModelObserver {
         brushBar.setVisible(true);
         hardnessSlider.setVisible(false);
         hardnessLabel.setVisible(false);
+        pencilButton.setSelected(true);
     }
 
     @FXML
     public void setFillTool() {
-
         image.activateFillTool();
         brushBar.setVisible(false);
         opacitySlider.setValue(1);
+        fillButton.setSelected(true);
     }
 
     @FXML
     public void setEyedropperTool(){
         image.activateEyedropperTool();
         brushBar.setVisible(false);
+        eyedropperButton.setSelected(true);
     }
 
     @FXML public void setBrushTool(){
@@ -418,6 +435,7 @@ public class PaintController implements ImageModelObserver {
         brushBar.setVisible(true);
         hardnessSlider.setVisible(true);
         hardnessLabel.setVisible(true);
+        brushButton.setSelected(true);
     }
 
     @FXML
@@ -430,18 +448,21 @@ public class PaintController implements ImageModelObserver {
         opacitySlider.setValue(1);
         hardnessSlider.setVisible(false);
         hardnessLabel.setVisible(false);
+        eraserButton.setSelected(true);
     }
 
     @FXML
     public void setSelectTool() {
         image.activateSelectTool();
         brushBar.setVisible(false);
+        selectButton.setSelected(true);
     }
 
     @FXML
     public void setZoomTool() {
         image.activateZoomTool();
         brushBar.setVisible(false);
+        zoomButton.setSelected(true);
     }
 
     @FXML
@@ -449,7 +470,7 @@ public class PaintController implements ImageModelObserver {
         image.activateShapeTool();
         brushBar.setVisible(false);
         opacitySlider.setValue(1);
-
+        shapeButton.setSelected(true);
     }
 
     @FXML
