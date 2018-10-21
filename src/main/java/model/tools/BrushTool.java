@@ -11,7 +11,7 @@ public class BrushTool extends AbstractPaintTool {
 
     private HashMap<Point<Integer>,Double> closestDistMap;
     private HashMap<Point<Integer>,PaintColor> origColorMap;
-    private double hardness = 0.8;
+    private double hardness = 0.4;
 
     public BrushTool() {
         closestDistMap = new HashMap<>();
