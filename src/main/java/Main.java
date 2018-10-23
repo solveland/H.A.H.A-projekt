@@ -19,9 +19,8 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Paint.fxml"));
-        PaintController pc = new PaintController();
+        IPaintController pc = new PaintController();
         loader.setController(pc);
-        //Parent root = FXMLLoader.load(getClass().getResource("Paint.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
         stage.setMaximized(true);
@@ -32,7 +31,7 @@ public class Main extends Application {
         stage.setScene(scene);
 
 
-        stage.setTitle("Paint");
+        stage.setTitle("Paint++");
         stage.show();
     }
 

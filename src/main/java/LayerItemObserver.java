@@ -1,6 +1,6 @@
 import model.PaintLayer;
 
-public interface LayerObserver {
+public interface LayerItemObserver {
 
     void layerUpdate(PaintLayer layer, String id);
 

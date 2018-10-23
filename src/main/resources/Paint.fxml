@@ -2,6 +2,7 @@
 
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.ComboBox?>
@@ -97,7 +98,7 @@
                            </image>
                         </ImageView>
                      </graphic></ToggleButton>
-                           <Button fx:id="undoButton" onAction="#undoButton" text="Undo">
+                           <Button fx:id="undoButton" onAction="#undoAction" text="Undo">
                      <font>
                         <Font size="9.0" />
                      </font></Button>
@@ -134,7 +135,7 @@
                               <MenuItem onAction="#saveFile" text="Save" />
                               <MenuItem onAction="#saveFileAs" text="Save As" />
                               <SeparatorMenuItem />
-                              <MenuItem text="Exit" />
+                              <MenuItem onAction="#exitApplication" text="Exit" />
                           </items>
                       </Menu>
                       <Menu text="Edit">
@@ -199,6 +200,9 @@
                <children>
                   <ImageView fx:id="canvas" fitHeight="600.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" smooth="false" />
                </children>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
             </StackPane>
          </content>
          <styleClass>

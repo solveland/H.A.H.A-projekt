@@ -70,7 +70,7 @@ public class ShapeTool implements ITool {
         for (Point<Integer> i : shape) {
             arrayList.add(new Pixel(i.getX(), i.getY(), color));
         }
-        //shapeOverlay.setChanged(true);
+
         imageModel.addToShapeOverlay(arrayList);
 
     }

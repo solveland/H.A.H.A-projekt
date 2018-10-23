@@ -4,6 +4,8 @@ import services.ServiceFactory;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.ImageCursor;
+import javafx.scene.image.Image;
 import javafx.scene.input.*;
 
 import model.ImageModel;
@@ -28,7 +30,7 @@ import view.PaintView;
 import java.io.File;
 import java.util.List;
 
-public class PaintController implements ImageModelObserver {
+public class PaintController implements ImageModelObserver, IPaintController {
 
     private static final double MAX_SCALE = 15.0d;
     private static final double MIN_SCALE = 0.1d;
@@ -52,19 +54,16 @@ public class PaintController implements ImageModelObserver {
     private Slider opacitySlider;
     @FXML
     private Label opacityLabel;
-
     @FXML
     private Label hardnessLabel;
-
     @FXML
     private ComboBox<String> shapeBox;
     @FXML
     private ContextMenu contextMenu;
     @FXML
-    private MenuItem item1;
+    private MenuItem deselectItem;
     @FXML
     private Label label;
-
     @FXML
     private Slider hardnessSlider;
 
@@ -80,47 +79,29 @@ public class PaintController implements ImageModelObserver {
 
 
     //BUTTONS
-    ToggleGroup tg;
-
     @FXML
-    public ToggleButton brushButton;
+    private ToggleButton brushButton;
     @FXML
-    public ToggleButton shapeButton;
+    private ToggleButton shapeButton;
     @FXML
-    public ToggleButton eyedropperButton;
+    private ToggleButton eyedropperButton;
     @FXML
-    public ToggleButton eraserButton;
+    private ToggleButton eraserButton;
     @FXML
-    public Button undoButton;
+    private Button undoButton;
     @FXML
-    public ToggleButton fillButton;
+    private ToggleButton fillButton;
     @FXML
-    public ToggleButton pencilButton;
+    private ToggleButton pencilButton;
     @FXML
-    public ToggleButton zoomButton;
+    private ToggleButton zoomButton;
     @FXML
-    public ToggleButton selectButton;
+    private ToggleButton selectButton;
 
     private Boolean mouseDown;
-
-
     private ImageModel image;
     private PaintView view;
-
     private File openedFile = null;
-
-    public static double clamp(double value, double min, double max) {
-
-        if (Double.compare(value, min) < 0) {
-            return min;
-        }
-
-        if (Double.compare(value, max) > 0) {
-            return max;
-        }
-
-        return value;
-    }
 
     public void initialize() {
         view = new PaintView(600, 600);
@@ -131,7 +112,10 @@ public class PaintController implements ImageModelObserver {
         image.updateRenderedImage();
         borderPane.setRight(lController.getListPane());
         contextMenu = new ContextMenu();
-        item1 = new MenuItem("Deselect");
+        deselectItem = new MenuItem("Deselect");
+
+        ShortcutController sC = new ShortcutController(this, lController);
+
         mouseDown = false;
 
         image.addObserver(this);
@@ -142,13 +126,13 @@ public class PaintController implements ImageModelObserver {
         setImagePressEvent(canvas);
         setImageReleaseEvent(canvas);
 
-        stackPane.setOnMousePressed(e ->{
-                    if(image.getActiveTool().equals(image.getZoomTool())) {
-                        if (e.isAltDown())
-                            zoom(false);
-                        else
-                        zoom(true);
-                    }
+        stackPane.setOnMousePressed(e -> {
+            if (image.getActiveTool().equals(image.getZoomTool())) {
+                if (e.isAltDown())
+                    zoom(false);
+                else
+                    zoom(true);
+            }
         });
 
         //Color Palette
@@ -166,8 +150,13 @@ public class PaintController implements ImageModelObserver {
         opacitySlider.valueProperty().addListener((obs, oldvalue, newvalue) -> sendColorState());
         brushBar.setVisible(false);
         shapeBox.getItems().addAll("Circle", "Square");
+        shapeBox.getSelectionModel().selectFirst();
         view.populateShapeComboBox(shapeBox);
         shapeBox.valueProperty().addListener((obs, oldvalue, newvalue) -> image.setToolShape(newvalue));
+        hardnessSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
+            image.setHardness(newValue.doubleValue());
+        });
+        hardnessSlider.setValue(0.5);
 
         //shapeBar
         shapeBox1.getItems().addAll("Line", "Rectangle", "Triangle", "Ellipse");
@@ -180,8 +169,8 @@ public class PaintController implements ImageModelObserver {
 
         sendColorState();
 
-        // Left Toolbar buttons
-        tg = new ToggleGroup();
+        // Left Toolbar toggle group
+        ToggleGroup tg = new ToggleGroup();
         pencilButton.setToggleGroup(tg);
         brushButton.setToggleGroup(tg);
         eraserButton.setToggleGroup(tg);
@@ -191,17 +180,18 @@ public class PaintController implements ImageModelObserver {
         selectButton.setToggleGroup(tg);
         eyedropperButton.setToggleGroup(tg);
 
+        sendColorState();
         setBrushTool();
 
         //Deselect selected area - rightclick
-        item1.setOnAction(new EventHandler<ActionEvent>() {
+        deselectItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 image.deselectArea();
             }
         });
 
-        contextMenu.getItems().add(item1);
+        contextMenu.getItems().add(deselectItem);
 
 
         canvas.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
@@ -212,148 +202,26 @@ public class PaintController implements ImageModelObserver {
                 }
             }
         });
-
-        hardnessSlider.valueProperty().addListener((obs,oldValue,newValue) -> {
-            image.setHardness(newValue.doubleValue());
-        });
-
-        hardnessSlider.setValue(0.5);
-
-        ////////// SHORTCUTS ////////////
-        brushButtonShort();
-        eyedropperShort();
-        eraserShort();
-        undoShort();
-        fillShort();
-        pencilShort();
-        zoomShort();
-        selectShort();
-        image.updateCanvas();
     }
 
-    private void pencilShort (){
-        Platform.runLater(()->{
-            brushButton.getScene().getAccelerators().put(
-                    new KeyCodeCombination(KeyCode.P),
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            if(!mouseDown){
-                                pencilButton.fire();
-                            }
+    private static double clamp(double value, double min, double max) {
 
+        if (Double.compare(value, min) < 0) {
+            return min;
+        }
 
+        if (Double.compare(value, max) > 0) {
+            return max;
+        }
 
-                        }
-                    });
-        });
+        return value;
     }
 
-    private void selectShort (){
-        Platform.runLater(()->{
-            brushButton.getScene().getAccelerators().put(
-                    new KeyCodeCombination(KeyCode.M),
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            if(!mouseDown) {
-                                selectButton.fire();
-                            }
-                        }
-                    });
-        });
+    @Override
+    @FXML
+    public void exitApplication() {
+        Platform.exit();
     }
-
-    private void zoomShort (){
-        Platform.runLater(()->{
-            brushButton.getScene().getAccelerators().put(
-                    new KeyCodeCombination(KeyCode.Z),
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            if(!mouseDown) {
-                                zoomButton.fire();
-                            }
-                        }
-                    });
-        });
-    }
-
-    private void fillShort (){
-        Platform.runLater(()->{
-            brushButton.getScene().getAccelerators().put(
-                    new KeyCodeCombination(KeyCode.G),
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            if(!mouseDown) {
-                                fillButton.fire();
-                            }
-                        }
-                    });
-        });
-    }
-
-    private void brushButtonShort (){
-        Platform.runLater(()->{
-            brushButton.getScene().getAccelerators().put(
-                    new KeyCodeCombination(KeyCode.B),
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            if(!mouseDown) {
-                                brushButton.fire();
-                            }
-                        }
-                    });
-        });
-    }
-
-    private void eyedropperShort (){
-        Platform.runLater(()->{
-            brushButton.getScene().getAccelerators().put(
-                    new KeyCodeCombination(KeyCode.I),
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            if(!mouseDown) {
-                                eyedropperButton.fire();
-                            }
-                        }
-                    });
-        });
-    }
-
-    private void eraserShort (){
-        Platform.runLater(()->{
-            brushButton.getScene().getAccelerators().put(
-                    new KeyCodeCombination(KeyCode.E),
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            if(!mouseDown) {
-                                eraserButton.fire();
-                            }
-                        }
-                    });
-        });
-    }
-
-    private void undoShort (){
-        Platform.runLater(()->{
-            brushButton.getScene().getAccelerators().put(
-                    new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN),
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            if(!mouseDown) {
-                                undoButton.fire();
-                            }
-                        }
-                    });
-        });
-    }
-
 
     private void sendColorState() {
         Color javafxcolor = colorPicker.getValue();
@@ -361,11 +229,13 @@ public class PaintController implements ImageModelObserver {
         image.setColor(color);
     }
 
+    @Override
     @FXML
-    public void undoButton() {
+    public void undoAction() {
         image.undo();
     }
 
+    @Override
     @FXML
     public void openFile() {
         FileChooser fileChooser = new FileChooser();
@@ -395,6 +265,7 @@ public class PaintController implements ImageModelObserver {
         image.loadImage(layerList);
     }
 
+    @Override
     @FXML
     public void saveFileAs() {
         FileChooser fileChooser = new FileChooser();
@@ -407,6 +278,7 @@ public class PaintController implements ImageModelObserver {
         openedFile = file;
     }
 
+    @Override
     @FXML
     public void saveFile() {
         if (openedFile == null) {
@@ -416,6 +288,7 @@ public class PaintController implements ImageModelObserver {
         ServiceFactory.getSaveAndLoader().saveFile(openedFile, image.getLayerList());
     }
 
+    @Override
     @FXML
     public void clearCanvas() {
         image.clearLayer();
@@ -433,6 +306,7 @@ public class PaintController implements ImageModelObserver {
         pencilButton.setSelected(true);
     }
 
+    @Override
     @FXML
     public void setFillTool() {
         shapeBar.setVisible(false);
@@ -442,6 +316,7 @@ public class PaintController implements ImageModelObserver {
         fillButton.setSelected(true);
     }
 
+    @Override
     @FXML
     public void setEyedropperTool(){
         shapeBar.setVisible(false);
@@ -450,8 +325,9 @@ public class PaintController implements ImageModelObserver {
         eyedropperButton.setSelected(true);
     }
 
-    @FXML public void setBrushTool(){
-        shapeBar.setVisible(false);
+    @Override
+    @FXML
+    public void setBrushTool(){
         image.activateBrushTool();
         opacitySlider.setVisible(true);
         opacityLabel.setVisible(true);
@@ -461,6 +337,7 @@ public class PaintController implements ImageModelObserver {
         brushButton.setSelected(true);
     }
 
+    @Override
     @FXML
     public void setEraserTool() {
         shapeBar.setVisible(false);
@@ -474,6 +351,7 @@ public class PaintController implements ImageModelObserver {
         eraserButton.setSelected(true);
     }
 
+    @Override
     @FXML
     public void setSelectTool() {
         shapeBar.setVisible(false);
@@ -482,6 +360,7 @@ public class PaintController implements ImageModelObserver {
         selectButton.setSelected(true);
     }
 
+    @Override
     @FXML
     public void setZoomTool() {
         shapeBar.setVisible(false);
@@ -490,6 +369,7 @@ public class PaintController implements ImageModelObserver {
         zoomButton.setSelected(true);
     }
 
+    @Override
     @FXML
     public void setShapeTool() {
         image.activateShapeTool();
@@ -499,8 +379,9 @@ public class PaintController implements ImageModelObserver {
         shapeBar.setVisible(true);
     }
 
+    @Override
     @FXML
-    public void zoom(boolean setZoom) {
+    public void zoom(Boolean setZoom) {
         double delta = 1.05;
         image.setZoomScaleX(canvas.getScaleX());
         image.setZoomScaleY(canvas.getScaleY());
@@ -524,26 +405,30 @@ public class PaintController implements ImageModelObserver {
         canvas.setScaleX(scaleX);
     }
 
+    @Override
     @FXML
     public void zoomIn() {
         zoom(true);
     }
 
+    @Override
     @FXML
     public void zoomOut() {
         zoom(false);
     }
 
-    public void setZoomPercent(double percent) {
+    private void setZoomPercent(double percent) {
         canvas.setScaleY(percent);
         canvas.setScaleX(percent);
     }
 
+    @Override
     @FXML
     public void zoomFifty() {
         setZoomPercent(0.5);
     }
 
+    @Override
     @FXML
     public void zoomHundred() {
         setZoomPercent(1);
@@ -595,6 +480,56 @@ public class PaintController implements ImageModelObserver {
             image.onPress(x, y);
             mouseDown = true;
         });
+    }
+
+    @Override
+    public ToggleButton getPencilButton() {
+        return pencilButton;
+    }
+
+    @Override
+    public ToggleButton getEraserButton() {
+        return eraserButton;
+    }
+
+    @Override
+    public ToggleButton getEyedropperButton() {
+        return eyedropperButton;
+    }
+
+    @Override
+    public ToggleButton getShapeButton() {
+        return shapeButton;
+    }
+
+    @Override
+    public ToggleButton getBrushButton() {
+        return brushButton;
+    }
+
+    @Override
+    public ToggleButton getFillButton() {
+        return fillButton;
+    }
+
+    @Override
+    public ToggleButton getZoomButton() {
+        return zoomButton;
+    }
+
+    @Override
+    public Button getUndoButton() {
+        return undoButton;
+    }
+
+    @Override
+    public ToggleButton getSelectButton() {
+        return selectButton;
+    }
+
+    @Override
+    public Boolean getMouseDown() {
+        return mouseDown;
     }
 
 }

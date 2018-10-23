@@ -32,6 +32,7 @@ public class ShapeToolTest {
 
         ImageModel im = new ImageModel(limit, limit);
         im.activateShapeTool();
+        im.setSize(1);
         im.setToolShape("Rectangle");
         PaintColor color = new PaintColor(red, green, blue);
         PaintColor white = new PaintColor(255, 255, 255);
@@ -45,7 +46,7 @@ public class ShapeToolTest {
         int maxX = (startPointX > endPointX) ? startPointX : endPointX;
 
         RectangleStrategy rs = new RectangleStrategy();
-        List<Point<Integer>> rectangle = rs.shapeStrategy(new Point<>(startPointX, startPointY), new Point<>(endPointX, endPointY));
+        List<Point<Integer>> rectangle = rs.shapeStrategy(new Point<>(startPointX, startPointY), new Point<>(endPointX, endPointY), 1);
 
         //Checks that the generated rectangle is painted on the image
         for(Point p : rectangle){
@@ -84,6 +85,7 @@ public class ShapeToolTest {
 
         ImageModel im = new ImageModel(limit, limit);
         im.activateShapeTool();
+        im.setSize(1);
         im.setToolShape("Triangle");
         PaintColor color = new PaintColor(red, green, blue);
         PaintColor white = new PaintColor(255, 255, 255);
@@ -97,7 +99,7 @@ public class ShapeToolTest {
         int maxX = (startPointX > endPointX) ? startPointX : endPointX;
 
         TriangleStrategy ts = new TriangleStrategy();
-        List<Point<Integer>> triangle = ts.shapeStrategy(new Point<>(startPointX, startPointY), new Point<>(endPointX, endPointY));
+        List<Point<Integer>> triangle = ts.shapeStrategy(new Point<>(startPointX, startPointY), new Point<>(endPointX, endPointY), 1);
 
         //Checks that the generated triangle is painted on the image
         for(Point p : triangle){
@@ -137,6 +139,7 @@ public class ShapeToolTest {
 
         ImageModel im = new ImageModel(limit, limit);
         im.activateShapeTool();
+        im.setSize(1);
         im.setToolShape("Line");
         PaintColor color = new PaintColor(red, green, blue);
         PaintColor white = new PaintColor(255, 255, 255);
@@ -150,7 +153,7 @@ public class ShapeToolTest {
         int maxX = (startPointX > endPointX) ? startPointX : endPointX;
 
         StraightLineStrategy sts = new StraightLineStrategy();
-        List<Point<Integer>> line = sts.shapeStrategy(new Point<>(startPointX, startPointY), new Point<>(endPointX, endPointY));
+        List<Point<Integer>> line = sts.shapeStrategy(new Point<>(startPointX, startPointY), new Point<>(endPointX, endPointY), 1);
 
         //Checks that the generated line is painted on the image
         for(Point p : line){
@@ -188,6 +191,7 @@ public class ShapeToolTest {
 
         ImageModel im = new ImageModel(limit, limit);
         im.activateShapeTool();
+        im.setSize(1);
         im.setToolShape("Circle");
         PaintColor color = new PaintColor(red, green, blue);
         PaintColor white = new PaintColor(255, 255, 255);
@@ -201,7 +205,7 @@ public class ShapeToolTest {
         int maxX = (startPointX > endPointX) ? startPointX : endPointX;
 
         EllipseStrategy es = new EllipseStrategy();
-        List<Point<Integer>> ellipse = es.shapeStrategy(new Point<>(startPointX, startPointY), new Point<>(endPointX, endPointY));
+        List<Point<Integer>> ellipse = es.shapeStrategy(new Point<>(startPointX, startPointY), new Point<>(endPointX, endPointY), 1);
 
         //Checks that the generated ellipse is painted on the image
         for(Point p : ellipse){

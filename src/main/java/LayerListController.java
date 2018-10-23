@@ -1,3 +1,5 @@
+import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import model.ImageModel;
 import model.ImageModelObserver;
 import model.pixel.PaintColor;
@@ -18,7 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LayerListController extends StackPane implements ImageModelObserver, LayerObserver {
+public class LayerListController extends StackPane implements ImageModelObserver, LayerItemObserver, ILayerListController {
 
     @FXML
     private StackPane frontPane;
@@ -28,6 +30,9 @@ public class LayerListController extends StackPane implements ImageModelObserver
 
     @FXML
     private FlowPane layerView;
+
+    @FXML
+    private Button deleteLayerButton;
 
     private List<Node> layerViewList;
     private ImageModel image;
@@ -49,8 +54,8 @@ public class LayerListController extends StackPane implements ImageModelObserver
         layerViewList = layerView.getChildren();
 
         frontPane.addEventFilter(MouseDragEvent.MOUSE_DRAG_RELEASED, e -> {
-            if (e.getGestureSource().getClass().equals(LayerItem.class)) {
-                LayerItem source = (LayerItem) e.getGestureSource();
+            if (e.getGestureSource().getClass().equals(LayerItemController.class)) {
+                LayerItemController source = (LayerItemController) e.getGestureSource();
 
                 if (frontPane.getChildren().contains(dragImage))
                     frontPane.getChildren().remove(dragImage);
@@ -59,8 +64,8 @@ public class LayerListController extends StackPane implements ImageModelObserver
         });
 
         frontPane.addEventFilter(MouseDragEvent.MOUSE_DRAG_EXITED, e -> {
-            if (e.getGestureSource().getClass().equals(LayerItem.class)) {
-                LayerItem source = (LayerItem) e.getGestureSource();
+            if (e.getGestureSource().getClass().equals(LayerItemController.class)) {
+                LayerItemController source = (LayerItemController) e.getGestureSource();
 
                 source.setCursor(Cursor.HAND);
                 e.consume();
@@ -68,8 +73,8 @@ public class LayerListController extends StackPane implements ImageModelObserver
         });
 
         frontPane.addEventFilter(MouseDragEvent.MOUSE_DRAG_ENTERED, e -> {
-            if (e.getGestureSource().getClass().equals(LayerItem.class)) {
-                LayerItem source = (LayerItem) e.getGestureSource();
+            if (e.getGestureSource().getClass().equals(LayerItemController.class)) {
+                LayerItemController source = (LayerItemController) e.getGestureSource();
 
                 source.setCursor(Cursor.CLOSED_HAND);
                 e.consume();
@@ -108,10 +113,10 @@ public class LayerListController extends StackPane implements ImageModelObserver
                 continue;
             }
 
-            boolean itemExists = false;
+            Boolean itemExists = false;
             for (Node n : tempList) {
-                if (n.getClass().equals(LayerItem.class)) {
-                    LayerItem l1 = (LayerItem) n;
+                if (n.getClass().equals(LayerItemController.class)) {
+                    LayerItemController l1 = (LayerItemController) n;
 
                     // If the layer and corresponding layer-item exists, add it to the layer-item list.
                     if (p.equals(l1.getLayer())) {
@@ -133,10 +138,10 @@ public class LayerListController extends StackPane implements ImageModelObserver
      Only used for creating a layer-item for an existing layer in the model.
       */
     private void createLayerItem(PaintLayer layer, String layerName, int index) {
-        LayerItem layerItem = new LayerItem(layerName, layer);
+        ILayerItemController layerItem = new LayerItemController(layerName, layer);
         layerItem.addObserver(this);
         setLayerDragEvents(layerItem);
-        layerViewList.add(index, layerItem);
+        layerViewList.add(index, layerItem.getLayerItemPane());
     }
 
     private void createLayer(PaintColor bgColor, String name) {
@@ -146,6 +151,7 @@ public class LayerListController extends StackPane implements ImageModelObserver
     /*
      New layer button creates a transparent layer with a unique name
       */
+    @Override
     @FXML
     public void newLayerAction() {
         createLayer(PaintColor.blank, "Layer " + image.getNewLayerCount());
@@ -154,6 +160,7 @@ public class LayerListController extends StackPane implements ImageModelObserver
     /*
      Delete layer button deletes the selected layer and selects a new layer (or none if there are no layers)
       */
+    @Override
     @FXML
     public void deleteLayerAction() {
         if (!layerViewList.isEmpty()) {
@@ -166,8 +173,8 @@ public class LayerListController extends StackPane implements ImageModelObserver
 
     private void deselectLayers() {
         for (Node n : layerViewList) {
-            if (n.getClass().equals(LayerItem.class)) {
-                LayerItem i = (LayerItem) n;
+            if (n.getClass().equals(LayerItemController.class)) {
+                LayerItemController i = (LayerItemController) n;
                 if (i.isSelected()) {
                     i.setDeselected();
                 }
@@ -175,15 +182,15 @@ public class LayerListController extends StackPane implements ImageModelObserver
         }
     }
 
-    private void selectLayer(LayerItem layer) {
+    private void selectLayer(LayerItemController layer) {
         deselectLayers();
         layer.setSelected();
     }
 
     private int indexOfSelectedItem() {
         for (Node n : layerViewList) {
-            if (n.getClass().equals(LayerItem.class)) {
-                LayerItem i = (LayerItem) n;
+            if (n.getClass().equals(LayerItemController.class)) {
+                LayerItemController i = (LayerItemController) n;
 
                 if (i.isSelected()) {
                     return layerViewList.indexOf(i);
@@ -215,8 +222,8 @@ public class LayerListController extends StackPane implements ImageModelObserver
 
     private void selectActiveLayer() {
         for (Node n : layerViewList) {
-            if (n.getClass().equals(LayerItem.class)) {
-                LayerItem l1 = (LayerItem) n;
+            if (n.getClass().equals(LayerItemController.class)) {
+                LayerItemController l1 = (LayerItemController) n;
 
                 if (image.getActiveLayer().equals(l1.getLayer())) {
                     selectLayer(l1);
@@ -226,12 +233,14 @@ public class LayerListController extends StackPane implements ImageModelObserver
         }
     }
 
-    private void setLayerDragEvents(LayerItem layerItem) {
+    private void setLayerDragEvents(ILayerItemController lI) {
+        AnchorPane layerItemPane = lI.getLayerItemPane();
+
         // Begin drag event when dragging a layer.
-        layerItem.setOnDragDetected(e -> {
-            layerItem.startFullDrag();
-            layerItem.setCursor(Cursor.CLOSED_HAND);
-            dragImage = layerItem.getSnapShot(1.25);
+        layerItemPane.setOnDragDetected(e -> {
+            layerItemPane.startFullDrag();
+            layerItemPane.setCursor(Cursor.CLOSED_HAND);
+            dragImage = lI.getSnapShot(1.25);
             frontPane.getChildren().add(dragImage);
             mouseY = e.getSceneY();
             dragImage.setManaged(false);
@@ -241,8 +250,8 @@ public class LayerListController extends StackPane implements ImageModelObserver
         });
 
         // Shows the image of the dragged layer.
-        layerItem.setOnMouseDragged(e -> {
-            if (e.getSource().getClass().equals(LayerItem.class)) {
+        layerItemPane.setOnMouseDragged(e -> {
+            if (e.getSource().getClass().equals(LayerItemController.class)) {
                 double deltaY = e.getSceneY() - mouseY;
                 if (frontPane.getChildren().contains(dragImage))
                     dragImage.setTranslateY(dragImage.getTranslateY() + deltaY);
@@ -251,19 +260,19 @@ public class LayerListController extends StackPane implements ImageModelObserver
         });
 
         // When mouse drag enters a layer, show highlighted panes (top or bottom of a layer) which indicates locations you can move the dragged layer to.
-        layerItem.addEventFilter(MouseDragEvent.MOUSE_DRAG_ENTERED, e -> {
-            if (!e.getGestureSource().equals(layerItem)) {
-                if (e.getGestureSource().getClass().equals(LayerItem.class)) {
-                    LayerItem l = (LayerItem) e.getGestureSource();
+        layerItemPane.addEventFilter(MouseDragEvent.MOUSE_DRAG_ENTERED, e -> {
+            if (!e.getGestureSource().equals(layerItemPane)) {
+                if (e.getGestureSource().getClass().equals(LayerItemController.class)) {
+                    LayerItemController l = (LayerItemController) e.getGestureSource();
 
-                    if (layerViewList.indexOf(l) == layerViewList.indexOf(layerItem) + 1) {
-                        layerItem.getTopBorderPane().setMouseTransparent(false);
+                    if (layerViewList.indexOf(l) == layerViewList.indexOf(layerItemPane) + 1) {
+                        lI.getTopBorderPane().setMouseTransparent(false);
                     }
-                    else if (layerViewList.indexOf(l) == layerViewList.indexOf(layerItem) - 1) {
-                        layerItem.getBottomBorderPane().setMouseTransparent(false);
+                    else if (layerViewList.indexOf(l) == layerViewList.indexOf(layerItemPane) - 1) {
+                        lI.getBottomBorderPane().setMouseTransparent(false);
                     } else {
-                        layerItem.getTopBorderPane().setMouseTransparent(false);
-                        layerItem.getBottomBorderPane().setMouseTransparent(false);
+                        lI.getTopBorderPane().setMouseTransparent(false);
+                        lI.getBottomBorderPane().setMouseTransparent(false);
                     }
                 }
 
@@ -272,35 +281,40 @@ public class LayerListController extends StackPane implements ImageModelObserver
         });
 
         // Hide highlighted panes when mouse drag exits layer.
-        layerItem.addEventFilter(MouseDragEvent.MOUSE_DRAG_EXITED, e -> {
-            if (!e.getGestureSource().equals(layerItem)) {
-                if (e.getGestureSource().getClass().equals(LayerItem.class)) {
-                    layerItem.getBottomBorderPane().setMouseTransparent(true);
-                    layerItem.getTopBorderPane().setMouseTransparent(true);
+        layerItemPane.addEventFilter(MouseDragEvent.MOUSE_DRAG_EXITED, e -> {
+            if (!e.getGestureSource().equals(layerItemPane)) {
+                if (e.getGestureSource().getClass().equals(LayerItemController.class)) {
+                    lI.getBottomBorderPane().setMouseTransparent(true);
+                    lI.getTopBorderPane().setMouseTransparent(true);
                 }
             }
             e.consume();
         });
 
         // If mouse drag releases over a top highlighted pane, move the dragged layer to the location.
-        layerItem.getTopBorderPane().addEventFilter(MouseDragEvent.MOUSE_DRAG_RELEASED, e -> {
-            if (e.getGestureSource().getClass().equals(LayerItem.class)) {
-                LayerItem source = (LayerItem) e.getGestureSource();
+        lI.getTopBorderPane().addEventFilter(MouseDragEvent.MOUSE_DRAG_RELEASED, e -> {
+            if (e.getGestureSource().getClass().equals(LayerItemController.class)) {
+                LayerItemController source = (LayerItemController) e.getGestureSource();
 
-                image.moveLayerAbove(layerViewList.indexOf(layerItem), source.getLayer());
+                image.moveLayerAbove(layerViewList.indexOf(layerItemPane), source.getLayer());
             }
             e.consume();
         });
 
         // If mouse drag releases over a bottom highlighted pane, move the dragged layer to the location.
-        layerItem.getBottomBorderPane().addEventFilter(MouseDragEvent.MOUSE_DRAG_RELEASED, e -> {
-            if (e.getGestureSource().getClass().equals(LayerItem.class)) {
-                LayerItem source = (LayerItem) e.getGestureSource();
+        lI.getBottomBorderPane().addEventFilter(MouseDragEvent.MOUSE_DRAG_RELEASED, e -> {
+            if (e.getGestureSource().getClass().equals(LayerItemController.class)) {
+                LayerItemController source = (LayerItemController) e.getGestureSource();
 
-                image.moveLayerUnder(layerViewList.indexOf(layerItem), source.getLayer());
+                image.moveLayerUnder(layerViewList.indexOf(layerItemPane), source.getLayer());
             }
             e.consume();
         });
+    }
+
+    @Override
+    public Button getDeleteLayerButton(){
+        return deleteLayerButton;
     }
 
 }

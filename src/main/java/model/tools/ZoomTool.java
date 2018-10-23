@@ -18,5 +18,4 @@ public class ZoomTool implements ITool {
 
     }
 
-
 }

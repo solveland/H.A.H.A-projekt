@@ -75,7 +75,6 @@ public class BucketFillTool implements ITool {
        }
     }
 
-
     public void updateSettings(ToolSettings ts){
         this.newColor = ts.getPaintColor();
     }

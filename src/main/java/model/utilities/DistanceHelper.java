@@ -11,7 +11,7 @@ USES: Point
 
 public class DistanceHelper {
 
-    public static double dist2(Point<Double> p1, Point<Double> p2){
+    private static double dist2(Point<Double> p1, Point<Double> p2){
         return (p1.getX() - p2.getX())*(p1.getX() - p2.getX()) + (p1.getY() - p2.getY())*(p1.getY() - p2.getY());
     }
 

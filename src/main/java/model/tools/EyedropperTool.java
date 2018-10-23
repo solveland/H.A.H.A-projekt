@@ -21,4 +21,5 @@ public class EyedropperTool implements ITool {
         extractedColor = image.getPixelColor(x,y);
         image.setColor(extractedColor);
     }
+
 }

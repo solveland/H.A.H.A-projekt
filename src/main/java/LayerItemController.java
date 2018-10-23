@@ -16,11 +16,10 @@ import model.PaintLayer;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LayerItem extends AnchorPane implements Serializable {
+public class LayerItemController extends AnchorPane implements ILayerItemController {
 
     @FXML
     private AnchorPane layerItemPane;
@@ -41,17 +40,18 @@ public class LayerItem extends AnchorPane implements Serializable {
     private Pane topBorderPane;
 
     private PaintLayer layer;
-    private List<LayerObserver> observers;
-    private boolean selected;
+    private List<LayerItemObserver> observers;
+    private Boolean selected;
 
     private String selectedColor;
     private String originalColor;
     private String borderColor;
 
-    public LayerItem(String name, PaintLayer layer)
+    public LayerItemController(String name, PaintLayer layer)
     {
         this.layer = layer;
         observers = new ArrayList<>();
+        selected = false;
 
         this.setCursor(Cursor.HAND);
 
@@ -99,9 +99,10 @@ public class LayerItem extends AnchorPane implements Serializable {
         setBorderEvents();
     }
 
+    @Override
     @FXML
     public void onSelectLayer() {
-        for (LayerObserver o : observers)
+        for (LayerItemObserver o : observers)
         {
             o.layerUpdate(layer, "selectLayer");
         }
@@ -109,45 +110,45 @@ public class LayerItem extends AnchorPane implements Serializable {
         setSelected();
     }
 
+    @Override
     @FXML
     public void onToggleVisible() {
-        for (LayerObserver o : observers) {
+        for (LayerItemObserver o : observers) {
             o.layerUpdate(layer, "toggleLayer");
         }
     }
 
-    public void addObserver(LayerObserver observer) {
+    @Override
+    public void addObserver(LayerItemObserver observer) {
         observers.add(observer);
     }
 
-    public boolean isSelected() { return selected; }
+    @Override
+    public Boolean isSelected() { return selected; }
 
+    @Override
     public void setSelected() {
         this.selected = true;
         layerItemPane.setStyle(selectedColor);
     }
 
+    @Override
     public void setDeselected() {
         this.selected = false;
         layerItemPane.setStyle(originalColor);
     }
 
-    public String getName(){
-        return layerName.getText();
-    }
-
+    @Override
     public PaintLayer getLayer() {
         return layer;
     }
 
-    public AnchorPane getLayerItemPane() {
-        return layerItemPane;
-    }
-
+    @Override
     public Pane getTopBorderPane() {
         return topBorderPane;
     }
 
+    @Override
     public Pane getBottomBorderPane() {
         return bottomBorderPane;
     }
@@ -174,34 +175,35 @@ public class LayerItem extends AnchorPane implements Serializable {
      */
     private void setBorderEvents() {
         topBorderPane.addEventFilter(MouseDragEvent.MOUSE_DRAG_ENTERED, e -> {
-            if (e.getGestureSource().getClass().equals(LayerItem.class)) {
+            if (e.getGestureSource().getClass().equals(LayerItemController.class)) {
                 setBorder("Top");
                 e.consume();
             }
         });
 
         topBorderPane.addEventFilter(MouseDragEvent.MOUSE_DRAG_EXITED, e -> {
-            if (e.getGestureSource().getClass().equals(LayerItem.class)) {
+            if (e.getGestureSource().getClass().equals(LayerItemController.class)) {
                 setBorder("noBorder");
                 e.consume();
             }
         });
 
         bottomBorderPane.addEventFilter(MouseDragEvent.MOUSE_DRAG_ENTERED, e -> {
-            if (e.getGestureSource().getClass().equals(LayerItem.class)) {
+            if (e.getGestureSource().getClass().equals(LayerItemController.class)) {
                 setBorder("Bottom");
                 e.consume();
             }
         });
 
         bottomBorderPane.addEventFilter(MouseDragEvent.MOUSE_DRAG_EXITED, e -> {
-            if (e.getGestureSource().getClass().equals(LayerItem.class)) {
+            if (e.getGestureSource().getClass().equals(LayerItemController.class)) {
                 setBorder("noBorder");
                 e.consume();
             }
         });
     }
 
+    @Override
     public ImageView getSnapShot(double scale) {
         Bounds bounds = layerItemPane.getLayoutBounds();
 
@@ -219,6 +221,11 @@ public class LayerItem extends AnchorPane implements Serializable {
         view.setMouseTransparent(true);
 
         return view;
+    }
+
+    @Override
+    public AnchorPane getLayerItemPane() {
+        return layerItemPane;
     }
 
 }
