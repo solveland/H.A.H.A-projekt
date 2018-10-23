@@ -8,7 +8,7 @@ import java.util.List;
 /*
 AUTHOR: Anthony Tao, Henrik Tao, Hampus Ekberg
 RESPONSIBILITY: Composition of two lists of pixels, one list is pixels that need to be rendered as an overlay, the other list is pixels that need to be cleared from the rendered image
-USED BY: ImageModel, PaintView, PaintController, LayerListController
+USED BY: ImageModel, PaintView, controller.PaintController, controller.LayerListController
 USES: Pixel
  */
 

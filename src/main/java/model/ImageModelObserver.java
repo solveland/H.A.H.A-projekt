@@ -7,7 +7,7 @@ import java.util.List;
 /*
 AUTHOR: Anthony Tao, Henrik Tao
 RESPONSIBILITY: Interface for the view and controller to listen to the model
-USED BY: PaintController, PaintView
+USED BY: controller.PaintController, PaintView
 USES: PaintLayer, PaintColor, PaintOverlay
  */
 

@@ -3,7 +3,7 @@ package services;
 /*
 AUTHOR: Hampus Ekberg
 RESPONSIBILITY: Factory for services
-USED BY: PaintController
+USED BY: controller.PaintController
 USES: ImageSaveLoad
  */
 

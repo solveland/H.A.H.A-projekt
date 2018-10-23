@@ -1,3 +1,6 @@
+package controller;
+
+
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import model.ImageModel;
@@ -41,7 +44,7 @@ public class LayerListController extends StackPane implements ImageModelObserver
     private double mouseY;
 
     public LayerListController(ImageModel image) {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("LayerList.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/LayerList.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
         try {

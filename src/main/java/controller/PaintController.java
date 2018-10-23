@@ -1,11 +1,12 @@
+package controller;
 
+import controller.IPaintController;
+import controller.ShortcutController;
 import services.ServiceFactory;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.ImageCursor;
-import javafx.scene.image.Image;
 import javafx.scene.input.*;
 
 import model.ImageModel;
@@ -183,7 +184,7 @@ public class PaintController implements ImageModelObserver, IPaintController {
         sendColorState();
         setBrushTool();
 
-        //Deselect selected area - rightclick
+        //Deselect selected area - right click
         deselectItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {

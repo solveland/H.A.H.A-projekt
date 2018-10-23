@@ -14,7 +14,7 @@ import java.util.List;
 /*
 AUTHOR: Hampus Ekberg
 RESPONSIBILITY: Saves and Loads images to the program
-USED BY: PaintController
+USED BY: controller.PaintController
 USES: Javafx, PaintLayer, PaintColor
  */
 

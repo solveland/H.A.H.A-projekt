@@ -11,7 +11,7 @@ import java.util.List;
 /*
 AUTHOR: Henrik Tao, Anthony Tao, August Sölveland, Hampus Ekberg
 RESPONSIBILITY: A broad connection point between the different parts of the model
-USED BY: PaintController, LayerListController, Main
+USED BY: controller.PaintController, controller.LayerListController, Main
 USES: Most other classes in the model package
  */
 
@@ -146,10 +146,6 @@ public class ImageModel implements IModel{
         return activeTool;
     }
 
-    public ShapeTool getShapeTool() {
-        return shapeTool;
-    }
-
     public ZoomTool getZoomTool(){return zoomTool;}
 
     public void setSize(int size){
@@ -237,10 +233,6 @@ public class ImageModel implements IModel{
     @Override
     public void addToSelectOverlay(List<Pixel> pixelList) {
         selectOverlay.setNewOverlay(pixelList);
-    }
-
-    public void pushToUndoStack(UndoBuffer buffer){
-        undoBufferStack.push(buffer);
     }
 
 

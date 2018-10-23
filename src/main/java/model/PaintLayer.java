@@ -6,7 +6,7 @@ import model.pixel.Point;
 /*
 AUTHOR: Anthony Tao, Henrik Tao, Hampus Ekberg, August Sölveland
 RESPONSIBILITY: Defines a layer of an image
-USED BY: ImageModel, ImageSaveLoad, LayerItem, LayerListController, LayerObserver, PaintController, PaintView
+USED BY: ImageModel, ImageSaveLoad, LayerItem, controller.LayerListController, LayerObserver, controller.PaintController, PaintView
 USES: PaintColor, Point
  */
 

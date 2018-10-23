@@ -1,3 +1,5 @@
+package controller;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -55,7 +57,7 @@ public class LayerItemController extends AnchorPane implements ILayerItemControl
 
         this.setCursor(Cursor.HAND);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("LayerLook.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/LayerLook.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
         try {
