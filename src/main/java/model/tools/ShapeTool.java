@@ -15,17 +15,20 @@ public class ShapeTool implements ITool {
     private Point<Integer> startPoint;
     private PaintColor color;
     private IShapeStrategy strategy;
+    private int size;
 
 
     public ShapeTool() {
         color = new PaintColor(255, 255, 255);
         setEllipseStrategy();
+        this.size = 1;
 
     }
 
 
     @Override
     public void updateSettings(ToolSettings ts) {
+        this.size = ts.getSize();
         this.color = ts.getPaintColor();
         if(ts.getShape() == Shape.TRIANGLE){
             setTriangleStrategy();
@@ -33,15 +36,15 @@ public class ShapeTool implements ITool {
             setRectangleStrategy();
         }else if (ts.getShape() == Shape.LINE){
             setStraightLineStrategy();
-        }else if(ts.getShape() == Shape.CIRCLE){
-
+        }else if(ts.getShape() == Shape.ELLIPSE){
+            setEllipseStrategy();
         }
 
     }
 
     @Override
     public void onDrag(int x, int y, IModel imageModel) {
-        List<Point<Integer>> pointList = strategy.shapeStrategy(startPoint, new Point<>(x, y));
+        List<Point<Integer>> pointList = strategy.shapeStrategy(startPoint, new Point<>(x, y), this.size);
         removeOutsidePoints(pointList,imageModel);
         addToOverlay(imageModel, pointList);
         imageModel.renderOverlay();
@@ -55,7 +58,7 @@ public class ShapeTool implements ITool {
     @Override
     public void onRelease(int x, int y, IModel imageModel) {
         imageModel.openNewUndoBuffer();
-        List<Point<Integer>> pointList = strategy.shapeStrategy(startPoint, new Point<>(x, y));
+        List<Point<Integer>> pointList = strategy.shapeStrategy(startPoint, new Point<>(x, y), this.size);
         removeOutsidePoints(pointList,imageModel);
         addShapeToImage(imageModel, pointList);
         imageModel.renderOverlay();

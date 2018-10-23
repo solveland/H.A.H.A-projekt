@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface IShapeStrategy {
 
-    List<Point<Integer>> shapeStrategy(Point<Integer> startPoint, Point<Integer> endPoint);
+    List<Point<Integer>> shapeStrategy(Point<Integer> startPoint, Point<Integer> endPoint, int size);
 
 }

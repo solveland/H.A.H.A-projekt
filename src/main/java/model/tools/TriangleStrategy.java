@@ -18,7 +18,7 @@ public class TriangleStrategy implements IShapeStrategy{
      */
 
     @Override
-    public List<Point<Integer>> shapeStrategy(Point<Integer> startPoint, Point<Integer> endPoint) {
+    public List<Point<Integer>> shapeStrategy(Point<Integer> startPoint, Point<Integer> endPoint, int size) {
         List<Point<Integer>> result = new ArrayList<>();
         int bottomY = (endPoint.getY() < startPoint.getY()) ? endPoint.getY() : startPoint.getY();
         int topY = (endPoint.getY() > startPoint.getY()) ? endPoint.getY() : startPoint.getY();
@@ -26,7 +26,9 @@ public class TriangleStrategy implements IShapeStrategy{
         int maxX = (startPoint.getX() > endPoint.getX()) ? startPoint.getX() : endPoint.getX();
 
         for(int i = minX + 1; i < maxX; i++){
-            result.add(new Point<>(i, topY));
+            for(int j = 0; j < size; j++) {
+                result.add(new Point<>(i, topY - j));
+            }
         }
 
         int dy2 = 0;
@@ -44,8 +46,15 @@ public class TriangleStrategy implements IShapeStrategy{
         int x = minX;
         int y = topY;
         for(int i=0; i<=big; i++){
-            result.add(new Point<>(x, y));
-            result.add(new Point<>(maxX - (x-minX), y));
+            if(i != big) {
+                for (int j = 0; j < size; j++) {
+                    result.add(new Point<>(x + j, y));
+                    result.add(new Point<>(maxX - (x - minX) - j, y));
+                }
+            }else{
+                result.add(new Point<>(x, y));
+                result.add(new Point<>(maxX - (x - minX), y));
+            }
             numerator += small;
             if(!(numerator < big)){
                 numerator -= big;

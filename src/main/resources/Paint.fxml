@@ -178,6 +178,17 @@
                   <Insets left="25.0" />
                </padding>
             </ToolBar>
+            <ToolBar fx:id="shapeBar" layoutY="26.0" prefHeight="37.0" prefWidth="672.0" style="-fx-spacing: 10px;" styleClass="top-tool-bar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+               <items>
+                  <Label text="Size:" />
+                  <ComboBox fx:id="sizeBox1" layoutX="103.0" layoutY="15.0" prefHeight="27.0" prefWidth="60.0" />
+                  <Label layoutX="10.0" layoutY="16.0" text="Shape:" />
+                  <ComboBox fx:id="shapeBox1" prefHeight="27.0" prefWidth="60.0" />
+               </items>
+               <padding>
+                  <Insets left="25.0" />
+               </padding>
+            </ToolBar>
          </children>
       </AnchorPane>
     </top>

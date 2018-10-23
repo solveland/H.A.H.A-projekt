@@ -68,6 +68,16 @@ public class PaintController implements ImageModelObserver {
     @FXML
     private Slider hardnessSlider;
 
+    //shapeToolbar
+    @FXML
+    private ToolBar shapeBar;
+
+    @FXML
+    private ComboBox<String> sizeBox1;
+
+    @FXML
+    private ComboBox<String> shapeBox1;
+
 
     //BUTTONS
     ToggleGroup tg;
@@ -148,6 +158,8 @@ public class PaintController implements ImageModelObserver {
             sendColorState();
         });
 
+
+        //brushBar
         sizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 5));
         sizeSpinner.setEditable(true);
         sizeSpinner.valueProperty().addListener((obs, oldvalue, newvalue) -> image.setSize(newvalue));
@@ -156,6 +168,15 @@ public class PaintController implements ImageModelObserver {
         shapeBox.getItems().addAll("Circle", "Square");
         view.populateShapeComboBox(shapeBox);
         shapeBox.valueProperty().addListener((obs, oldvalue, newvalue) -> image.setToolShape(newvalue));
+
+        //shapeBar
+        shapeBox1.getItems().addAll("Line", "Rectangle", "Triangle", "Ellipse");
+        sizeBox1.getItems().addAll("Small", "Medium", "Large");
+        view.populateSizeComboBox(sizeBox1);
+        view.populateShapeComboBox1(shapeBox1);
+        shapeBox1.valueProperty().addListener((obs, oldvalue, newvalue) -> image.setToolShape(newvalue));
+        sizeBox1.valueProperty().addListener((obs, oldvalue, newvalue) -> image.setSize(newvalue));
+        shapeBar.setVisible(false);
 
         sendColorState();
 
@@ -402,6 +423,7 @@ public class PaintController implements ImageModelObserver {
 
     @FXML
     public void setPencil() {
+        shapeBar.setVisible(false);
         image.activatePencilTool();
         opacitySlider.setVisible(true);
         opacityLabel.setVisible(true);
@@ -413,6 +435,7 @@ public class PaintController implements ImageModelObserver {
 
     @FXML
     public void setFillTool() {
+        shapeBar.setVisible(false);
         image.activateFillTool();
         brushBar.setVisible(false);
         opacitySlider.setValue(1);
@@ -421,12 +444,14 @@ public class PaintController implements ImageModelObserver {
 
     @FXML
     public void setEyedropperTool(){
+        shapeBar.setVisible(false);
         image.activateEyedropperTool();
         brushBar.setVisible(false);
         eyedropperButton.setSelected(true);
     }
 
     @FXML public void setBrushTool(){
+        shapeBar.setVisible(false);
         image.activateBrushTool();
         opacitySlider.setVisible(true);
         opacityLabel.setVisible(true);
@@ -438,7 +463,7 @@ public class PaintController implements ImageModelObserver {
 
     @FXML
     public void setEraserTool() {
-
+        shapeBar.setVisible(false);
         image.activateEraserTool();
         brushBar.setVisible(true);
         opacitySlider.setVisible(false);
@@ -451,6 +476,7 @@ public class PaintController implements ImageModelObserver {
 
     @FXML
     public void setSelectTool() {
+        shapeBar.setVisible(false);
         image.activateSelectTool();
         brushBar.setVisible(false);
         selectButton.setSelected(true);
@@ -458,6 +484,7 @@ public class PaintController implements ImageModelObserver {
 
     @FXML
     public void setZoomTool() {
+        shapeBar.setVisible(false);
         image.activateZoomTool();
         brushBar.setVisible(false);
         zoomButton.setSelected(true);
@@ -469,6 +496,7 @@ public class PaintController implements ImageModelObserver {
         brushBar.setVisible(false);
         opacitySlider.setValue(1);
         shapeButton.setSelected(true);
+        shapeBar.setVisible(true);
     }
 
     @FXML

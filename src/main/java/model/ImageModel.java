@@ -156,6 +156,22 @@ public class ImageModel implements IModel{
         ts.setSize(size);
         activeTool.updateSettings(ts);
     }
+    public void setSize(String s){
+        switch (s) {
+            case "Small":
+                ts.setSize(1);
+                break;
+            case "Medium":
+                ts.setSize(2);
+                break;
+            case "Large":
+                ts.setSize(3);
+                break;
+            default:
+                ts.setSize(1);
+        }
+        activeTool.updateSettings(ts);
+    }
 
     public void setColor(PaintColor color){
         ts.setColor(color);
@@ -178,6 +194,9 @@ public class ImageModel implements IModel{
         switch(s) {
             case "Circle":
                 ts.setCircle();
+                break;
+            case "Ellipse":
+                ts.setEllipse();
                 break;
             case "Square":
                 ts.setSquare();

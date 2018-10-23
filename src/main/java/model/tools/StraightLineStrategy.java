@@ -19,7 +19,7 @@ public class StraightLineStrategy implements IShapeStrategy {
      * @return sum of all points on the line
      */
     @Override
-    public List<Point<Integer>> shapeStrategy(Point<Integer> startPoint, Point<Integer> endPoint) {
+    public List<Point<Integer>> shapeStrategy(Point<Integer> startPoint, Point<Integer> endPoint, int size) {
         List<Point<Integer>> result = new ArrayList<>();
         int w = endPoint.getX() - startPoint.getX();
         int h = endPoint.getY() - startPoint.getY();
@@ -38,9 +38,11 @@ public class StraightLineStrategy implements IShapeStrategy {
         else if (h > 0){
             dy1 = 1;
         }
+        int sizer = 1;
         int big = Math.abs(w);
         int small = Math.abs(h);
         if(!(big > small)){
+            sizer = 0;
             int temp = big;
             big = small;
             small = temp;
@@ -52,19 +54,22 @@ public class StraightLineStrategy implements IShapeStrategy {
         int numerator = big >> 1;
         int x = startPoint.getX();
         int y = startPoint.getY();
-        for(int i=0; i<=big; i++){
-            result.add(new Point<>(x, y));
+        for(int i=0; i<=big; i++) {
+            for (int j = 0; j < size; j++) {
+                if(sizer == 1){ result.add(new Point<>(x, y + j)); }
+                else{ result.add(new Point<>(x + j, y)); }
+            }
+
             numerator += small;
-            if(!(numerator < big)){
+            if (!(numerator < big)) {
                 numerator -= big;
                 x += dx1;
                 y += dy1;
-            }else{
+            } else {
                 x += dx2;
                 y += dy2;
 
             }
-
         }
         return result;
     }

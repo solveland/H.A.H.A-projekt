@@ -37,6 +37,7 @@ public class ToolSettings {
     public void setCircle(){
         this.shape = Shape.CIRCLE;
     }
+    public void setEllipse(){ this.shape = Shape.ELLIPSE; }
 
 
 
