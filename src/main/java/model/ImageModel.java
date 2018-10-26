@@ -152,19 +152,19 @@ public class ImageModel implements IModel{
         ts.setSize(size);
         activeTool.updateSettings(ts);
     }
-    public void setSize(String s){
+    public void setShapeSize(String s){
         switch (s) {
             case "Small":
-                ts.setSize(1);
+                ts.setShapeSize(1);
                 break;
             case "Medium":
-                ts.setSize(2);
+                ts.setShapeSize(2);
                 break;
             case "Large":
-                ts.setSize(3);
+                ts.setShapeSize(3);
                 break;
             default:
-                ts.setSize(1);
+                ts.setShapeSize(1);
         }
         activeTool.updateSettings(ts);
     }

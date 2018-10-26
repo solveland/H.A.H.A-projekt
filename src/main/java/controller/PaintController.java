@@ -165,7 +165,7 @@ public class PaintController implements ImageModelObserver, IPaintController {
         view.populateSizeComboBox(sizeBox1);
         view.populateShapeComboBox1(shapeBox1);
         shapeBox1.valueProperty().addListener((obs, oldvalue, newvalue) -> image.setToolShape(newvalue));
-        sizeBox1.valueProperty().addListener((obs, oldvalue, newvalue) -> image.setSize(newvalue));
+        sizeBox1.valueProperty().addListener((obs, oldvalue, newvalue) -> image.setShapeSize(newvalue));
         shapeBar.setVisible(false);
 
         sendColorState();
@@ -329,6 +329,7 @@ public class PaintController implements ImageModelObserver, IPaintController {
     @Override
     @FXML
     public void setBrushTool(){
+        shapeBar.setVisible(false);
         image.activateBrushTool();
         opacitySlider.setVisible(true);
         opacityLabel.setVisible(true);

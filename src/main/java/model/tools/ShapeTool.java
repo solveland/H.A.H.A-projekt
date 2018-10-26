@@ -28,7 +28,7 @@ public class ShapeTool implements ITool {
 
     @Override
     public void updateSettings(ToolSettings ts) {
-        this.size = ts.getSize();
+        this.size = ts.getShapeSize();
         this.color = ts.getPaintColor();
         if(ts.getShape() == Shape.TRIANGLE){
             setTriangleStrategy();
