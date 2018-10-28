@@ -21,9 +21,9 @@ public class ZoomTool implements ITool {
     }
     public void onRelease(int x, int y, IEditableByTool imageModel, Boolean altDown){
         if (altDown) {
-            zoom(imageModel, true);
-        } else {
             zoom(imageModel, false);
+        } else {
+            zoom(imageModel, true);
         }
     }
 
