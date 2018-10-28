@@ -7,7 +7,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -41,8 +40,6 @@ public class LayerItemController extends AnchorPane implements ILayerItemControl
     @FXML
     private Label layerName;
 
-    @FXML
-    private CheckBox layerVisible;
 
     @FXML
     private TextField editableText;
@@ -61,8 +58,7 @@ public class LayerItemController extends AnchorPane implements ILayerItemControl
     private String originalColor;
     private String borderColor;
 
-    public LayerItemController(String name, PaintLayer layer)
-    {
+    public LayerItemController(String name, PaintLayer layer) {
         this.layer = layer;
         observers = new ArrayList<>();
         selected = false;
@@ -84,15 +80,15 @@ public class LayerItemController extends AnchorPane implements ILayerItemControl
         borderColor = "-fx-border-color: white";
 
         editableText.focusedProperty().addListener(new ChangeListener<Boolean>() {
-           @Override
-           public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
-               if (newPropertyValue) {
-                   editableText.setText(layerName.getText());
-               } else {
-                   editableText.setVisible(false);
-                   layerName.setText(editableText.getText());
-               }
-           }
+            @Override
+            public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
+                if (newPropertyValue) {
+                    editableText.setText(layerName.getText());
+                } else {
+                    editableText.setVisible(false);
+                    layerName.setText(editableText.getText());
+                }
+            }
         });
 
         editableText.setOnKeyPressed(e -> {
@@ -102,11 +98,9 @@ public class LayerItemController extends AnchorPane implements ILayerItemControl
         });
 
         layerName.setOnMouseClicked(e -> {
-            if(e.getButton().equals(MouseButton.PRIMARY)){
-                if(e.getClickCount() == 2){
-                    editableText.setVisible(true);
-                    editableText.requestFocus();
-                }
+            if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
+                editableText.setVisible(true);
+                editableText.requestFocus();
             }
         });
 
@@ -116,8 +110,7 @@ public class LayerItemController extends AnchorPane implements ILayerItemControl
     @Override
     @FXML
     public void onSelectLayer() {
-        for (LayerItemObserver o : observers)
-        {
+        for (LayerItemObserver o : observers) {
             o.layerUpdate(layer, "selectLayer");
         }
 
@@ -138,7 +131,9 @@ public class LayerItemController extends AnchorPane implements ILayerItemControl
     }
 
     @Override
-    public Boolean isSelected() { return selected; }
+    public Boolean isSelected() {
+        return selected;
+    }
 
     @Override
     public void setSelected() {
@@ -170,7 +165,7 @@ public class LayerItemController extends AnchorPane implements ILayerItemControl
     private void setBorder(String side) {
         switch (side) {
             case "Top":
-                topBorderPane.setStyle("-fx-border-width: 1 0 0 0;" +  borderColor);
+                topBorderPane.setStyle("-fx-border-width: 1 0 0 0;" + borderColor);
                 break;
             case "Bottom":
                 bottomBorderPane.setStyle("-fx-border-width: 0 0 1 0;" + borderColor);

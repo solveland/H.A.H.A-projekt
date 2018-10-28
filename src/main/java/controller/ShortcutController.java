@@ -20,12 +20,10 @@ USES: ILayerListController, IPaintController
 
 public class ShortcutController {
 
-    private ILayerListController layerLC;
     private IPaintController pC;
 
     protected ShortcutController(IPaintController pC, ILayerListController layerLC) {
         this.pC = pC;
-        this.layerLC = layerLC;
 
         // Tools shortcuts
         setButtonShortcut(pC.getBrushButton(), KeyCode.B);
@@ -41,6 +39,8 @@ public class ShortcutController {
         // Layer list shortcuts
         setButtonShortcut(layerLC.getDeleteLayerButton(), KeyCode.DELETE);
     }
+
+
 
     private void setButtonShortcut(ButtonBase b, KeyCode k) {
         Platform.runLater(()-> {

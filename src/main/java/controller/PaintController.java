@@ -14,12 +14,9 @@ import model.PaintLayer;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import model.pixel.PaintColor;
@@ -44,15 +41,9 @@ USES: ImageModel, PaintView
 public class PaintController implements ImageModelObserver, IPaintController {
 
     @FXML
-    private ScrollPane scrollPane;
-    @FXML
     private ImageView canvas;
     @FXML
-    private StackPane stackPane;
-    @FXML
     private ColorPicker colorPicker;
-    @FXML
-    private FlowPane layerView;
     @FXML
     private BorderPane borderPane;
     @FXML
@@ -69,10 +60,6 @@ public class PaintController implements ImageModelObserver, IPaintController {
     private ComboBox<String> shapeBox;
     @FXML
     private ContextMenu contextMenu;
-    @FXML
-    private MenuItem deselectItem;
-    @FXML
-    private Label label;
     @FXML
     private Slider hardnessSlider;
 
@@ -121,7 +108,7 @@ public class PaintController implements ImageModelObserver, IPaintController {
         image.updateRenderedImage();
         borderPane.setRight(lController.getListPane());
         contextMenu = new ContextMenu();
-        deselectItem = new MenuItem("Deselect");
+        MenuItem deselectItem = new MenuItem("Deselect");
 
         ShortcutController sC = new ShortcutController(this, lController);
 
@@ -148,7 +135,7 @@ public class PaintController implements ImageModelObserver, IPaintController {
         sizeSpinner.valueProperty().addListener((obs, oldvalue, newvalue) -> image.setSize(newvalue));
         opacitySlider.valueProperty().addListener((obs, oldvalue, newvalue) -> sendColorState());
         brushBar.setVisible(false);
-        shapeBox.getItems().addAll("Circle", "Square");
+        shapeBox.getItems().addAll("Circle");
         shapeBox.getSelectionModel().selectFirst();
         view.populateShapeComboBox(shapeBox);
         shapeBox.valueProperty().addListener((obs, oldvalue, newvalue) -> image.setToolShape(newvalue));

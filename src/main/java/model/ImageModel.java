@@ -76,8 +76,8 @@ public class ImageModel implements IEditableByTool {
 
         // Layers
         layerList = new LinkedList<>();
-        renderedImage = new PaintLayer(sizeX, sizeY, new PaintColor(0,0,0,0), null);
-        createLayer(new PaintColor(255,255,255), "Background"); // Should be moved to the method where we initialize a new project.
+        renderedImage = new PaintLayer(sizeX, sizeY, new PaintColor(0, 0, 0, 0), null);
+        createLayer(new PaintColor(255, 255, 255), "Background"); // Should be moved to the method where we initialize a new project.
 
         newLayerCount = 0;
         undoBufferStack = new Stack<>();
@@ -114,21 +114,21 @@ public class ImageModel implements IEditableByTool {
         }
     }
 
-    public void onDrag(int x, int y, Boolean altDown){
+    public void onDrag(int x, int y, Boolean altDown) {
         if (!(activeLayer == null)) {
             activeTool.onDrag(x, y, this, altDown);
             updateCanvas();
         }
     }
 
-    public void onRelease(int x, int y, Boolean altDown){
+    public void onRelease(int x, int y, Boolean altDown) {
         if (!(activeLayer == null)) {
             activeTool.onRelease(x, y, this, altDown);
             updateCanvas();
         }
     }
 
-    public void onPress(int x, int y, Boolean altDown){
+    public void onPress(int x, int y, Boolean altDown) {
         if (!(activeLayer == null)) {
             activeTool.onPress(x, y, this, altDown);
             updateCanvas();
@@ -140,11 +140,12 @@ public class ImageModel implements IEditableByTool {
         activeTool.updateSettings(ts);
     }
 
-    public void setSize(int size){
+    public void setSize(int size) {
         ts.setSize(size);
         activeTool.updateSettings(ts);
     }
-    public void setShapeSize(String s){
+
+    public void setShapeSize(String s) {
         switch (s) {
             case "Small":
                 ts.setShapeSize(1);
@@ -161,18 +162,18 @@ public class ImageModel implements IEditableByTool {
         activeTool.updateSettings(ts);
     }
 
-    public void setColor(PaintColor color){
+    public void setColor(PaintColor color) {
         ts.setColor(color);
         activeTool.updateSettings(ts);
         updateColorPicker();
     }
 
-    private void updateColorPicker(){
+    private void updateColorPicker() {
         notifyObservers("colorPickerUpdate");
     }
 
-    public void setToolShape(String s){
-        switch(s) {
+    public void setToolShape(String s) {
+        switch (s) {
             case "Circle":
                 ts.setCircle();
                 break;
@@ -191,7 +192,8 @@ public class ImageModel implements IEditableByTool {
             case "Line":
                 ts.setLine();
                 break;
-            default: ts.setCircle();
+            default:
+                ts.setCircle();
         }
         activeTool.updateSettings(ts);
     }
@@ -221,50 +223,54 @@ public class ImageModel implements IEditableByTool {
     }
 
 
-    public void undo(){
-        if(undoBufferStack.empty()){
+    public void undo() {
+        if (undoBufferStack.empty()) {
             return;
         }
         UndoBuffer buffer = undoBufferStack.pop();
         // Need to deselect layer temporarily because the layer being selected can block setPixel
         boolean oldSelected = buffer.getLayer().hasSelection();
         buffer.getLayer().setSelection(false);
-        for(Pixel p : buffer.pixels){
-            buffer.getLayer().setPixel(p.getX(),p.getY(),p.getColor());
+        for (Pixel p : buffer.pixels) {
+            buffer.getLayer().setPixel(p.getX(), p.getY(), p.getColor());
         }
         buffer.getLayer().setSelection(oldSelected);
         updateCanvas();
     }
 
-    public void activateShapeTool(){
+    public void activateShapeTool() {
         setActiveTool(shapeTool);
     }
 
-    public void activatePencilTool(){
+    public void activatePencilTool() {
         setActiveTool(pencilTool);
     }
 
-    public void activateBrushTool(){
+    public void activateBrushTool() {
         setActiveTool(brushTool);
     }
 
-    public void activateFillTool(){
+    public void activateFillTool() {
         setActiveTool(bucketFillTool);
     }
 
-    public void activateEraserTool(){
+    public void activateEraserTool() {
         setActiveTool(eraserTool);
     }
 
-    public void activateZoomTool(){
+    public void activateZoomTool() {
         setActiveTool(zoomTool);
     }
 
-    public void activateSelectTool(){setActiveTool(selectTool);}
+    public void activateSelectTool() {
+        setActiveTool(selectTool);
+    }
 
-    public void activateEyedropperTool(){setActiveTool(eyedropperTool);}
+    public void activateEyedropperTool() {
+        setActiveTool(eyedropperTool);
+    }
 
-    public double getZoomScale(){
+    public double getZoomScale() {
         return zoomScale;
     }
 
@@ -284,8 +290,7 @@ public class ImageModel implements IEditableByTool {
         notifyObservers("layerUpdate");
     }
 
-    public void clearLayer()
-    {
+    public void clearLayer() {
         activeLayer.clearLayer();
         updateCanvas();
     }
@@ -334,11 +339,11 @@ public class ImageModel implements IEditableByTool {
     }
 
     // Deletes the active layer and selects a new active layer or none if no layers exist.
-    public void deleteActiveLayer(){
+    public void deleteActiveLayer() {
         if (!layerList.isEmpty()) {
             int index = indexOfActiveLayer();
 
-            undoBufferStack.removeIf(undoBuffer ->{
+            undoBufferStack.removeIf(undoBuffer -> {
                 return undoBuffer.getLayer() == activeLayer;
             });
             layerList.remove(index);
@@ -360,10 +365,8 @@ public class ImageModel implements IEditableByTool {
     }
 
     public void setActiveLayer(PaintLayer layer) {
-        if(activeLayer != null){
-            if(activeLayer.hasSelection() && layer != null){
-                layer.selectArea(activeLayer.getSelectedStartPoint(), activeLayer.getSelectedEndPoint());
-            }
+        if (activeLayer != null && activeLayer.hasSelection() && layer != null) {
+            layer.selectArea(activeLayer.getSelectedStartPoint(), activeLayer.getSelectedEndPoint());
         }
 
         activeLayer = layer;
@@ -400,10 +403,10 @@ public class ImageModel implements IEditableByTool {
         updateLayerGUI();
     }
 
-    public void moveLayerAbove(int index, PaintLayer movingLayer){
+    public void moveLayerAbove(int index, PaintLayer movingLayer) {
         int newIndex = index;
 
-        if (layerList.indexOf(movingLayer) < newIndex){
+        if (layerList.indexOf(movingLayer) < newIndex) {
             newIndex -= 1;
         }
 
@@ -411,11 +414,10 @@ public class ImageModel implements IEditableByTool {
         moveLayerIndex(newIndex, movingLayer);
     }
 
-    public void moveLayerUnder(int index, PaintLayer movingLayer){
-        int newIndex = index +1;
+    public void moveLayerUnder(int index, PaintLayer movingLayer) {
+        int newIndex = index + 1;
 
-        if (layerList.indexOf(movingLayer) < newIndex)
-        {
+        if (layerList.indexOf(movingLayer) < newIndex) {
             newIndex -= 1;
         }
 
@@ -425,7 +427,7 @@ public class ImageModel implements IEditableByTool {
     ///// LAYER END ////// RENDER START //////
 
     public void updateRenderedImage() {
-        renderImage(0,width,0,height);
+        renderImage(0, width, 0, height);
         updateCanvas();
     }
 
@@ -434,21 +436,21 @@ public class ImageModel implements IEditableByTool {
         int maxX = activeLayer.getChangedMaxX();
         int minY = activeLayer.getChangedMinY();
         int maxY = activeLayer.getChangedMaxY();
-        renderImage(minX,maxX,minY,maxY);
+        renderImage(minX, maxX, minY, maxY);
     }
 
-    private void renderImage(int minX,int maxX,int minY,int maxY){
+    private void renderImage(int minX, int maxX, int minY, int maxY) {
         // Fill in a checkered background to make transparent parts easier to see
-        PaintColor bg1 = new PaintColor(180,180,180);
-        PaintColor bg2 = new PaintColor(130,130,130);
+        PaintColor bg1 = new PaintColor(180, 180, 180);
+        PaintColor bg2 = new PaintColor(130, 130, 130);
         for (int x = minX; x < maxX; x++) {
             for (int y = minY; y < maxY; y++) {
-                renderedImage.setPixel(x, y, ((x/20 + y/20) % 2 == 0)? bg1 : bg2);
+                renderedImage.setPixel(x, y, ((x / 20 + y / 20) % 2 == 0) ? bg1 : bg2);
             }
         }
 
         // Draws the image from bottom layer to top layer to make a top layer render over the bottom layer.
-        if(!layerList.isEmpty()) {
+        if (!layerList.isEmpty()) {
             for (PaintLayer l : reversedLayerList()) {
                 if (l.isVisible()) {
                     for (int x = minX; x < maxX; x++) {
@@ -462,27 +464,27 @@ public class ImageModel implements IEditableByTool {
             }
         }
 
-        for(PaintLayer layer : layerList){
+        for (PaintLayer layer : layerList) {
             layer.resetChangeTracker();
         }
     }
 
-    public void loadImage(List<PaintLayer> newLayerList){
+    public void loadImage(List<PaintLayer> newLayerList) {
         layerList = newLayerList;
         setActiveLayer(newLayerList.get(0));
         updateLayerGUI();
         width = newLayerList.get(0).getWidth();
         height = newLayerList.get(0).getHeight();
-        renderedImage = new PaintLayer(width,height,PaintColor.blank, null);
+        renderedImage = new PaintLayer(width, height, PaintColor.blank, null);
         updateCanvas();
     }
 
     private void renderTransparent() {
-        PaintColor bg1 = new PaintColor(180,180,180);
-        PaintColor bg2 = new PaintColor(130,130,130);
+        PaintColor bg1 = new PaintColor(180, 180, 180);
+        PaintColor bg2 = new PaintColor(130, 130, 130);
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                renderedImage.setPixel(x, y, ((x/20 + y/20) % 2 == 0)? bg1 : bg2);
+                renderedImage.setPixel(x, y, ((x / 20 + y / 20) % 2 == 0) ? bg1 : bg2);
             }
         }
         updateCanvas();
@@ -507,12 +509,12 @@ public class ImageModel implements IEditableByTool {
             renderedOverlay.getOldOverlay().addAll(overlay.getOldOverlay());
         }
 
-        for(PaintOverlay overlay: overlayList) {
+        for (PaintOverlay overlay : overlayList) {
             List<Pixel> old = overlay.getOldOverlay();
             old.clear();
         }
 
-        for(PaintOverlay overlay: overlayList) {
+        for (PaintOverlay overlay : overlayList) {
             renderedOverlay.getOverlay().addAll(overlay.getOverlay());
         }
 
@@ -552,7 +554,7 @@ public class ImageModel implements IEditableByTool {
 
     @Override
     public void selectArea(Point<Integer> start, Point<Integer> end) {
-        activeLayer.selectArea(start,end);
+        activeLayer.selectArea(start, end);
     }
 
 

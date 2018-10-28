@@ -7,7 +7,7 @@
     -layer-highlight: rgb(102, 124, 135);
     -fx-background-color: -light-black;
     -layer-background: rgb(65, 68, 70);
-    -selected-color: rgb(29, 29, 29)
+    -selected-color: rgb(29, 29, 29);
 }
 
 .scrollPane {

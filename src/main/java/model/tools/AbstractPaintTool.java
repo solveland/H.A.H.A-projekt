@@ -20,7 +20,6 @@ public abstract class AbstractPaintTool implements ITool {
     private int size;
     protected PaintColor color;
     private Point<Double> oldPoint;
-    private Shape shape = Shape.CIRCLE;
 
     public void onPress(int x, int y, IEditableByTool imageModel, Boolean altDown) {
         imageModel.openNewUndoBuffer();
@@ -67,7 +66,6 @@ public abstract class AbstractPaintTool implements ITool {
     public void updateSettings(ToolSettings ts) {
         this.size = ts.getSize();
         this.color = ts.getPaintColor();
-        this.shape = ts.getShape();
     }
 
     abstract PaintColor getPixelColor(double dist, PaintColor oldColor);

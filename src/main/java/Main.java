@@ -18,6 +18,8 @@ public class Main extends Application {
         stage.setMaximized(true);
 
 
+
+
         // Stylesheet CSS  REMOVE
         scene.getStylesheets().add(getClass().getResource("Stylesheet.css").toExternalForm());
         stage.setScene(scene);
