@@ -15,7 +15,7 @@ USED BY: controller.PaintController, controller.LayerListController, Main
 USES: Most other classes in the model package
  */
 
-public class ImageModel implements IModel{
+public class ImageModel implements IEditableByTool {
 
     private List<PaintLayer> layerList;
     private PaintLayer activeLayer;
@@ -97,7 +97,7 @@ public class ImageModel implements IModel{
         observers.add(observer);
     }
 
-    public void updateCanvas() {
+    private void updateCanvas() {
         if (!layerList.isEmpty()) {
             updateRenderedRect();
         }
@@ -582,7 +582,7 @@ public class ImageModel implements IModel{
         activeLayer.selectArea(start,end);
     }
 
-    public void updateOverlay() {
+    private void updateOverlay() {
         int minX = renderedImage.getChangedMinX();
         int maxX = renderedImage.getChangedMaxX();
         int minY = renderedImage.getChangedMinY();

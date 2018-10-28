@@ -1,7 +1,5 @@
 package controller;
 
-import controller.IPaintController;
-import controller.ShortcutController;
 import services.ServiceFactory;
 
 import javafx.application.Platform;
@@ -30,6 +28,13 @@ import view.PaintView;
 
 import java.io.File;
 import java.util.List;
+
+/*
+AUTHOR: Anthony Tao, Henrik Tao, August Sölveland, Hampus Ekberg
+RESPONSIBILITY: The main controller class
+USED BY:
+USES: ImageModel, PaintView
+ */
 
 public class PaintController implements ImageModelObserver, IPaintController {
 

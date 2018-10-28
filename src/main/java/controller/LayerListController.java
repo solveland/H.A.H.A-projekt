@@ -23,6 +23,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+AUTHOR: Anthony Tao
+RESPONSIBILITY: Keeping track of the list of layer items and making sure you can drag them around.
+USED BY: PaintController
+USES: PaintLayer, ImageModel
+ */
+
 public class LayerListController extends StackPane implements ImageModelObserver, LayerItemObserver, ILayerListController {
 
     @FXML

@@ -6,6 +6,14 @@ import model.pixel.Point;
 
 import java.util.LinkedList;
 import java.util.Queue;
+
+/*
+AUTHOR: Henrik Tao, Anthony Tao
+RESPONSIBILITY: Tool for filling an area
+USED BY:
+USES:
+ */
+
 /**
  * BucketFillTool class for the fill tool feature.
  */
@@ -14,16 +22,14 @@ public class BucketFillTool implements ITool {
     private PaintColor newColor;
 
 
-    public void onPress(int x, int y, IModel imageModel) {
+    public void onPress(int x, int y, IEditableByTool imageModel) {
        imageModel.openNewUndoBuffer();
        flood(x, y, imageModel);
     }
 
-    public void onDrag(int x, int y, IModel imageModel){
-        //flood(x, y, imageModel.getActiveLayer());
+    public void onDrag(int x, int y, IEditableByTool imageModel){
     }
-    public void onRelease(int x, int y, IModel imageModel) {
-        //flood(x, y, imageModel.getActiveLayer());
+    public void onRelease(int x, int y, IEditableByTool imageModel) {
     }
 
     /**
@@ -33,7 +39,7 @@ public class BucketFillTool implements ITool {
      * @param imageModel an interface to the image model
      */
 
-    private void flood(int x, int y, IModel imageModel) {
+    private void flood(int x, int y, IEditableByTool imageModel) {
        PaintColor oldColor = imageModel.getPixelColor(x, y);
        Point<Integer> p = new Point<>(x,y);
        Queue<Point<Integer>> Q = new LinkedList<>();

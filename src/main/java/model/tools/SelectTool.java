@@ -11,6 +11,13 @@ import java.util.List;
  * SelectTool class for the select feature.
  */
 
+/*
+AUTHOR: Henrik Tao, Anthony Tao
+RESPONSIBILITY: Tool for selecting a rectangular area of the image
+USED BY:
+USES: PaintColor, Point, Pixel
+ */
+
 public class SelectTool implements ITool{
     private Point<Integer> startPoint;
     private PaintColor paintColor;
@@ -26,17 +33,17 @@ public class SelectTool implements ITool{
     }
 
 
-    public void onDrag(int x, int y, IModel imageModel){
+    public void onDrag(int x, int y, IEditableByTool imageModel){
         Point<Integer> endPoint = new Point<> (x,y);
         drawSelectedToolArea(imageModel, endPoint,imageModel.getWidth(),imageModel.getHeight());
         imageModel.renderOverlay();
     }
-    public void onPress(int x, int y, IModel imageModel){
+    public void onPress(int x, int y, IEditableByTool imageModel){
         Point<Integer> startPoint = new Point<>(x,y);
         setStartPoint(startPoint);
     }
 
-    public void onRelease(int x, int y, IModel imageModel){
+    public void onRelease(int x, int y, IEditableByTool imageModel){
         Point endPoint = new Point (x,y);
         imageModel.selectArea(startPoint, endPoint);
     }
@@ -50,7 +57,7 @@ public class SelectTool implements ITool{
      * @param endPoint a point used when creating a rectangle for the selected area.
      */
 
-    private void drawSelectedToolArea (IModel imageModel, Point<Integer> endPoint, int maxWidth, int maxHeight){
+    private void drawSelectedToolArea (IEditableByTool imageModel, Point<Integer> endPoint, int maxWidth, int maxHeight){
         List<Pixel> arrayList = new ArrayList<>();
 
         int minX = Math.max((startPoint.getX() < endPoint.getX()) ? startPoint.getX() : endPoint.getX(),0);

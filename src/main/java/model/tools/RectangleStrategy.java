@@ -5,6 +5,13 @@ import model.pixel.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+AUTHOR: August Sölveland
+RESPONSIBILITY: Strategy used by ShapeTool to draw a rectangle
+USED BY: ShapeTool
+USES:
+ */
+
 public class RectangleStrategy implements IShapeStrategy {
     @Override
     public List<Point<Integer>> shapeStrategy(Point<Integer> startPoint, Point<Integer> endPoint, int size) {
