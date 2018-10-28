@@ -30,13 +30,14 @@ public class PaintView implements ImageModelObserver {
 
     public void setSize(int x, int y){
         image = new WritableImage(x, y);
+
     }
 
     /*
     // Draw the rendered image on update from model.
      */
     @Override
-    public void notifyObservers(PaintLayer renderedImage, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, PaintOverlay overlay, String id)
+    public void update(PaintLayer renderedImage, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, PaintOverlay overlay, String id)
     {
         if (id.equals("imageUpdate")) {
             PixelWriter pw = image.getPixelWriter();

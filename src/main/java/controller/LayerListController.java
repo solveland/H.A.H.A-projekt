@@ -91,7 +91,7 @@ public class LayerListController extends StackPane implements ImageModelObserver
         Listens to the model's layer list and updates the layer GUI.
      */
     @Override
-    public void notifyObservers(PaintLayer layer, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, PaintOverlay overlay, String id) {
+    public void update(PaintLayer layer, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, PaintOverlay overlay, String id) {
         if (id.equals("layerUpdate")) {
             if (!layerList.isEmpty()) {
                 updateLayerItemList(layerList);

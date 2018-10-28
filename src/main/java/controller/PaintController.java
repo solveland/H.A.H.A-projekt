@@ -194,7 +194,6 @@ public class PaintController implements ImageModelObserver, IPaintController {
 
         contextMenu.getItems().add(deselectItem);
 
-
         canvas.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
             @Override
             public void handle(ContextMenuEvent event) {
@@ -442,7 +441,7 @@ public class PaintController implements ImageModelObserver, IPaintController {
     }
 
     @Override
-    public void notifyObservers(PaintLayer layer, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, PaintOverlay overlay, String id){
+    public void update(PaintLayer layer, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, PaintOverlay overlay, String id){
         if(id.equals("colorPickerUpdate")){
             Color c = new Color(color.getRedRatio(),color.getGreenRatio(), color.getBlueRatio(), color.getAlphaRatio());
             colorPicker.setValue(c);

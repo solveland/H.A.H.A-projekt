@@ -13,5 +13,5 @@ USES: PaintLayer, PaintColor, PaintOverlay
 
 public interface ImageModelObserver {
 
-   void notifyObservers(PaintLayer layer, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, PaintOverlay overlay, String id);
+   void update(PaintLayer layer, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, PaintOverlay overlay, String id);
 }
