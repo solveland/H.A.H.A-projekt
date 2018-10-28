@@ -34,21 +34,21 @@ public class EyedropperTest {
         // white background
         image.activateFillTool();
         image.setColor(white);
-        image.onPress(x,y, );
+        image.onPress(x,y, false);
 
         // draw two pixels with different color. A red pixel and a initcolored pixel.
         image.activatePencilTool();
         image.setSize(1);
         image.setColor(redColor);
-        image.onPress(a,b, );
+        image.onPress(a,b, false);
         image.setColor(initColor);
-        image.onPress(x,y, );
+        image.onPress(x,y, false);
 
         // use eyedropper tool on these pixels and check if current color has changed to the color of the pixels.
         image.activateEyedropperTool();
-        image.onRelease(a,b, );
+        image.onRelease(a,b, false);
         assertEquals(image.getActiveLayer().getPixel(a,b), image.getTs().getPaintColor());
-        image.onRelease(x,y, );
+        image.onRelease(x,y, false);
         assertEquals(image.getActiveLayer().getPixel(x,y), image.getTs().getPaintColor());
     }
 }

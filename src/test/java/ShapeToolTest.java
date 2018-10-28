@@ -37,8 +37,8 @@ public class ShapeToolTest {
         PaintColor color = new PaintColor(red, green, blue);
         PaintColor white = new PaintColor(255, 255, 255);
         im.setColor(color);
-        im.onPress(startPointX, startPointY, );
-        im.onRelease(endPointX, endPointY, );
+        im.onPress(startPointX, startPointY, false);
+        im.onRelease(endPointX, endPointY, false);
 
         int minY = (endPointY < startPointY) ? endPointY : startPointY;
         int maxY = (endPointY > startPointY) ? endPointY : startPointY;
@@ -90,8 +90,8 @@ public class ShapeToolTest {
         PaintColor color = new PaintColor(red, green, blue);
         PaintColor white = new PaintColor(255, 255, 255);
         im.setColor(color);
-        im.onPress(startPointX, startPointY, );
-        im.onRelease(endPointX, endPointY, );
+        im.onPress(startPointX, startPointY, false);
+        im.onRelease(endPointX, endPointY, false);
 
         int minY = (endPointY < startPointY) ? endPointY : startPointY;
         int maxY = (endPointY > startPointY) ? endPointY : startPointY;
@@ -144,8 +144,8 @@ public class ShapeToolTest {
         PaintColor color = new PaintColor(red, green, blue);
         PaintColor white = new PaintColor(255, 255, 255);
         im.setColor(color);
-        im.onPress(startPointX, startPointY, );
-        im.onRelease(endPointX, endPointY, );
+        im.onPress(startPointX, startPointY, false);
+        im.onRelease(endPointX, endPointY, false);
 
         int minY = (endPointY < startPointY) ? endPointY : startPointY;
         int maxY = (endPointY > startPointY) ? endPointY : startPointY;
@@ -196,8 +196,8 @@ public class ShapeToolTest {
         PaintColor color = new PaintColor(red, green, blue);
         PaintColor white = new PaintColor(255, 255, 255);
         im.setColor(color);
-        im.onPress(startPointX, startPointY, );
-        im.onRelease(endPointX, endPointY, );
+        im.onPress(startPointX, startPointY, false);
+        im.onRelease(endPointX, endPointY, false);
 
         int minY = (endPointY < startPointY) ? endPointY : startPointY;
         int maxY = (endPointY > startPointY) ? endPointY : startPointY;

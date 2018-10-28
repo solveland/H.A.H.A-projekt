@@ -33,8 +33,8 @@ public class SelectTest {
         PaintColor white = new PaintColor(255,255,255);
 
         image.activateSelectTool();
-        image.onPress(x,y, );
-        image.onRelease(a,b, );
+        image.onPress(x,y, false);
+        image.onRelease(a,b, false);
 
         //If an area has been selected
         assertTrue(image.getActiveLayer().hasSelection());
@@ -44,7 +44,7 @@ public class SelectTest {
         image.activatePencilTool();
         image.setSize(size);
         image.setColor(initColor);
-        image.onPress(c,d, );
+        image.onPress(c,d, false);
 
         if ((c > x && d > y) && (c < a && d < b)){
             assertEquals(image.getActiveLayer().getPixel(c,d),initColor);
@@ -75,8 +75,8 @@ public class SelectTest {
         PaintColor white = new PaintColor(255,255,255);
 
         image.activateSelectTool();
-        image.onPress(x,y, );
-        image.onRelease(a,b, );
+        image.onPress(x,y, false);
+        image.onRelease(a,b, false);
 
         //If an area has been selected
         assertTrue(image.getActiveLayer().hasSelection());
@@ -86,7 +86,7 @@ public class SelectTest {
         image.activatePencilTool();
         image.setSize(size);
         image.setColor(initColor);
-        image.onPress(c,d, );
+        image.onPress(c,d, false);
 
         if ((c > x && d > y) && (c < a && d < b)){
             assertEquals(image.getActiveLayer().getPixel(c,d),initColor);
@@ -100,7 +100,7 @@ public class SelectTest {
         image.activatePencilTool();
         image.setSize(size);
         image.setColor(initColor);
-        image.onPress(c,d, );
+        image.onPress(c,d, false);
 
         //If inside the deleted area, draw pixel. If outside the deleted area, draw pixel. Selected area has been deselected.
         if ((c > x && d > y) && (c < a && d < b)){

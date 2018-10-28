@@ -37,7 +37,7 @@ public class LayerTest {
             im.createLayer(noColor, "");
         }
         PaintLayer paintedLayer = im.getActiveLayer();
-        im.onPress(x, y, );
+        im.onPress(x, y, false);
 
 
         for (PaintLayer l : im.getLayerList()) {
@@ -80,11 +80,11 @@ public class LayerTest {
         im.activatePencilTool();
         im.setSize(size);
         im.setColor(color);
-        im.onPress(x, y, );
+        im.onPress(x, y, false);
         oldState = im.getRenderedImage();
         im.createLayer(PaintColor.blank, "");
         im.setColor(newColor);
-        im.onPress(x, y, );
+        im.onPress(x, y, false);
         currentState = im.getRenderedImage();
 
         for(int xi = 0; xi < limit; xi++){
