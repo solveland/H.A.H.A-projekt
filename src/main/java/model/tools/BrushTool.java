@@ -11,7 +11,7 @@ import java.util.Map;
 /*
 AUTHOR: Hampus Ekberg
 RESPONSIBILITY: Tool for drawing with soft edges
-USED BY:
+USED BY: ImageModel
 USES:PaintColor, DistanceHelper
  */
 

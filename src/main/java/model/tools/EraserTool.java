@@ -5,8 +5,8 @@ import model.pixel.PaintColor;
 /*
 AUTHOR: August Sölveland
 RESPONSIBILITY: Tool for erasing
-USED BY: PaintColor
-USES:
+USED BY: ImageModel
+USES: PaintColor
  */
 
 public class EraserTool extends AbstractPaintTool {

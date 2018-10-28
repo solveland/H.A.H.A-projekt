@@ -10,7 +10,7 @@ import java.util.Queue;
 /*
 AUTHOR: Henrik Tao, Anthony Tao
 RESPONSIBILITY: Tool for filling an area
-USED BY:
+USED BY: ImageModel
 USES:
  */
 

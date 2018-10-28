@@ -5,7 +5,7 @@ import model.pixel.PaintColor;
 /*
 AUTHOR: Henrik Tao, Anthony Tao
 RESPONSIBILITY: Tool for setting the programs current color to match that of a pixel on the image
-USED BY:
+USED BY: ImageModel
 USES: PaintColor
  */
 

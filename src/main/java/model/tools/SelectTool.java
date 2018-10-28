@@ -14,7 +14,7 @@ import java.util.List;
 /*
 AUTHOR: Henrik Tao, Anthony Tao
 RESPONSIBILITY: Tool for selecting a rectangular area of the image
-USED BY:
+USED BY: ImageModel
 USES: PaintColor, Point, Pixel
  */
 

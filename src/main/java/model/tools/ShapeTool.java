@@ -10,7 +10,7 @@ import java.util.List;
 /*
 AUTHOR: August Sölveland
 RESPONSIBILITY: Tool for drawing a shape defined by different strategies
-USED BY:
+USED BY: ImageModel
 USES: TriangleStrategy, RectangleStrategy, StraightLineStrategy, EllipseStrategy
  */
 
