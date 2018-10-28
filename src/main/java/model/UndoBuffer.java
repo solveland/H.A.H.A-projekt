@@ -7,6 +7,7 @@ import model.pixel.Point;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /*
 AUTHOR: Hampus Ekberg
@@ -18,7 +19,7 @@ USES: PaintLayer, Point, Pixel
 public class UndoBuffer {
     List<Pixel> pixels;
     private PaintLayer layer;
-    private HashSet<Point<Integer>> pointHashSet;
+    private Set<Point<Integer>> pointHashSet;
 
     public UndoBuffer(PaintLayer layer){
         this.layer = layer;

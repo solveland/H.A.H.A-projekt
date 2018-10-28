@@ -23,6 +23,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+AUTHOR: Anthony Tao
+RESPONSIBILITY: Keeping track of the list of layer items and making sure you can drag them around.
+USED BY: PaintController
+USES: PaintLayer, ImageModel
+ */
+
 public class LayerListController extends StackPane implements ImageModelObserver, LayerItemObserver, ILayerListController {
 
     @FXML
@@ -61,7 +68,9 @@ public class LayerListController extends StackPane implements ImageModelObserver
                 LayerItemController source = (LayerItemController) e.getGestureSource();
 
                 if (frontPane.getChildren().contains(dragImage))
+                {
                     frontPane.getChildren().remove(dragImage);
+                }
                 source.setCursor(Cursor.HAND);
             }
         });
@@ -98,7 +107,9 @@ public class LayerListController extends StackPane implements ImageModelObserver
                 selectActiveLayer();
             } else {
                 if (!layerViewList.isEmpty())
+                {
                     layerViewList.clear();
+                }
             }
         }
     }
@@ -131,7 +142,9 @@ public class LayerListController extends StackPane implements ImageModelObserver
             }
             // If the layer-item does not already exist, create the layer-item.
             if (!itemExists)
+            {
                 createLayerItem(p, p.getName(), i);
+            }
         }
 
         selectActiveLayer();
@@ -256,8 +269,9 @@ public class LayerListController extends StackPane implements ImageModelObserver
         layerItemPane.setOnMouseDragged(e -> {
             if (e.getSource().getClass().equals(LayerItemController.class)) {
                 double deltaY = e.getSceneY() - mouseY;
-                if (frontPane.getChildren().contains(dragImage))
+                if (frontPane.getChildren().contains(dragImage)) {
                     dragImage.setTranslateY(dragImage.getTranslateY() + deltaY);
+                }
                 mouseY = e.getSceneY();
             }
         });

@@ -16,6 +16,13 @@ import model.pixel.Pixel;
 
 import java.util.List;
 
+/*
+AUTHOR: Anthony Tao, August Sölveland
+RESPONSIBILITY: Rendering the image that is being edited and populating some combo boxes
+USED BY: PaintController, and ImageModel uses it through the observer interface
+USES: PaintLayer, PaintColor, PaintOverlay
+ */
+
 public class PaintView implements ImageModelObserver {
 
     private WritableImage image;

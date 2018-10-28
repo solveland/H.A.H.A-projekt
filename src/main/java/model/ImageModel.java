@@ -15,7 +15,7 @@ USED BY: controller.PaintController, controller.LayerListController, Main
 USES: Most other classes in the model package
  */
 
-public class ImageModel implements IModel{
+public class ImageModel implements IEditableByTool {
 
     private List<PaintLayer> layerList;
     private PaintLayer activeLayer;
@@ -97,7 +97,7 @@ public class ImageModel implements IModel{
         observers.add(observer);
     }
 
-    public void notifyObservers(String id) {
+    private void notifyObservers(String id) {
         int minX = renderedImage.getChangedMinX();
         int maxX = renderedImage.getChangedMaxX();
         int minY = renderedImage.getChangedMinY();
@@ -108,7 +108,7 @@ public class ImageModel implements IModel{
         }
     }
 
-    public void updateCanvas() {
+    private void updateCanvas() {
         if (!layerList.isEmpty()) {
             updateRenderedRect();
         }
@@ -423,8 +423,10 @@ public class ImageModel implements IModel{
     public void moveLayerAbove(int index, PaintLayer movingLayer){
         int newIndex = index;
 
-        if (layerList.indexOf(movingLayer) < newIndex)
+        if (layerList.indexOf(movingLayer) < newIndex){
             newIndex -= 1;
+        }
+
 
         moveLayerIndex(newIndex, movingLayer);
     }
@@ -433,7 +435,9 @@ public class ImageModel implements IModel{
         int newIndex = index +1;
 
         if (layerList.indexOf(movingLayer) < newIndex)
+        {
             newIndex -= 1;
+        }
 
         moveLayerIndex(newIndex, movingLayer);
     }

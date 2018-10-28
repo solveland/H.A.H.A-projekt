@@ -90,11 +90,11 @@ public class PaintLayer {
         }
     }
 
-    public Point<Integer> getSelectedStartPoint() {
+    Point<Integer> getSelectedStartPoint() {
         return selectedStartPoint;
     }
 
-    public Point<Integer> getSelectedEndPoint() {
+    Point<Integer> getSelectedEndPoint() {
         return selectedEndPoint;
     }
 
@@ -103,7 +103,7 @@ public class PaintLayer {
     }
 
     // Temporary clear
-    public void clearLayer() {
+    void clearLayer() {
         for (int i = 0; i < height * width; i++) {
             pixelArray[i] = bgColor;
         }
@@ -114,7 +114,7 @@ public class PaintLayer {
         changedMaxX = width;
     }
 
-    public void resetChangeTracker() {
+    void resetChangeTracker() {
         changedMinX = 0;
         changedMaxX = 0;
         changedMinY = 0;
@@ -122,7 +122,7 @@ public class PaintLayer {
         changed = false;
     }
 
-    public void selectArea(Point<Integer> startPoint, Point<Integer> endPoint){
+    void selectArea(Point<Integer> startPoint, Point<Integer> endPoint){
         selectedStartPoint = startPoint;
         selectedEndPoint = endPoint;
         selection = true;
@@ -132,35 +132,35 @@ public class PaintLayer {
         return selection;
     }
 
-    public void setSelection(Boolean selection) {
+    void setSelection(Boolean selection) {
         this.selection = selection;
     }
 
-    public int getChangedMinX() {
+    int getChangedMinX() {
         return changedMinX;
     }
 
-    public int getChangedMinY() {
+    int getChangedMinY() {
         return changedMinY;
     }
 
-    public int getChangedMaxX() {
+    int getChangedMaxX() {
         return changedMaxX;
     }
 
-    public int getChangedMaxY() {
+    int getChangedMaxY() {
         return changedMaxY;
     }
 
-    public boolean isChanged() {
+    boolean isChanged() {
         return changed;
     }
 
-    public boolean isVisible() {
+    boolean isVisible() {
         return visible;
     }
 
-    public void toggleVisible() {
+    void toggleVisible() {
         visible = !visible;
     }
 
@@ -172,7 +172,7 @@ public class PaintLayer {
         this.name = name;
     }
 
-    public PaintColor getBgColor() {
+    PaintColor getBgColor() {
         return bgColor;
     }
 }

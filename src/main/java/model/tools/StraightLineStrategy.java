@@ -10,6 +10,13 @@ import java.util.List;
  * A strategy for drawing a straight line between two points
  */
 
+/*
+AUTHOR: August Sölveland
+RESPONSIBILITY: Strategy used by ShapeTool to draw a straight line between two points
+USED BY: ShapeTool
+USES: Point
+ */
+
 public class StraightLineStrategy implements IShapeStrategy {
 
     /**
@@ -48,7 +55,9 @@ public class StraightLineStrategy implements IShapeStrategy {
             small = temp;
             if(h < 0) {
                 dy2 = -1;
-            }else if( h > 0) dy2 = 1;
+            }else if( h > 0) {
+                dy2 = 1;
+            }
             dx2 = 0;
         }
         int numerator = big >> 1;

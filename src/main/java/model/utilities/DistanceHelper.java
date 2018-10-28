@@ -17,7 +17,9 @@ public class DistanceHelper {
 
     public static double distToSegmentSquared(Point<Double> v, Point<Double> w, Point<Double> p){
         double l2 = dist2(w, v);
-        if (l2 == 0.0) return dist2(p, v);
+        if (l2 == 0.0) {
+            return dist2(p, v);
+        }
         double t = ((p.getX() - v.getX()) * (w.getX() - v.getX()) + (p.getY() - v.getY()) * (w.getY() - v.getY())) / l2;
         t = Math.max(0, Math.min(1, t));
         return dist2(p,new Point<>(v.getX() + t * (w.getX() - v.getX()),v.getY() + t * (w.getY() - v.getY())));
