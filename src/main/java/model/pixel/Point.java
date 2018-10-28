@@ -7,6 +7,10 @@ USED BY: ImageModel, PaintLayer, UndoBuffer, Most tools, DistanceHelper
 USES:
  */
 
+/**
+ * Point class is a generic point that consists of two generic values.
+ */
+
 public class Point <T extends Number> {
     private final T x;
     private final T y;

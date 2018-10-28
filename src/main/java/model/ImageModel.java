@@ -36,7 +36,6 @@ public class ImageModel implements IModel{
     private List<PaintOverlay> overlayList;
 
     private ITool activeTool;
-
     private PencilTool pencilTool;
     private BrushTool brushTool;
     private BucketFillTool bucketFillTool;
@@ -45,7 +44,6 @@ public class ImageModel implements IModel{
     private SelectTool selectTool;
     private ShapeTool shapeTool;
     private EyedropperTool eyedropperTool;
-
     private ToolSettings ts = new ToolSettings(5);
 
 
@@ -599,6 +597,11 @@ public class ImageModel implements IModel{
 
     ///// RENDER END //////
 
+    /**
+     * DeselectArea is a method that deselects the selected area made by the selectTool. It checks the overlay and oldOverlay, which are lists,
+     * and clears the content. Thereafter, it toggles the variable "selection" to false, which means that there are no selected area.
+     * And lastly it updates the rendered image.
+     */
     public void deselectArea(){
         selectOverlay.getOverlay().clear();
         selectOverlay.getOldOverlay().clear();

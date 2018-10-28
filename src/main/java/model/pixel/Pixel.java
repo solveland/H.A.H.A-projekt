@@ -7,6 +7,10 @@ USED BY: ImageModel, PaintOverlay, UndoBuffer, Most tools, PaintView
 USES: Point & PaintColor
  */
 
+/**
+ * Pixel class consists of two variables, its position and its color.
+ */
+
 public class Pixel {
     private final Point<Integer> position;
     private final PaintColor color;

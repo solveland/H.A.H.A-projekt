@@ -30,7 +30,7 @@ public class BucketFillTool implements ITool {
      * An algorithm for filling an area with the same color while checking the color of the edges.
      * @param x an x-coordinate value of clicked pixel
      * @param y an y-coordinate value of clicked pixel
-     * @param imageModel an interface to the image model
+     * @param imageModel is a reference to the IModel interface
      */
 
     private void flood(int x, int y, IModel imageModel) {

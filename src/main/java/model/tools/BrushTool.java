@@ -8,6 +8,9 @@ import model.pixel.Point;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * BrushTool class for the using of a brush.
+ */
 public class BrushTool extends AbstractPaintTool {
 
     private Map<Point<Integer>,Double> closestDistMap;

@@ -21,6 +21,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * LayerItemController handles GUI for layer items in the layer pane.
+ */
+
 public class LayerItemController extends AnchorPane implements ILayerItemController {
 
     @FXML

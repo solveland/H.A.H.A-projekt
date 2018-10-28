@@ -2,8 +2,6 @@ package model.tools;
 
 public class ZoomTool implements ITool {
 
-
-
     public void onDrag(int x, int y, IModel imageModel){
 
     }

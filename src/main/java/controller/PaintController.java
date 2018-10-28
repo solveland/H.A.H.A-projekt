@@ -31,6 +31,10 @@ import view.PaintView;
 import java.io.File;
 import java.util.List;
 
+/**
+ * PaintController initializes and handles the GUI.
+ */
+
 public class PaintController implements ImageModelObserver, IPaintController {
 
     private static final double MAX_SCALE = 15.0d;
@@ -132,11 +136,9 @@ public class PaintController implements ImageModelObserver, IPaintController {
                 if (e.isAltDown()){
                     zoom(false);
                 }
-
                 else {
                     zoom(true);
                 }
-
             }
         });
 

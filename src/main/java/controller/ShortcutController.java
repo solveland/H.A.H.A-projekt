@@ -7,6 +7,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 
+/**
+ * ShortcutController handles the shortcuts to activate specific tools in the application.
+ */
+
 public class ShortcutController {
 
     private ILayerListController layerLC;

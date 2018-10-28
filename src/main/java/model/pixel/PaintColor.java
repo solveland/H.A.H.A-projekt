@@ -82,6 +82,9 @@ public class PaintColor {
         return c.getValue() == getValue();
     }
 
+
+
+
     public static PaintColor alphaBlend(PaintColor src, PaintColor dst){
         if (src.getAlphaRatio() > 0.9999){
             return src;
