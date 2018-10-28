@@ -7,6 +7,13 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 
+/*
+AUTHOR: Anthony Tao, Henrik Tao
+RESPONSIBILITY: Adds shortcuts in the form of key combinations to the program
+USED BY: PaintController
+USES: ILayerListController, IPaintController
+*/
+
 /**
  * ShortcutController handles the shortcuts to activate specific tools in the application.
  */

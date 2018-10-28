@@ -7,6 +7,14 @@ import java.util.List;
 /**
  * A strategy for drawing a triangle inside a rectangle created by two points
  */
+
+/*
+AUTHOR: August Sölveland
+RESPONSIBILITY: Strategy used by ShapeTool to draw a triangle
+USED BY: ShapeTool
+USES: Point
+ */
+
 public class TriangleStrategy implements IShapeStrategy{
     /**
      *<p> This method calculates a triangle by taking two points as an input. The point with the highest y value ((0,0) is the top left corner) will decide the base of the triangle.

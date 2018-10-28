@@ -16,6 +16,13 @@ import model.pixel.Pixel;
 
 import java.util.List;
 
+/*
+AUTHOR: Anthony Tao, August Sölveland
+RESPONSIBILITY: Rendering the image that is being edited and populating some combo boxes
+USED BY: PaintController, and ImageModel uses it through the observer interface
+USES: PaintLayer, PaintColor, PaintOverlay
+ */
+
 public class PaintView implements ImageModelObserver {
 
     private WritableImage image;
@@ -36,7 +43,7 @@ public class PaintView implements ImageModelObserver {
     // Draw the rendered image on update from model.
      */
     @Override
-    public void notifyObservers(PaintLayer renderedImage, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, PaintOverlay overlay, String id)
+    public void update(PaintLayer renderedImage, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, PaintOverlay overlay, String id)
     {
         if (id.equals("imageUpdate")) {
             PixelWriter pw = image.getPixelWriter();

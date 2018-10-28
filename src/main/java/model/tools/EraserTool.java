@@ -2,7 +2,12 @@ package model.tools;
 
 import model.pixel.PaintColor;
 
-
+/*
+AUTHOR: August Sölveland
+RESPONSIBILITY: Tool for erasing
+USED BY: PaintColor
+USES:
+ */
 
 public class EraserTool extends AbstractPaintTool {
 

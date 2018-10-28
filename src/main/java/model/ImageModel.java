@@ -15,7 +15,7 @@ USED BY: controller.PaintController, controller.LayerListController, Main
 USES: Most other classes in the model package
  */
 
-public class ImageModel implements IModel{
+public class ImageModel implements IEditableByTool {
 
     private List<PaintLayer> layerList;
     private PaintLayer activeLayer;
@@ -95,24 +95,30 @@ public class ImageModel implements IModel{
         observers.add(observer);
     }
 
-    public void updateCanvas() {
+    private void notifyObservers(String id) {
+        int minX = renderedImage.getChangedMinX();
+        int maxX = renderedImage.getChangedMaxX();
+        int minY = renderedImage.getChangedMinY();
+        int maxY = renderedImage.getChangedMaxY();
+
+        for (ImageModelObserver o : observers) {
+            o.update(renderedImage, minX, maxX, minY, maxY, layerList, ts.getPaintColor(), renderedOverlay, id);
+        }
+    }
+
+    private void updateCanvas() {
         if (!layerList.isEmpty()) {
             updateRenderedRect();
         }
 
         if (renderedImage.isChanged()) {
-            int minX = renderedImage.getChangedMinX();
-            int maxX = renderedImage.getChangedMaxX();
-            int minY = renderedImage.getChangedMinY();
-            int maxY = renderedImage.getChangedMaxY();
-
-            for (ImageModelObserver o : observers) {
-                o.notifyObservers(renderedImage, minX, maxX, minY, maxY, layerList, ts.getPaintColor(), renderedOverlay,"imageUpdate");
-            }
+            notifyObservers("imageUpdate");
 
             renderedImage.resetChangeTracker();
         }
     }
+
+
 
     public void onDrag(int x, int y){
         if (!(activeLayer == null)) {
@@ -174,14 +180,7 @@ public class ImageModel implements IModel{
     }
 
     private void updateColorPicker(){
-        int minX = renderedImage.getChangedMinX();
-        int maxX = renderedImage.getChangedMaxX();
-        int minY = renderedImage.getChangedMinY();
-        int maxY = renderedImage.getChangedMaxY();
-
-        for(ImageModelObserver observer: observers){
-            observer.notifyObservers(renderedImage, minX, maxX, minY, maxY, layerList, ts.getPaintColor(), renderedOverlay, "colorPickerUpdate" );
-        }
+        notifyObservers("colorPickerUpdate");
     }
 
     public void setToolShape(String s){
@@ -290,16 +289,8 @@ public class ImageModel implements IModel{
         this.zoomScaleX = zoomValueX;
     }
 
-    public double getOldZoomScaleY() {
-        return oldZoomScaleY;
-    }
-
     public void setOldZoomScaleY(double oldZoomValueY) {
         this.oldZoomScaleY = oldZoomValueY;
-    }
-
-    public double getOldZoomScaleX() {
-        return oldZoomScaleX;
     }
 
     public void setOldZoomScaleX(double oldZoomValueX) {
@@ -308,14 +299,7 @@ public class ImageModel implements IModel{
     //// LAYER ///////
 
     private void updateLayerGUI() {
-        int minX = renderedImage.getChangedMinX();
-        int maxX = renderedImage.getChangedMaxX();
-        int minY = renderedImage.getChangedMinY();
-        int maxY = renderedImage.getChangedMaxY();
-
-        for (ImageModelObserver o : observers) {
-            o.notifyObservers(renderedImage, minX, maxX, minY, maxY, layerList, ts.getPaintColor(), renderedOverlay, "layerUpdate");
-        }
+        notifyObservers("layerUpdate");
     }
 
     public void clearLayer()
@@ -546,13 +530,18 @@ public class ImageModel implements IModel{
             old.clear();
         }
 
-        // SelectTool
         for(PaintOverlay overlay: overlayList) {
             renderedOverlay.getOverlay().addAll(overlay.getOverlay());
         }
 
         updateOverlay();
     }
+
+    private void updateOverlay() {
+        notifyObservers("overlayUpdate");
+    }
+
+    ///// RENDER END //////
 
     @Override
     public void openNewUndoBuffer() {
@@ -584,24 +573,13 @@ public class ImageModel implements IModel{
         activeLayer.selectArea(start,end);
     }
 
-    public void updateOverlay() {
-        int minX = renderedImage.getChangedMinX();
-        int maxX = renderedImage.getChangedMaxX();
-        int minY = renderedImage.getChangedMinY();
-        int maxY = renderedImage.getChangedMaxY();
-
-        for (ImageModelObserver o : observers) {
-            o.notifyObservers(renderedImage, minX, maxX, minY, maxY, layerList, ts.getPaintColor(), renderedOverlay, "overlayUpdate");
-        }
-    }
-
-    ///// RENDER END //////
 
     /**
      * DeselectArea is a method that deselects the selected area made by the selectTool. It checks the overlay and oldOverlay, which are lists,
      * and clears the content. Thereafter, it toggles the variable "selection" to false, which means that there are no selected area.
      * And lastly it updates the rendered image.
      */
+
     public void deselectArea(){
         selectOverlay.getOverlay().clear();
         selectOverlay.getOldOverlay().clear();

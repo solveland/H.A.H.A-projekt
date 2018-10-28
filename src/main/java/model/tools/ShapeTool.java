@@ -7,6 +7,13 @@ import model.pixel.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+AUTHOR: August Sölveland
+RESPONSIBILITY: Tool for drawing a shape defined by different strategies
+USED BY:
+USES: TriangleStrategy, RectangleStrategy, StraightLineStrategy, EllipseStrategy
+ */
+
 /**
  * This tool is used for creating shapes. It uses the strategy pattern to calculate different shapes and then adds it to the image.
  */
@@ -43,7 +50,7 @@ public class ShapeTool implements ITool {
     }
 
     @Override
-    public void onDrag(int x, int y, IModel imageModel) {
+    public void onDrag(int x, int y, IEditableByTool imageModel) {
         List<Point<Integer>> pointList = strategy.shapeStrategy(startPoint, new Point<>(x, y), this.size);
         removeOutsidePoints(pointList,imageModel);
         addToOverlay(imageModel, pointList);
@@ -51,12 +58,12 @@ public class ShapeTool implements ITool {
     }
 
     @Override
-    public void onPress(int x, int y, IModel imageModel) {
+    public void onPress(int x, int y, IEditableByTool imageModel) {
         this.startPoint = new Point<>(x, y);
     }
 
     @Override
-    public void onRelease(int x, int y, IModel imageModel) {
+    public void onRelease(int x, int y, IEditableByTool imageModel) {
         imageModel.openNewUndoBuffer();
         List<Point<Integer>> pointList = strategy.shapeStrategy(startPoint, new Point<>(x, y), this.size);
         removeOutsidePoints(pointList,imageModel);
@@ -64,7 +71,7 @@ public class ShapeTool implements ITool {
         imageModel.renderOverlay();
     }
 
-    private void addToOverlay(IModel imageModel, List<Point<Integer>> shape) {
+    private void addToOverlay(IEditableByTool imageModel, List<Point<Integer>> shape) {
         List<Pixel> arrayList = new ArrayList<>();
         arrayList.clear();
         for (Point<Integer> i : shape) {
@@ -76,7 +83,7 @@ public class ShapeTool implements ITool {
     }
 
 
-    private void addShapeToImage(IModel image, List<Point<Integer>> shape) {
+    private void addShapeToImage(IEditableByTool image, List<Point<Integer>> shape) {
         //Empty the overlay
         image.addToShapeOverlay(new ArrayList<>());
         for (Point<Integer> i : shape) {
@@ -89,7 +96,7 @@ public class ShapeTool implements ITool {
         }
     }
 
-    private void removeOutsidePoints(List<Point<Integer>> pointList, IModel imageModel){
+    private void removeOutsidePoints(List<Point<Integer>> pointList, IEditableByTool imageModel){
         pointList.removeIf(p -> (p.getX() < 0 || p.getY() < 0 || p.getX() >= imageModel.getWidth() || p.getY() >= imageModel.getHeight())
         );
     }

@@ -1,7 +1,5 @@
 package controller;
 
-import controller.IPaintController;
-import controller.ShortcutController;
 import services.ServiceFactory;
 
 import javafx.application.Platform;
@@ -30,6 +28,14 @@ import view.PaintView;
 
 import java.io.File;
 import java.util.List;
+
+
+/*
+AUTHOR: Anthony Tao, Henrik Tao, August Sölveland, Hampus Ekberg
+RESPONSIBILITY: The main controller class
+USED BY:
+USES: ImageModel, PaintView
+ */
 
 /**
  * PaintController initializes and handles the GUI.
@@ -199,7 +205,6 @@ public class PaintController implements ImageModelObserver, IPaintController {
         });
 
         contextMenu.getItems().add(deselectItem);
-
 
         canvas.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
             @Override
@@ -448,7 +453,7 @@ public class PaintController implements ImageModelObserver, IPaintController {
     }
 
     @Override
-    public void notifyObservers(PaintLayer layer, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, PaintOverlay overlay, String id){
+    public void update(PaintLayer layer, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, PaintOverlay overlay, String id){
         if(id.equals("colorPickerUpdate")){
             Color c = new Color(color.getRedRatio(),color.getGreenRatio(), color.getBlueRatio(), color.getAlphaRatio());
             colorPicker.setValue(c);

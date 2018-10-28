@@ -2,6 +2,13 @@ package model.tools;
 
 import model.pixel.PaintColor;
 
+/*
+AUTHOR: August Sölveland
+RESPONSIBILITY: A collection of settings that different tools might use
+USED BY: All tools
+USES: PaintColor
+ */
+
 public class ToolSettings {
     private PaintColor color;
     private int size;

@@ -16,7 +16,7 @@ public class PaintOverlay {
     private List<Pixel> overlay;
     private List<Pixel> oldOverlay;
 
-    public PaintOverlay(){
+    PaintOverlay(){
         overlay = new ArrayList<>();
         oldOverlay = new ArrayList<>();
     }
@@ -29,7 +29,7 @@ public class PaintOverlay {
         return oldOverlay;
     }
 
-    public void setNewOverlay(List<Pixel> pixels){
+    void setNewOverlay(List<Pixel> pixels){
         oldOverlay = overlay;
         overlay = pixels;
     }

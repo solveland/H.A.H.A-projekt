@@ -5,6 +5,13 @@ import model.utilities.DistanceHelper;
 import model.pixel.PaintColor;
 import model.pixel.Point;
 
+/*
+AUTHOR: August Sölveland, Hampus Ekberg
+RESPONSIBILITY: General behaviour of a tool that paints when you drag (Pencil, Brush and Eraser)
+USED BY: PencilTool, BrushTool, EraserTool
+USES: ITool, PaintColor, DistanceHelper
+ */
+
 /**
  * This class is an abstraction of a pencil/eraser.
  * It contains the shared logic used for both drawing and erasing pixels on a canvas.
@@ -15,15 +22,15 @@ public abstract class AbstractPaintTool implements ITool {
     private Point<Double> oldPoint;
     private Shape shape = Shape.CIRCLE;
 
-    public void onPress(int x, int y, IModel imageModel) {
+    public void onPress(int x, int y, IEditableByTool imageModel) {
         imageModel.openNewUndoBuffer();
         oldPoint = new Point<>((double) x, (double) y);
         onDrag(x,y,imageModel);
 
     }
 
-    public void onDrag(int x, int y, IModel imageModel) {
-        Point<Double> newPoint = new Point<Double>((double) x, (double) y);
+    public void onDrag(int x, int y, IEditableByTool imageModel) {
+        Point<Double> newPoint = new Point<>((double) x, (double) y);
         int minX = Math.max(0, Math.min(x, oldPoint.getX().intValue()) - size);
         int minY = Math.max(0, Math.min(y, oldPoint.getY().intValue()) - size);
         int maxX = Math.min(imageModel.getWidth(), Math.max(x, oldPoint.getX().intValue()) + size);
@@ -36,7 +43,7 @@ public abstract class AbstractPaintTool implements ITool {
         oldPoint = newPoint;
     }
 
-    void paintPixel(int x, int y,Point<Double> newPoint,IModel imageModel,Point<Double> oldPoint){
+    void paintPixel(int x, int y, Point<Double> newPoint, IEditableByTool imageModel, Point<Double> oldPoint){
         if(imageModel.existsInUndoBuffer(new Point<>(x,y))){
             return;
         }
@@ -47,7 +54,7 @@ public abstract class AbstractPaintTool implements ITool {
         }
     }
 
-    public void onRelease(int x, int y, IModel imageModel) {
+    public void onRelease(int x, int y, IEditableByTool imageModel) {
 
     }
 

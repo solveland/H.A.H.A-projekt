@@ -8,9 +8,18 @@ import model.pixel.Point;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+AUTHOR: Hampus Ekberg
+RESPONSIBILITY: Tool for drawing with soft edges
+USED BY:
+USES:PaintColor, DistanceHelper
+ */
+
 /**
  * BrushTool class for the using of a brush.
  */
+
+
 public class BrushTool extends AbstractPaintTool {
 
     private Map<Point<Integer>,Double> closestDistMap;
@@ -23,7 +32,7 @@ public class BrushTool extends AbstractPaintTool {
     }
 
     @Override
-    void paintPixel(int x, int y,Point<Double> newPoint,IModel imageModel,Point<Double> oldPoint){
+    void paintPixel(int x, int y, Point<Double> newPoint, IEditableByTool imageModel, Point<Double> oldPoint){
         Point<Integer> pos = new Point<>(x,y);
         double dist = DistanceHelper.distToSegmentSquared(oldPoint, newPoint, new Point<>((double) x, (double) y));
         if (dist < (getSize() - 0.5) * (getSize() - 0.5)) {
@@ -44,7 +53,7 @@ public class BrushTool extends AbstractPaintTool {
     }
 
     @Override
-    public void onPress(int x, int y, IModel imageModel) {
+    public void onPress(int x, int y, IEditableByTool imageModel) {
         closestDistMap.clear();
         origColorMap.clear();
         super.onPress(x,y,imageModel);

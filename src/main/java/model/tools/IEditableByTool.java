@@ -6,7 +6,7 @@ import model.pixel.Point;
 
 import java.util.List;
 
-public interface IModel {
+public interface IEditableByTool {
 
     void setPixel(int x, int y, PaintColor color);
     PaintColor getPixelColor(int x, int y);

@@ -21,6 +21,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/*
+AUTHOR: Anthony Tao
+RESPONSIBILITY: Keeping track of the items representing a layer in the layer list of the program
+USED BY: LayerListController
+USES: PaintLayer
+*/
+
 /**
  * LayerItemController handles GUI for layer items in the layer pane.
  */
