@@ -439,8 +439,10 @@ public class ImageModel implements IModel{
     public void moveLayerAbove(int index, PaintLayer movingLayer){
         int newIndex = index;
 
-        if (layerList.indexOf(movingLayer) < newIndex)
+        if (layerList.indexOf(movingLayer) < newIndex){
             newIndex -= 1;
+        }
+
 
         moveLayerIndex(newIndex, movingLayer);
     }
@@ -449,7 +451,9 @@ public class ImageModel implements IModel{
         int newIndex = index +1;
 
         if (layerList.indexOf(movingLayer) < newIndex)
+        {
             newIndex -= 1;
+        }
 
         moveLayerIndex(newIndex, movingLayer);
     }
