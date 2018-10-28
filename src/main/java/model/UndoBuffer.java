@@ -27,10 +27,6 @@ public class UndoBuffer {
         pointHashSet = new HashSet<>();
     }
 
-    public void addPixel(int x, int y,PaintColor color){
-        addPixel(new Pixel(x,y,color));
-    }
-
     public void addPixel(Pixel p){
         pixels.add(p);
         pointHashSet.add(p.getPosition());

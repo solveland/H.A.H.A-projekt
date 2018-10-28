@@ -28,7 +28,7 @@ public class PencilTest {
         im.activatePencilTool();
         im.setSize(size);
         im.setColor(color);
-        im.onPress(x, y);
+        im.onPress(x, y, );
 
         for(int xi = 0; xi < limit; xi++){
             for(int yi = 0; yi < limit; yi++) {

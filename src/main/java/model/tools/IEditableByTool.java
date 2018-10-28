@@ -20,5 +20,7 @@ public interface IEditableByTool {
     int getWidth();
     int getHeight();
     void selectArea(Point<Integer> start, Point<Integer> end);
+    void setZoomScale(double zoomValue);
+    double getZoomScale();
 
 }

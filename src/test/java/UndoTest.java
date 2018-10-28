@@ -55,23 +55,23 @@ public class UndoTest {
         //Use some different tools
         image.activateBrushTool();
         image.setColor(color1);
-        image.onPress(x1, y1);
-        image.onDrag(x2,y2);
-        image.onRelease(x2,y2);
+        image.onPress(x1, y1, );
+        image.onDrag(x2,y2, );
+        image.onRelease(x2,y2, );
         image.activateShapeTool();
         image.setColor(color2);
-        image.onPress(x3,y3);
-        image.onDrag(x4,y4);
-        image.onRelease(x4,y4);
+        image.onPress(x3,y3, );
+        image.onDrag(x4,y4, );
+        image.onRelease(x4,y4, );
         image.activatePencilTool();
-        image.onPress(x5,y5);
-        image.onDrag(x3,y1);
-        image.onRelease(x3,y1);
+        image.onPress(x5,y5, );
+        image.onDrag(x3,y1, );
+        image.onRelease(x3,y1, );
         image.activateFillTool();
         image.setColor(color1);
-        image.onPress(x5,y2);
-        image.onDrag(x2,y4);
-        image.onRelease(x2,y4);
+        image.onPress(x5,y2, );
+        image.onDrag(x2,y4, );
+        image.onRelease(x2,y4, );
 
         //Undoing 4 times should clear everything
 
