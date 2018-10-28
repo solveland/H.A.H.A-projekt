@@ -134,10 +134,14 @@ public class PaintController implements ImageModelObserver, IPaintController {
 
         stackPane.setOnMousePressed(e -> {
             if (image.getActiveTool().equals(image.getZoomTool())) {
-                if (e.isAltDown())
+                if (e.isAltDown()){
                     zoom(false);
-                else
+                }
+
+                else {
                     zoom(true);
+                }
+
             }
         });
 

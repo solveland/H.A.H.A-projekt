@@ -11,7 +11,6 @@ USES: PaintColor
 
 public class EyedropperTool implements ITool {
 
-    private PaintColor extractedColor;
 
     public void onDrag(int x, int y, IEditableByTool imageModel){ }
     public void onPress(int x, int y, IEditableByTool imageModel){
@@ -24,8 +23,9 @@ public class EyedropperTool implements ITool {
     }
     public void updateSettings(ToolSettings ts){}
 
+
     private void extractColor(int x, int y, IEditableByTool image){
-        extractedColor = image.getPixelColor(x,y);
+        PaintColor extractedColor = image.getPixelColor(x,y);
         image.setColor(extractedColor);
     }
 

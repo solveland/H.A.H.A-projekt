@@ -6,6 +6,7 @@ import model.pixel.PaintColor;
 import model.pixel.Point;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /*
 AUTHOR: Hampus Ekberg
@@ -16,8 +17,8 @@ USES:PaintColor, DistanceHelper
 
 public class BrushTool extends AbstractPaintTool {
 
-    private HashMap<Point<Integer>,Double> closestDistMap;
-    private HashMap<Point<Integer>,PaintColor> origColorMap;
+    private Map<Point<Integer>,Double> closestDistMap;
+    private Map<Point<Integer>,PaintColor> origColorMap;
     private double hardness;
 
     public BrushTool() {

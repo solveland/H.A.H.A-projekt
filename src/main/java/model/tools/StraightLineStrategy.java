@@ -55,7 +55,9 @@ public class StraightLineStrategy implements IShapeStrategy {
             small = temp;
             if(h < 0) {
                 dy2 = -1;
-            }else if( h > 0) dy2 = 1;
+            }else if( h > 0) {
+                dy2 = 1;
+            }
             dx2 = 0;
         }
         int numerator = big >> 1;
