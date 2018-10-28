@@ -34,7 +34,7 @@ public class BucketTest {
         image.setActiveLayer(paintLayer);
         image.activateFillTool();
         image.setColor(initColor);
-        image.onPress(x, y);
+        image.onPress(x, y, false);
 
         for (int xi = 0; xi < limit; xi++) {
             for (int yi = 0; yi < limit; yi++) {
@@ -67,10 +67,10 @@ public class BucketTest {
         image.activateFillTool();
 
         image.setColor(white);
-        image.onPress(x, y);
+        image.onPress(x, y, false);
         image.getActiveLayer().setPixel(x, y, black);
         image.setColor(initColor);
-        image.onPress(x, y);
+        image.onPress(x, y, false);
 
         for (int xi = 0; xi < limit; xi++) {
             for (int yi = 0; yi < limit; yi++) {
@@ -111,18 +111,18 @@ public class BucketTest {
 
         image.activateFillTool();
         image.setColor(white);
-        image.onPress(x, y);
+        image.onPress(x, y, false);
 
         image.activateShapeTool();
         image.setSize(1);
         image.setToolShape("Rectangle");
         image.setColor(black);
-        image.onPress(x, y);
-        image.onRelease(a, b);
+        image.onPress(x, y, false);
+        image.onRelease(a, b, false);
 
         image.activateFillTool();
         image.setColor(initColor);
-        image.onPress(c,d);
+        image.onPress(c,d, false);
 
 
         for (int xi = 0; xi < limit; xi++) {

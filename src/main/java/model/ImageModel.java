@@ -25,10 +25,7 @@ public class ImageModel implements IEditableByTool {
     private int height;
     private PaintLayer renderedImage;
 
-    private double zoomScaleX;
-    private double zoomScaleY;
-    private double oldZoomScaleY;
-    private double oldZoomScaleX;
+    private double zoomScale;
 
     private PaintOverlay selectOverlay;
     private PaintOverlay shapeOverlay;
@@ -55,6 +52,7 @@ public class ImageModel implements IEditableByTool {
     public ImageModel(int sizeX, int sizeY) {
         width = sizeX;
         height = sizeY;
+        zoomScale = 1;
 
         // Tools
         shapeTool = new ShapeTool();
@@ -87,8 +85,6 @@ public class ImageModel implements IEditableByTool {
         undoBufferStack = new Stack<>();
     }
 
-
-
     public List<PaintLayer> getLayerList() {
         return layerList;
     }
@@ -104,7 +100,7 @@ public class ImageModel implements IEditableByTool {
         int maxY = renderedImage.getChangedMaxY();
 
         for (ImageModelObserver o : observers) {
-            o.update(renderedImage, minX, maxX, minY, maxY, layerList, ts.getPaintColor(), renderedOverlay, id);
+            o.update(renderedImage, minX, maxX, minY, maxY, layerList, ts.getPaintColor(), renderedOverlay, zoomScale, id);
         }
     }
 
@@ -120,25 +116,23 @@ public class ImageModel implements IEditableByTool {
         }
     }
 
-
-
-    public void onDrag(int x, int y){
+    public void onDrag(int x, int y, Boolean altDown){
         if (!(activeLayer == null)) {
-            activeTool.onDrag(x, y, this);
+            activeTool.onDrag(x, y, this, altDown);
             updateCanvas();
         }
     }
 
-    public void onRelease(int x, int y){
+    public void onRelease(int x, int y, Boolean altDown){
         if (!(activeLayer == null)) {
-            activeTool.onRelease(x, y, this);
+            activeTool.onRelease(x, y, this, altDown);
             updateCanvas();
         }
     }
 
-    public void onPress(int x, int y){
+    public void onPress(int x, int y, Boolean altDown){
         if (!(activeLayer == null)) {
-            activeTool.onPress(x, y, this);
+            activeTool.onPress(x, y, this, altDown);
             updateCanvas();
         }
     }
@@ -147,12 +141,6 @@ public class ImageModel implements IEditableByTool {
         this.activeTool = activeTool;
         activeTool.updateSettings(ts);
     }
-
-    public ITool getActiveTool() {
-        return activeTool;
-    }
-
-    public ZoomTool getZoomTool(){return zoomTool;}
 
     public void setSize(int size){
         ts.setSize(size);
@@ -278,26 +266,20 @@ public class ImageModel implements IEditableByTool {
 
     public void activateEyedropperTool(){setActiveTool(eyedropperTool);}
 
-    public double getZoomScaleY(){
-        return zoomScaleY;
-    }
-    public double getZoomScaleX(){
-        return zoomScaleX;
-    }
-    public void setZoomScaleY(double zoomValueY){
-        this.zoomScaleY = zoomValueY;
-    }
-    public void setZoomScaleX(double zoomValueX){
-        this.zoomScaleX = zoomValueX;
+    public double getZoomScale(){
+        return zoomScale;
     }
 
-    public void setOldZoomScaleY(double oldZoomValueY) {
-        this.oldZoomScaleY = oldZoomValueY;
+    public void setZoomScale(double zoomValue) {
+        zoomScale = zoomValue;
+
+        updateZoom();
     }
 
-    public void setOldZoomScaleX(double oldZoomValueX) {
-        this.oldZoomScaleX = oldZoomValueX;
+    private void updateZoom() {
+        notifyObservers("zoomUpdate");
     }
+
     //// LAYER ///////
 
     private void updateLayerGUI() {

@@ -22,14 +22,14 @@ public class BucketFillTool implements ITool {
     private PaintColor newColor;
 
 
-    public void onPress(int x, int y, IEditableByTool imageModel) {
+    public void onPress(int x, int y, IEditableByTool imageModel, Boolean altDown) {
        imageModel.openNewUndoBuffer();
        flood(x, y, imageModel);
     }
 
-    public void onDrag(int x, int y, IEditableByTool imageModel){
+    public void onDrag(int x, int y, IEditableByTool imageModel, Boolean altDown){
     }
-    public void onRelease(int x, int y, IEditableByTool imageModel) {
+    public void onRelease(int x, int y, IEditableByTool imageModel, Boolean altDown) {
     }
 
     /**

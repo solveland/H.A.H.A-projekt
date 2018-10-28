@@ -48,10 +48,10 @@ public class BrushTool extends AbstractPaintTool {
     }
 
     @Override
-    public void onPress(int x, int y, IEditableByTool imageModel) {
+    public void onPress(int x, int y, IEditableByTool imageModel, Boolean altDown) {
         closestDistMap.clear();
         origColorMap.clear();
-        super.onPress(x,y,imageModel);
+        super.onPress(x,y,imageModel, altDown);
     }
 
 

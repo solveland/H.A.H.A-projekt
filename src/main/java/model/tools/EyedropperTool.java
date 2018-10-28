@@ -12,10 +12,10 @@ USES: PaintColor
 public class EyedropperTool implements ITool {
 
 
-    public void onDrag(int x, int y, IEditableByTool imageModel){ }
-    public void onPress(int x, int y, IEditableByTool imageModel){
+    public void onDrag(int x, int y, IEditableByTool imageModel, Boolean altDown){ }
+    public void onPress(int x, int y, IEditableByTool imageModel, Boolean altDown){
     }
-    public void onRelease(int x, int y, IEditableByTool imageModel){
+    public void onRelease(int x, int y, IEditableByTool imageModel, Boolean altDown){
         if ( ! (x < 0 || y < 0 || x >= imageModel.getWidth() || y >= imageModel.getHeight()) )
         {
             extractColor(x, y, imageModel);

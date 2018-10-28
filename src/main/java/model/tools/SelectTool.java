@@ -33,17 +33,17 @@ public class SelectTool implements ITool{
     }
 
 
-    public void onDrag(int x, int y, IEditableByTool imageModel){
+    public void onDrag(int x, int y, IEditableByTool imageModel, Boolean altDown){
         Point<Integer> endPoint = new Point<> (x,y);
         drawSelectedToolArea(imageModel, endPoint,imageModel.getWidth(),imageModel.getHeight());
         imageModel.renderOverlay();
     }
-    public void onPress(int x, int y, IEditableByTool imageModel){
+    public void onPress(int x, int y, IEditableByTool imageModel, Boolean altDown){
         Point<Integer> startPoint = new Point<>(x,y);
         setStartPoint(startPoint);
     }
 
-    public void onRelease(int x, int y, IEditableByTool imageModel){
+    public void onRelease(int x, int y, IEditableByTool imageModel, Boolean altDown){
         Point endPoint = new Point (x,y);
         imageModel.selectArea(startPoint, endPoint);
     }
