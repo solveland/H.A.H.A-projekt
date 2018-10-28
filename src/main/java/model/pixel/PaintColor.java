@@ -83,6 +83,12 @@ public class PaintColor {
     }
 
 
+    /**
+     * Mixes two colors based on their alpha values
+     * @param src The foreground color
+     * @param dst The background color
+     * @return The mix between the foreground color and the background color
+     */
 
 
     public static PaintColor alphaBlend(PaintColor src, PaintColor dst){

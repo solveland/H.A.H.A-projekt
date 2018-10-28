@@ -10,7 +10,7 @@ import java.util.List;
 /*
 AUTHOR: August Sölveland
 RESPONSIBILITY: Tool for drawing a shape defined by different strategies
-USED BY:
+USED BY: ImageModel
 USES: TriangleStrategy, RectangleStrategy, StraightLineStrategy, EllipseStrategy
  */
 
@@ -50,7 +50,7 @@ public class ShapeTool implements ITool {
     }
 
     @Override
-    public void onDrag(int x, int y, IEditableByTool imageModel) {
+    public void onDrag(int x, int y, IEditableByTool imageModel, Boolean altDown) {
         List<Point<Integer>> pointList = strategy.shapeStrategy(startPoint, new Point<>(x, y), this.size);
         removeOutsidePoints(pointList,imageModel);
         addToOverlay(imageModel, pointList);
@@ -58,12 +58,12 @@ public class ShapeTool implements ITool {
     }
 
     @Override
-    public void onPress(int x, int y, IEditableByTool imageModel) {
+    public void onPress(int x, int y, IEditableByTool imageModel, Boolean altDown) {
         this.startPoint = new Point<>(x, y);
     }
 
     @Override
-    public void onRelease(int x, int y, IEditableByTool imageModel) {
+    public void onRelease(int x, int y, IEditableByTool imageModel, Boolean altDown) {
         imageModel.openNewUndoBuffer();
         List<Point<Integer>> pointList = strategy.shapeStrategy(startPoint, new Point<>(x, y), this.size);
         removeOutsidePoints(pointList,imageModel);

@@ -43,7 +43,7 @@ public class PaintView implements ImageModelObserver {
     // Draw the rendered image on update from model.
      */
     @Override
-    public void update(PaintLayer renderedImage, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, PaintOverlay overlay, String id)
+    public void update(PaintLayer renderedImage, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, PaintOverlay overlay, Double zoomScale, String id)
     {
         if (id.equals("imageUpdate")) {
             PixelWriter pw = image.getPixelWriter();

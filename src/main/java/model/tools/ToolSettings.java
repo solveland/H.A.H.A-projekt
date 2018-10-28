@@ -5,7 +5,7 @@ import model.pixel.PaintColor;
 /*
 AUTHOR: August Sölveland
 RESPONSIBILITY: A collection of settings that different tools might use
-USED BY: All tools
+USED BY: All tools, ImageModel
 USES: PaintColor
  */
 

@@ -155,8 +155,6 @@
                       </Menu>
                   <Menu mnemonicParsing="false" text="View">
                     <items>
-                      <MenuItem mnemonicParsing="false" onAction="#zoomIn" text="Zoom In" />
-                        <MenuItem mnemonicParsing="false" onAction="#zoomOut" text="Zoom Out" />
                         <MenuItem mnemonicParsing="false" onAction="#zoomFifty" text="Zoom 50%" />
                         <MenuItem mnemonicParsing="false" onAction="#zoomHundred" text="Zoom 100%" />
                         <MenuItem mnemonicParsing="false" onAction="#zoomTwoHundred" text="Zoom 200%" />

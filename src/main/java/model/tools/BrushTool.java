@@ -11,7 +11,7 @@ import java.util.Map;
 /*
 AUTHOR: Hampus Ekberg
 RESPONSIBILITY: Tool for drawing with soft edges
-USED BY:
+USED BY: ImageModel
 USES:PaintColor, DistanceHelper
  */
 
@@ -53,10 +53,10 @@ public class BrushTool extends AbstractPaintTool {
     }
 
     @Override
-    public void onPress(int x, int y, IEditableByTool imageModel) {
+    public void onPress(int x, int y, IEditableByTool imageModel, Boolean altDown) {
         closestDistMap.clear();
         origColorMap.clear();
-        super.onPress(x,y,imageModel);
+        super.onPress(x,y,imageModel, altDown);
     }
 
 

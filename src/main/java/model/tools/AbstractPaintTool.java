@@ -22,14 +22,14 @@ public abstract class AbstractPaintTool implements ITool {
     private Point<Double> oldPoint;
     private Shape shape = Shape.CIRCLE;
 
-    public void onPress(int x, int y, IEditableByTool imageModel) {
+    public void onPress(int x, int y, IEditableByTool imageModel, Boolean altDown) {
         imageModel.openNewUndoBuffer();
         oldPoint = new Point<>((double) x, (double) y);
-        onDrag(x,y,imageModel);
+        onDrag(x,y,imageModel, altDown);
 
     }
 
-    public void onDrag(int x, int y, IEditableByTool imageModel) {
+    public void onDrag(int x, int y, IEditableByTool imageModel, Boolean altDown) {
         Point<Double> newPoint = new Point<>((double) x, (double) y);
         int minX = Math.max(0, Math.min(x, oldPoint.getX().intValue()) - size);
         int minY = Math.max(0, Math.min(y, oldPoint.getY().intValue()) - size);
@@ -54,7 +54,7 @@ public abstract class AbstractPaintTool implements ITool {
         }
     }
 
-    public void onRelease(int x, int y, IEditableByTool imageModel) {
+    public void onRelease(int x, int y, IEditableByTool imageModel, Boolean altDown) {
 
     }
 

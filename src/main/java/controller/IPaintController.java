@@ -35,12 +35,6 @@ public interface IPaintController {
     @FXML
     void setShapeTool();
     @FXML
-    void zoom(Boolean setZoom);
-    @FXML
-    void zoomIn();
-    @FXML
-    void zoomOut();
-    @FXML
     void zoomFifty();
     @FXML
     void zoomHundred();

@@ -43,8 +43,6 @@ USES: ImageModel, PaintView
 
 public class PaintController implements ImageModelObserver, IPaintController {
 
-    private static final double MAX_SCALE = 15.0d;
-    private static final double MIN_SCALE = 0.1d;
     @FXML
     private ScrollPane scrollPane;
     @FXML
@@ -137,24 +135,12 @@ public class PaintController implements ImageModelObserver, IPaintController {
         setImagePressEvent(canvas);
         setImageReleaseEvent(canvas);
 
-        stackPane.setOnMousePressed(e -> {
-            if (image.getActiveTool().equals(image.getZoomTool())) {
-                if (e.isAltDown()){
-                    zoom(false);
-                }
-                else {
-                    zoom(true);
-                }
-            }
-        });
-
         //Color Palette
         colorPicker.setValue(Color.BLACK);
 
         colorPicker.setOnAction(e -> {
             sendColorState();
         });
-
 
         //brushBar
         sizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 5));
@@ -214,19 +200,6 @@ public class PaintController implements ImageModelObserver, IPaintController {
                 }
             }
         });
-    }
-
-    private static double clamp(double value, double min, double max) {
-
-        if (Double.compare(value, min) < 0) {
-            return min;
-        }
-
-        if (Double.compare(value, max) > 0) {
-            return max;
-        }
-
-        return value;
     }
 
     @Override
@@ -394,69 +367,29 @@ public class PaintController implements ImageModelObserver, IPaintController {
 
     @Override
     @FXML
-    public void zoom(Boolean setZoom) {
-        double delta = 1.05;
-        image.setZoomScaleX(canvas.getScaleX());
-        image.setZoomScaleY(canvas.getScaleY());
-        image.setOldZoomScaleX(image.getZoomScaleX());
-        image.setOldZoomScaleY(image.getZoomScaleY());
-
-        double scaleY = image.getZoomScaleY();
-        double scaleX = image.getZoomScaleX();
-
-        if (setZoom) {
-            scaleY *= delta;
-            scaleX *= delta;
-        } else {
-            scaleY /= delta;
-            scaleX /= delta;
-        }
-        scaleY = clamp(scaleY, MIN_SCALE, MAX_SCALE);
-        scaleX = clamp(scaleX, MIN_SCALE, MAX_SCALE);
-
-        canvas.setScaleY(scaleY);
-        canvas.setScaleX(scaleX);
-    }
-
-    @Override
-    @FXML
-    public void zoomIn() {
-        zoom(true);
-    }
-
-    @Override
-    @FXML
-    public void zoomOut() {
-        zoom(false);
-    }
-
-    private void setZoomPercent(double percent) {
-        canvas.setScaleY(percent);
-        canvas.setScaleX(percent);
-    }
-
-    @Override
-    @FXML
     public void zoomFifty() {
-        setZoomPercent(0.5);
+        image.setZoomScale(0.5);
     }
 
     @Override
     @FXML
     public void zoomHundred() {
-        setZoomPercent(1);
+        image.setZoomScale(1);
     }
 
     @FXML
     public void zoomTwoHundred() {
-        setZoomPercent(2);
+        image.setZoomScale(2);
     }
 
     @Override
-    public void update(PaintLayer layer, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, PaintOverlay overlay, String id){
+    public void update(PaintLayer layer, int minX, int maxX, int minY, int maxY, List<PaintLayer> layerList, PaintColor color, PaintOverlay overlay, Double zoomScale, String id){
         if(id.equals("colorPickerUpdate")){
             Color c = new Color(color.getRedRatio(),color.getGreenRatio(), color.getBlueRatio(), color.getAlphaRatio());
             colorPicker.setValue(c);
+        } else if (id.equals("zoomUpdate")) {
+            canvas.setScaleX(zoomScale);
+            canvas.setScaleY(zoomScale);
         }
     }
 
@@ -467,7 +400,7 @@ public class PaintController implements ImageModelObserver, IPaintController {
             }
             int x = (int) Math.floor(e.getX());
             int y = (int) Math.floor(e.getY());
-            image.onDrag(x, y);
+            image.onDrag(x, y, e.isAltDown());
         });
     }
 
@@ -478,7 +411,8 @@ public class PaintController implements ImageModelObserver, IPaintController {
             }
             int x = (int) Math.floor(e.getX());
             int y = (int) Math.floor(e.getY());
-            image.onRelease(x, y);
+
+            image.onRelease(x, y, e.isAltDown());
             mouseDown = false;
         });
     }
@@ -490,7 +424,8 @@ public class PaintController implements ImageModelObserver, IPaintController {
             }
             int x = (int) Math.floor(e.getX());
             int y = (int) Math.floor(e.getY());
-            image.onPress(x, y);
+
+            image.onPress(x, y, e.isAltDown());
             mouseDown = true;
         });
     }
