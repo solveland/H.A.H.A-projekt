@@ -14,7 +14,7 @@
             <Font size="10.0" />
          </font>
       </Label>
-      <CheckBox fx:id="layerVisible" layoutX="7.0" layoutY="9.0" mnemonicParsing="false" onAction="#onToggleVisible" selected="true" AnchorPane.bottomAnchor="9.399999999999999" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="9.0" />
+      <CheckBox layoutX="7.0" layoutY="9.0" mnemonicParsing="false" onAction="#onToggleVisible" selected="true" AnchorPane.bottomAnchor="9.399999999999999" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="9.0" />
       <TextField fx:id="editableText" layoutX="35.0" layoutY="6.0" prefHeight="20.0" prefWidth="131.0" styleClass="layerTextField" text="editName" visible="false" AnchorPane.bottomAnchor="6.800000000000001" AnchorPane.rightAnchor="12.800000000000011" AnchorPane.topAnchor="6.0">
          <font>
             <Font size="10.0" />

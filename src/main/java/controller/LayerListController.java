@@ -11,7 +11,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.FlowPane;
@@ -35,8 +34,6 @@ public class LayerListController extends StackPane implements ImageModelObserver
     @FXML
     private StackPane frontPane;
 
-    @FXML
-    private TitledPane titledPane;
 
     @FXML
     private FlowPane layerView;
@@ -67,8 +64,7 @@ public class LayerListController extends StackPane implements ImageModelObserver
             if (e.getGestureSource().getClass().equals(LayerItemController.class)) {
                 LayerItemController source = (LayerItemController) e.getGestureSource();
 
-                if (frontPane.getChildren().contains(dragImage))
-                {
+                if (frontPane.getChildren().contains(dragImage)) {
                     frontPane.getChildren().remove(dragImage);
                 }
                 source.setCursor(Cursor.HAND);
@@ -106,8 +102,7 @@ public class LayerListController extends StackPane implements ImageModelObserver
                 updateLayerItemList(layerList);
                 selectActiveLayer();
             } else {
-                if (!layerViewList.isEmpty())
-                {
+                if (!layerViewList.isEmpty()) {
                     layerViewList.clear();
                 }
             }
@@ -141,8 +136,7 @@ public class LayerListController extends StackPane implements ImageModelObserver
                 }
             }
             // If the layer-item does not already exist, create the layer-item.
-            if (!itemExists)
-            {
+            if (!itemExists) {
                 createLayerItem(p, p.getName(), i);
             }
         }
@@ -180,7 +174,6 @@ public class LayerListController extends StackPane implements ImageModelObserver
     @FXML
     public void deleteLayerAction() {
         if (!layerViewList.isEmpty()) {
-            int index = indexOfSelectedItem();
 
             image.deleteActiveLayer();
         }
@@ -278,22 +271,19 @@ public class LayerListController extends StackPane implements ImageModelObserver
 
         // When mouse drag enters a layer, show highlighted panes (top or bottom of a layer) which indicates locations you can move the dragged layer to.
         layerItemPane.addEventFilter(MouseDragEvent.MOUSE_DRAG_ENTERED, e -> {
-            if (!e.getGestureSource().equals(layerItemPane)) {
-                if (e.getGestureSource().getClass().equals(LayerItemController.class)) {
-                    LayerItemController l = (LayerItemController) e.getGestureSource();
+            if ((!e.getGestureSource().equals(layerItemPane)) && e.getGestureSource().getClass().equals(LayerItemController.class)) {
+                LayerItemController l = (LayerItemController) e.getGestureSource();
 
-                    if (layerViewList.indexOf(l) == layerViewList.indexOf(layerItemPane) + 1) {
-                        lI.getTopBorderPane().setMouseTransparent(false);
-                    }
-                    else if (layerViewList.indexOf(l) == layerViewList.indexOf(layerItemPane) - 1) {
-                        lI.getBottomBorderPane().setMouseTransparent(false);
-                    } else {
-                        lI.getTopBorderPane().setMouseTransparent(false);
-                        lI.getBottomBorderPane().setMouseTransparent(false);
-                    }
+                if (layerViewList.indexOf(l) == layerViewList.indexOf(layerItemPane) + 1) {
+                    lI.getTopBorderPane().setMouseTransparent(false);
+                } else if (layerViewList.indexOf(l) == layerViewList.indexOf(layerItemPane) - 1) {
+                    lI.getBottomBorderPane().setMouseTransparent(false);
+                } else {
+                    lI.getTopBorderPane().setMouseTransparent(false);
+                    lI.getBottomBorderPane().setMouseTransparent(false);
                 }
-
             }
+
             e.consume();
         });
 
@@ -330,7 +320,7 @@ public class LayerListController extends StackPane implements ImageModelObserver
     }
 
     @Override
-    public Button getDeleteLayerButton(){
+    public Button getDeleteLayerButton() {
         return deleteLayerButton;
     }
 

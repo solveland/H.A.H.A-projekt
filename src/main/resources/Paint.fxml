@@ -130,27 +130,11 @@
                   <menus>
                       <Menu text="File">
                           <items>
-                              <MenuItem text="New" />
                               <MenuItem onAction="#openFile" text="Open" />
                               <MenuItem onAction="#saveFile" text="Save" />
                               <MenuItem onAction="#saveFileAs" text="Save As" />
                               <SeparatorMenuItem />
                               <MenuItem onAction="#exitApplication" text="Exit" />
-                          </items>
-                      </Menu>
-                      <Menu text="Edit">
-                          <items>
-                              <MenuItem text="Copy" />
-                              <MenuItem text="Cut" />
-                              <MenuItem text="Paste" />
-                          </items>
-                      </Menu>
-                      <Menu text="Help">
-                          <items>
-                              <MenuItem disable="true" text="Search" />
-                              <MenuItem text="Online Manual" visible="false" />
-                              <SeparatorMenuItem />
-                              <MenuItem text="About" />
                           </items>
                       </Menu>
                   <Menu mnemonicParsing="false" text="View">
@@ -192,9 +176,9 @@
       </AnchorPane>
     </top>
    <center>
-      <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" minViewportHeight="600.0" minViewportWidth="600.0" prefViewportHeight="600.0" prefViewportWidth="600.0">
+      <ScrollPane fitToHeight="true" fitToWidth="true" minViewportHeight="600.0" minViewportWidth="600.0" prefViewportHeight="600.0" prefViewportWidth="600.0">
          <content>
-            <StackPane fx:id="stackPane" styleClass="scrollPane" BorderPane.alignment="CENTER">
+            <StackPane styleClass="scrollPane" BorderPane.alignment="CENTER">
                <children>
                   <ImageView fx:id="canvas" fitHeight="600.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" smooth="false" />
                </children>
