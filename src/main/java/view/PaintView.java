@@ -30,7 +30,6 @@ public class PaintView implements ImageModelObserver {
 
     public void setSize(int x, int y){
         image = new WritableImage(x, y);
-
     }
 
     /*
